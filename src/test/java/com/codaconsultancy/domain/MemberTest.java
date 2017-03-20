@@ -24,13 +24,20 @@ public class MemberTest {
         member.setEmail("hp@email.com");
         member.setMembershipType("Lifeline");
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        String dateInString = "31-08-2014";
-        Date date = sdf.parse(dateInString);
-        member.setJoinDate(date);
+        Date joinDate = sdf.parse("31-08-2014");
+        Date leaveDate = sdf.parse("31-08-2015");
+        Date cardRequestDate = sdf.parse("13-08-2014");
+        Date cardIssuedDate = sdf.parse("30-08-2014");
+        Date welcomeLetterIssuedDate = sdf.parse("31-08-2014");
+        member.setJoinDate(joinDate);
+        member.setLeaveDate(leaveDate);
+        member.setCardRequestDate(cardRequestDate);
+        member.setCardIssuedDate(cardIssuedDate);
+        member.setWelcomeLetterIssuedDate(welcomeLetterIssuedDate);
         member.setLandlineNumber("01383 665544");
         member.setMobileNumber("07766554433");
         member.setPayerType("Monthly");
-        member.setStatus("Open");
+        member.setStatus("Closed");
     }
 
     @Test
@@ -50,7 +57,7 @@ public class MemberTest {
 
     @Test
     public void getStatus() {
-        assertEquals("Open", member.getStatus());
+        assertEquals("Closed", member.getStatus());
     }
 
     @Test
@@ -77,6 +84,14 @@ public class MemberTest {
     }
 
     @Test
+    public void getLeaveDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Date leaveDate = member.getLeaveDate();
+        String dateString = sdf.format(leaveDate);
+        assertEquals("31-08-2015", dateString);
+    }
+
+    @Test
     public void getComments() {
         assertEquals("Migrated member", member.getComments());
     }
@@ -96,4 +111,27 @@ public class MemberTest {
         assertEquals("07766554433", member.getMobileNumber());
     }
 
+    @Test
+    public void getCardRequestDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Date cardRequestDate = member.getCardRequestDate();
+        String dateString = sdf.format(cardRequestDate);
+        assertEquals("13-08-2014", dateString);
+    }
+
+    @Test
+    public void getCardIssuedDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Date cardIssuedDate = member.getCardIssuedDate();
+        String dateString = sdf.format(cardIssuedDate);
+        assertEquals("30-08-2014", dateString);
+    }
+
+    @Test
+    public void getWelcomeLetterIssuedDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        Date welcomeLetterIssuedDate = member.getWelcomeLetterIssuedDate();
+        String dateString = sdf.format(welcomeLetterIssuedDate);
+        assertEquals("31-08-2014", dateString);
+    }
 }
