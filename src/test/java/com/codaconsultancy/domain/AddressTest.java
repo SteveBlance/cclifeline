@@ -14,6 +14,7 @@ public class AddressTest {
     @Before
     public void setUp() {
         address = new Address();
+        address.setId(86L);
         address.setAddressLine1("Line1");
         address.setAddressLine2("Line2");
         address.setAddressLine3("Line3");
@@ -25,6 +26,11 @@ public class AddressTest {
         member.setForename("Hamish");
         member.setSurname("Petrie");
         address.setMember(member);
+    }
+
+    @Test
+    public void getId() {
+        assertEquals(86L, address.getId().longValue());
     }
 
     @Test

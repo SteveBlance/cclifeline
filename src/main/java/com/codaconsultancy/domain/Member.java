@@ -13,6 +13,10 @@ public class Member {
     private Long id;
 
     @NotNull
+    @Column(name = "MEMBERSHIP_NUMBER")
+    private Long membershipNumber;
+
+    @NotNull
     @Column(name = "MEMBERSHIP_TYPE")
     private String membershipType;
 
@@ -46,7 +50,6 @@ public class Member {
 
     @Column(name = "MOBILE_NUMBER")
     private String mobileNumber;
-    private Long membershipNumber;
 
     public Long getId() {
         return id;
