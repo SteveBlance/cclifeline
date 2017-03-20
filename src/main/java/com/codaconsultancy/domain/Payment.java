@@ -9,7 +9,7 @@ public class Payment {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @Column(name = "PAYMENT_DATE")
     private Date paymentDate;
@@ -17,14 +17,17 @@ public class Payment {
     @Column(name = "PAYMENT_AMOUNT")
     private Float paymentAmount;
 
+    @Column(name = "CREDITED_ACCOUNT")
+    private String creditedAccount;
+
     @ManyToOne
     private Member member;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -42,6 +45,14 @@ public class Payment {
 
     public void setPaymentAmount(Float paymentAmount) {
         this.paymentAmount = paymentAmount;
+    }
+
+    public String getCreditedAccount() {
+        return creditedAccount;
+    }
+
+    public void setCreditedAccount(String creditedAccount) {
+        this.creditedAccount = creditedAccount;
     }
 
     public Member getMember() {

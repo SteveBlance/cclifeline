@@ -46,6 +46,7 @@ public class Member {
 
     @Column(name = "MOBILE_NUMBER")
     private String mobileNumber;
+    private Long membershipNumber;
 
     public Long getId() {
         return id;
@@ -133,5 +134,13 @@ public class Member {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public void setMembershipNumber(Long membershipNumber) {
+        this.membershipNumber = membershipNumber;
+    }
+
+    public Long getMembershipNumber() {
+        return membershipNumber;
     }
 }

@@ -8,7 +8,7 @@ public class PaymentReference {
 
     @Id
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @Column(name = "REFERENCE")
     private String reference;
@@ -19,11 +19,11 @@ public class PaymentReference {
     @ManyToOne
     private Member member;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -35,11 +35,11 @@ public class PaymentReference {
         this.reference = reference;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
 
