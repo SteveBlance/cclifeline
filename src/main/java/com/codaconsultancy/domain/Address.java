@@ -1,13 +1,14 @@
 package com.codaconsultancy.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "ADDRESSES")
 public class Address {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @Column(name = "ADDRESS_LINE_1")
     private String addressLine1;
@@ -32,6 +33,14 @@ public class Address {
 
     @ManyToOne
     private Member member;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getAddressLine1() {
         return addressLine1;

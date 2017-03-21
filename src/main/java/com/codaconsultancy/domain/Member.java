@@ -13,6 +13,10 @@ public class Member {
     private Long id;
 
     @NotNull
+    @Column(name = "MEMBERSHIP_NUMBER")
+    private Long membershipNumber;
+
+    @NotNull
     @Column(name = "MEMBERSHIP_TYPE")
     private String membershipType;
 
@@ -35,6 +39,9 @@ public class Member {
     @Column(name = "JOIN_DATE")
     private Date joinDate;
 
+    @Column(name = "LEAVE_DATE")
+    private Date leaveDate;
+
     @Column(name = "COMMENTS")
     private String comments;
 
@@ -46,6 +53,15 @@ public class Member {
 
     @Column(name = "MOBILE_NUMBER")
     private String mobileNumber;
+
+    @Column(name = "CARD_REQUEST_DATE")
+    private Date cardRequestDate;
+
+    @Column(name = "CARD_ISSUED_DATE")
+    private Date cardIssuedDate;
+
+    @Column(name = "WELCOME_LETTER_ISSUED_DATE")
+    private Date welcomeLetterIssuedDate;
 
     public Long getId() {
         return id;
@@ -103,6 +119,14 @@ public class Member {
         this.joinDate = joinDate;
     }
 
+    public Date getLeaveDate() {
+        return leaveDate;
+    }
+
+    public void setLeaveDate(Date leaveDate) {
+        this.leaveDate = leaveDate;
+    }
+
     public String getComments() {
         return comments;
     }
@@ -133,5 +157,37 @@ public class Member {
 
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
+    }
+
+    public void setMembershipNumber(Long membershipNumber) {
+        this.membershipNumber = membershipNumber;
+    }
+
+    public Long getMembershipNumber() {
+        return membershipNumber;
+    }
+
+    public Date getCardRequestDate() {
+        return cardRequestDate;
+    }
+
+    public void setCardRequestDate(Date cardRequestDate) {
+        this.cardRequestDate = cardRequestDate;
+    }
+
+    public Date getCardIssuedDate() {
+        return cardIssuedDate;
+    }
+
+    public void setCardIssuedDate(Date cardIssuedDate) {
+        this.cardIssuedDate = cardIssuedDate;
+    }
+
+    public Date getWelcomeLetterIssuedDate() {
+        return welcomeLetterIssuedDate;
+    }
+
+    public void setWelcomeLetterIssuedDate(Date welcomeLetterIssuedDate) {
+        this.welcomeLetterIssuedDate = welcomeLetterIssuedDate;
     }
 }
