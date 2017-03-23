@@ -13,6 +13,9 @@ public class PaymentReference {
     @Column(name = "REFERENCE")
     private String reference;
 
+    @Column(name = "NAME")
+    private String name;
+
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
 
@@ -41,6 +44,14 @@ public class PaymentReference {
 
     public void setIsActive(Boolean active) {
         isActive = active;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Member getMember() {

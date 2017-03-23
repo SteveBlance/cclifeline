@@ -15,6 +15,7 @@ public class PaymentReferenceTest {
         paymentReference = new PaymentReference();
         paymentReference.setId(56L);
         paymentReference.setReference("FPS CREDIT 1234 H PETRIE");
+        paymentReference.setName("H Petrie");
         paymentReference.setIsActive(true);
         Member member = new Member();
         member.setForename("Hamish");
@@ -35,6 +36,11 @@ public class PaymentReferenceTest {
     @Test
     public void getActive() {
         assertTrue(paymentReference.getIsActive());
+    }
+
+    @Test
+    public void getName() {
+        assertEquals("H Petrie", paymentReference.getName());
     }
 
     @Test
