@@ -1,7 +1,7 @@
-package com.codaconsultancy.repositories;
+package com.codaconsultancy.cclifeline.repositories;
 
-import com.codaconsultancy.domain.Member;
-import com.codaconsultancy.domain.PaymentReference;
+import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

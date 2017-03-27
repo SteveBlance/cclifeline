@@ -1,7 +1,7 @@
-package com.codaconsultancy.repositories;
+package com.codaconsultancy.cclifeline.repositories;
 
-import com.codaconsultancy.domain.Address;
-import com.codaconsultancy.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Address;
+import com.codaconsultancy.cclifeline.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -9,4 +9,6 @@ import java.util.List;
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
     public List<Address> findByMember(Member member);
+
+
 }

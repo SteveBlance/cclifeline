@@ -1,4 +1,4 @@
-package com.codaconsultancy.domain;
+package com.codaconsultancy.cclifeline.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

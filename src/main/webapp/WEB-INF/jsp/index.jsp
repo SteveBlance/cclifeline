@@ -37,6 +37,7 @@
     <div class="starter-template">
         <h1>Centenary Club Lifeline</h1>
         <h2>Message: ${message}</h2>
+        <p>User count: ${userCount}</p>
     </div>
 
 </div>
