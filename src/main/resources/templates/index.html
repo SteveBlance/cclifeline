@@ -2,8 +2,12 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Boot and Thymeleaf example</title>
+    <title>Centenary Club Lifeline</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css"/>
+
+
 </head>
 <body>
 <div class="starter-template">
@@ -11,22 +15,74 @@
     <h2 th:text="${message}"></h2>
     <p>User count <span th:text="${userCount}"/></p>
 </div>
+<div id="accordion">
+    <h3>First</h3>
+    <div>Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet.</div>
+    <h3>Second</h3>
+    <div>Phasellus mattis tincidunt nibh.</div>
+    <h3>Third</h3>
+    <div>Nam dui erat, auctor a, dignissim quis.</div>
+</div>
+<br/>
 
-<table>
+<table id="member_tab" class="stripe" cellspacing="0" width="100%">
     <thead>
     <tr>
         <th>Membership No</th>
         <th>Forename</th>
         <th>Surname</th>
+        <th>Membership Type</th>
+        <th>Status</th>
+        <th>Payer Type</th>
+        <th>Join Date</th>
+        <th>Leave Date</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Mobile Number</th>
+        <th>Card Request Date</th>
+        <th>Card Issue Date</th>
+        <th>Welcome Letter Date</th>
+        <th>Comments</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="member: ${members}">
-        <td th:text="${member.membershipNumber}">MembershipNumber</td>
+        <td th:text="${member.membershipNumber}">Membership No</td>
         <td th:text="${member.forename}">Forename</td>
         <td th:text="${member.surname}">Surname</td>
+        <td th:text="${member.membershipType}">Membership Type</td>
+        <td th:text="${member.status}">Status</td>
+        <td th:text="${member.payerType}">Payer Type</td>
+        <td th:text="${member.joinDate}">Join Date</td>
+        <td th:text="${member.leaveDate}">Leave Date</td>
+        <td th:text="${member.email}">Email</td>
+        <td th:text="${member.landlineNumber}">Phone Number</td>
+        <td th:text="${member.mobileNumber}">Mobile Number</td>
+        <td th:text="${member.cardRequestDate}">Card Request Date</td>
+        <td th:text="${member.cardIssuedDate}">Card Issue Date</td>
+        <td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>
+        <td th:text="${member.comments}">Comments</td>
+
     </tr>
     </tbody>
 </table>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.dataTables.js"></script>
+
+<script>
+
+    $("#accordion").accordion();
+
+</script>
+
+<script type="text/javascript" language="javascript" class="init">
+
+    $(document).ready(function () {
+        $('#member_tab').DataTable();
+    });
+
+</script>
 </body>
 </html>
