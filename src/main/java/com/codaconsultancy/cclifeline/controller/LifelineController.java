@@ -5,6 +5,7 @@ import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -28,6 +29,12 @@ public class LifelineController {
         List<Member> allMembers = memberRepository.findAll();
         model.put("members", allMembers);
         return "index";
+    }
+
+    @RequestMapping("/member/{number}")
+    public String member(Map<String, Object> model, @PathVariable String number) {
+        model.put("memberNumber", number);
+        return "member";
     }
 
 }
