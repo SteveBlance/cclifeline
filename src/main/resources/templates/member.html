@@ -12,6 +12,88 @@
 <body>
 <div class="starter-template">
     <h1>Member Details : <span th:text="${memberNumber}"/></h1>
+
+    <table>
+        <table id="member_tab" class="stripe hover compact" cellspacing="0" width="50%">
+            <thead></thead>
+            <tbody>
+            <tr>
+                <td>Membership No</td>
+                <td th:text="${member.membershipNumber}">Membership No</td>
+            </tr>
+            <tr>
+                <td>Forename</td>
+                <td th:text="${member.forename}">Forename</td>
+            </tr>
+            <tr>
+                <td>Surname</td>
+                <td th:text="${member.surname}">Surname</td>
+            </tr>
+            <tr>
+                <td>Membership Type</td>
+                <td th:text="${member.membershipType}">Membership Type</td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td th:text="${member.status}">Status</td>
+            </tr>
+            <tr>
+                <td>Payer Type</td>
+                <td th:text="${member.payerType}">Payer Type</td>
+            </tr>
+            <tr>
+                <td>Join Date</td>
+                <td th:text="${member.joinDate}">Join Date</td>
+            </tr>
+            <tr>
+                <td>Leave Date</td>
+                <td th:text="${member.leaveDate}">Leave Date</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td th:text="${member.email}">Email</td>
+            </tr>
+            <tr>
+                <td>Phone Number</td>
+                <td th:text="${member.landlineNumber}">Phone Number</td>
+            </tr>
+            <tr>
+                <td>Mobile Number</td>
+                <td th:text="${member.mobileNumber}">Mobile Number</td>
+            </tr>
+            <tr>
+                <td>Card Request Date</td>
+                <td th:text="${member.cardRequestDate}">Card Request Date</td>
+            </tr>
+            <tr>
+                <td>Card Issue Date</td>
+                <td th:text="${member.cardIssuedDate}">Card Issue Date</td>
+            </tr>
+            <tr>
+                <td>Welcome Letter Issue Date</td>
+                <td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>
+            </tr>
+            <tr>
+                <td>Comments</td>
+                <td th:text="${member.comments}">Comments</td>
+            </tr>
+            </tbody>
+        </table>
+    </table>
 </div>
+
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.dataTables.js"></script>
+
+
+<script type="text/javascript" language="javascript" class="init">
+
+    $(document).ready(function () {
+        $('#member_tab').DataTable();
+    });
+
+</script>
 </body>
 </html>

@@ -13,13 +13,12 @@
 <div class="starter-template">
     <h1>Centenary Club Lifeline</h1>
     <h2 th:text="${message}"></h2>
-    <p>User count <span th:text="${userCount}"/></p>
+    <p>Member count <span th:text="${memberCount}"/></p>
 </div>
 
-<table id="member_tab" class="stripe hover compact" cellspacing="0" width="100%">
+<table id="members_tab" class="stripe hover compact" cellspacing="0" width="100%">
     <thead>
     <tr>
-        <th></th>
         <th>Member No</th>
         <th>Forename</th>
         <th>Surname</th>
@@ -73,7 +72,7 @@
 <script type="text/javascript" language="javascript" class="init">
 
     $(document).ready(function () {
-        $('#member_tab').DataTable();
+        $('#members_tab').DataTable();
     });
 
 </script>

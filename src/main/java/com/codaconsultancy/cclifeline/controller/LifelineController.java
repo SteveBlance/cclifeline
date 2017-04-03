@@ -25,7 +25,7 @@ public class LifelineController {
     public String home(Map<String, Object> model) {
         long count = memberRepository.count();
         model.put("message", this.message);
-        model.put("userCount", count);
+        model.put("memberCount", count);
         List<Member> allMembers = memberRepository.findAll();
         model.put("members", allMembers);
         return "index";
@@ -34,6 +34,9 @@ public class LifelineController {
     @RequestMapping("/member/{number}")
     public String member(Map<String, Object> model, @PathVariable String number) {
         model.put("memberNumber", number);
+        Long memberNumber = Long.parseLong(number);
+        Member member = memberRepository.findByMembershipNumber(memberNumber);
+        model.put("member", member);
         return "member";
     }
 
