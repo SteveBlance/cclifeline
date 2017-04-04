@@ -15,8 +15,4 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
-
-
-
-
 }

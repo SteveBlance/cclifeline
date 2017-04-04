@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    public List<Payment> findByMember(Member member);
+    List<Payment> findByMember(Member member);
 
 }
