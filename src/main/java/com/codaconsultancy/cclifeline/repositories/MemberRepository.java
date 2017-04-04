@@ -7,4 +7,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     long count();
 
+    Member findByMembershipNumber(Long membershipNumber);
 }
