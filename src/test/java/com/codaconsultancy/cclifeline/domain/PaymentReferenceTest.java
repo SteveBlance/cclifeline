@@ -1,7 +1,5 @@
-package com.codaconsultancy.cclifline.domain;
+package com.codaconsultancy.cclifeline.domain;
 
-import com.codaconsultancy.cclifeline.domain.Member;
-import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import org.junit.Before;
 import org.junit.Test;
 
