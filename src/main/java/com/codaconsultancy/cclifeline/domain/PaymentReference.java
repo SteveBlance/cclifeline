@@ -6,6 +6,16 @@ import javax.persistence.*;
 @Table(name = "PAYMENT_REFERENCES")
 public class PaymentReference {
 
+    public PaymentReference() {
+    }
+
+    public PaymentReference(String reference, String name, Boolean isActive, Member member) {
+        this.reference = reference;
+        this.name = name;
+        this.isActive = isActive;
+        this.member = member;
+    }
+
     @Id
     @GeneratedValue
     private Long id;

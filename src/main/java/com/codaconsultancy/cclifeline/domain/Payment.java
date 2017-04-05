@@ -7,6 +7,15 @@ import java.util.Date;
 @Table(name = "PAYMENTS")
 public class Payment {
 
+    public Payment() {
+    }
+
+    public Payment(Date paymentDate, Float paymentAmount, String creditedAccount) {
+        this.paymentDate = paymentDate;
+        this.paymentAmount = paymentAmount;
+        this.creditedAccount = creditedAccount;
+    }
+
     @Id
     @GeneratedValue
     private Long id;

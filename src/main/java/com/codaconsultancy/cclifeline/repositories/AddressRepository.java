@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
 
-    public List<Address> findByMember(Member member);
+    List<Address> findByMember(Member member);
 
-
+    List<Address> findByMemberAndIsActive(Member member, boolean isActive);
 }

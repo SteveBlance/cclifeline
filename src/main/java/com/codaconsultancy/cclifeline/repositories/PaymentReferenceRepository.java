@@ -10,4 +10,5 @@ public interface PaymentReferenceRepository extends JpaRepository<PaymentReferen
 
     List<PaymentReference> findByMember(Member member);
 
+    List<PaymentReference> findByMemberAndIsActive(Member member, boolean isActive);
 }

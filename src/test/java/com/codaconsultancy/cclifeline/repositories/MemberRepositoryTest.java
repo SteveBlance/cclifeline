@@ -8,13 +8,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Calendar;
-
 @SpringBootTest(classes = Member.class)
 public class MemberRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     private Member member1;
     private Member member2;
@@ -51,30 +49,18 @@ public class MemberRepositoryTest extends BaseRepositoryTest {
     @Test
     public void findByMembershipNumber() {
         Member foundMember = memberRepository.findByMembershipNumber(1818L);
+        Assert.assertEquals("Frank", foundMember.getForename());
+        Assert.assertEquals("Jones", foundMember.getSurname());
         Assert.assertEquals("frank@email.com", foundMember.getEmail());
+
         foundMember = memberRepository.findByMembershipNumber(1819L);
         Assert.assertEquals("Jane", foundMember.getForename());
         Assert.assertEquals("Smith", foundMember.getSurname());
         Assert.assertEquals("jsmith@email.com", foundMember.getEmail());
+
         foundMember = memberRepository.findByMembershipNumber(9900L);
         Assert.assertNull(foundMember);
 
-    }
-
-    private Member newMember(long membershipNumber, String forename, String surname, String email, String landlineNumber, String mobileNumber, String payerType, String membershipType, String comments, String status) {
-        Member member = new Member();
-        member.setMembershipNumber(membershipNumber);
-        member.setForename(forename);
-        member.setSurname(surname);
-        member.setEmail(email);
-        member.setLandlineNumber(landlineNumber);
-        member.setMobileNumber(mobileNumber);
-        member.setPayerType(payerType);
-        member.setMembershipType(membershipType);
-        member.setJoinDate(Calendar.getInstance().getTime());
-        member.setComments(comments);
-        member.setStatus(status);
-        return member;
     }
 
 }
