@@ -2,6 +2,7 @@ package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
+import com.codaconsultancy.cclifeline.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,16 +18,19 @@ public class LifelineController {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    private MemberService memberService;
+
     // inject via application.properties
     @Value("${welcome.message:test}")
     private String message = "Hello World";
 
     @RequestMapping("/")
     public String home(Map<String, Object> model) {
-        long count = memberRepository.count();
+        long count = memberService.countAllMembers();
         model.put("message", this.message);
         model.put("memberCount", count);
-        List<Member> allMembers = memberRepository.findAll();
+        List<Member> allMembers = memberService.findAllMembers();
         model.put("members", allMembers);
         return "index";
     }
@@ -35,7 +39,7 @@ public class LifelineController {
     public String member(Map<String, Object> model, @PathVariable String number) {
         model.put("memberNumber", number);
         Long memberNumber = Long.parseLong(number);
-        Member member = memberRepository.findByMembershipNumber(memberNumber);
+        Member member = memberService.findMemberByMembershipNumber(memberNumber);
         model.put("member", member);
         return "member";
     }

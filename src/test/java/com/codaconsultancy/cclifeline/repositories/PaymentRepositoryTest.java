@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.repositories;
 
+import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import org.junit.After;
@@ -26,7 +27,7 @@ public class PaymentRepositoryTest extends BaseRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        member = newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
+        member = TestHelper.newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
         entityManager.persist(member);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date1 = simpleDateFormat.parse("23/11/2014");
@@ -53,6 +54,7 @@ public class PaymentRepositoryTest extends BaseRepositoryTest {
     @Test
     public void findByMember() throws Exception {
         List<Payment> paymentsByMember = paymentRepository.findByMember(member);
+
         assertEquals(1, paymentsByMember.size());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         assertEquals("23/11/2014", simpleDateFormat.format(paymentsByMember.get(0).getPaymentDate()));

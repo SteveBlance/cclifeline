@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.repositories;
 
+import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
 import org.junit.After;
@@ -26,7 +27,7 @@ public class AddressRepositoryTest extends BaseRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        member = newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
+        member = TestHelper.newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
         entityManager.persist(member);
 
         address1 = new Address();

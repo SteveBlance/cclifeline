@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.repositories;
 
+import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import org.junit.After;
 import org.junit.Assert;
@@ -21,10 +22,10 @@ public class MemberRepositoryTest extends BaseRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        member1 = newMember(1818L, "Frank", "Jones", "frank@email.com", "013177766655", "07712312312", "Monthly", "Lifeline", "New member", "Open");
-        member2 = newMember(1819L, "Jane", "Smith", "jsmith@email.com", "01383772233", "07777777766", "Monthly", "Lifeline", "Was a legacy member", "Open");
-        member3 = newMember(1820L, "Bill", "Wilson", "billy@email.com", "01383999999", null, "Annual", "Legacy", "Old member", "Open");
-        member4 = newMember(1821L, "Jimmy", "Jimmieson", "jj@email.com", "01383000111", null, "Monthly", "Legacy", "Old member", "Closed");
+        member1 = TestHelper.newMember(1818L, "Frank", "Jones", "frank@email.com", "013177766655", "07712312312", "Monthly", "Lifeline", "New member", "Open");
+        member2 = TestHelper.newMember(1819L, "Jane", "Smith", "jsmith@email.com", "01383772233", "07777777766", "Monthly", "Lifeline", "Was a legacy member", "Open");
+        member3 = TestHelper.newMember(1820L, "Bill", "Wilson", "billy@email.com", "01383999999", null, "Annual", "Legacy", "Old member", "Open");
+        member4 = TestHelper.newMember(1821L, "Jimmy", "Jimmieson", "jj@email.com", "01383000111", null, "Monthly", "Legacy", "Old member", "Closed");
         entityManager.persist(member1);
         entityManager.persist(member2);
         entityManager.persist(member3);

@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.repositories;
 
+import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import org.junit.After;
@@ -24,7 +25,7 @@ public class PaymentReferenceRepositoryTest extends BaseRepositoryTest {
 
     @Before
     public void setUp() throws Exception {
-        member = newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
+        member = TestHelper.newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
         entityManager.persist(member);
 
         paymentReference1 = new PaymentReference("FPS CREDIT 1578", "H SMITH", false, member);

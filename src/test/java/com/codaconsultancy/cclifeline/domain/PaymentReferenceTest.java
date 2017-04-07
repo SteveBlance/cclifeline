@@ -54,7 +54,8 @@ public class PaymentReferenceTest {
         Member member = new Member();
         member.setSurname("Petrie");
         PaymentReference paymentReference = new PaymentReference("FPS CREDIT 9988", "H PETRIE", true, member);
-        assertEquals("FPS CREDIT 9988 H PETRIE", paymentReference.getReference());
+        assertEquals("FPS CREDIT 9988", paymentReference.getReference());
+        assertEquals("H PETRIE", paymentReference.getName());
         assertEquals("Petrie", paymentReference.getMember().getSurname());
         assertTrue(paymentReference.getIsActive());
     }
