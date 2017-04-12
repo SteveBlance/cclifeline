@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -41,6 +42,29 @@ public class MemberServiceTest {
         List<Member> allMembers = memberService.findAllMembers();
 
         verify(memberRepository, times(1)).findAll();
+        assertEquals(3, allMembers.size());
     }
+
+    @Test
+    public void countMembers() {
+        when(memberRepository.count()).thenReturn(87L);
+
+        Long memberCount = memberService.countAllMembers();
+
+        verify(memberRepository, times(1)).count();
+        assertEquals(87L, memberCount.longValue());
+    }
+
+    public void findMemberByMembershipNumber_success() {
+        Member member = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+
+        when(memberRepository.findByMembershipNumber(1234L)).thenReturn(member);
+
+        Member foundMember = memberService.findMemberByMembershipNumber(1234L);
+
+        verify(memberRepository, times(1)).findByMembershipNumber(1234L);
+        assertEquals("fz@email.com", foundMember.getEmail());
+    }
+
 
 }
