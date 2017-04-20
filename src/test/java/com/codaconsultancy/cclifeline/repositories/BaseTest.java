@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @EntityScan("com.codaconsultancy.cclifeline.domain")
-public abstract class BaseRepositoryTest {
+public abstract class BaseTest {
 
     @Autowired
     protected TestEntityManager entityManager;

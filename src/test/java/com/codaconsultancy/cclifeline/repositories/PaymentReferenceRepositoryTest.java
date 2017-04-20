@@ -14,7 +14,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest(classes = PaymentReference.class)
-public class PaymentReferenceRepositoryTest extends BaseRepositoryTest {
+public class PaymentReferenceRepositoryTest extends BaseTest {
 
     @Autowired
     private PaymentReferenceRepository paymentReferenceRepository;

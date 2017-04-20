@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 @SpringBootTest(classes = Address.class)
-public class AddressRepositoryTest extends BaseRepositoryTest {
+public class AddressRepositoryTest extends BaseTest {
 
     @Autowired
     private AddressRepository addressRepository;

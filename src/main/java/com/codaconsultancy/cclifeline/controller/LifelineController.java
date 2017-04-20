@@ -4,7 +4,6 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,14 +20,10 @@ public class LifelineController {
     @Autowired
     private MemberService memberService;
 
-    // inject via application.properties
-    @Value("${welcome.message:test}")
-    private String message = "Hello World";
-
     @RequestMapping("/")
     public String home(Map<String, Object> model) {
         long count = memberService.countAllMembers();
-        model.put("message", this.message);
+        model.put("message", "Hello World");
         model.put("memberCount", count);
         List<Member> allMembers = memberService.findAllMembers();
         model.put("members", allMembers);

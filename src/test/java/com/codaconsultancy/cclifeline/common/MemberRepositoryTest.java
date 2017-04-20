@@ -1,7 +1,8 @@
-package com.codaconsultancy.cclifeline.repositories;
+package com.codaconsultancy.cclifeline.common;
 
-import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.repositories.BaseTest;
+import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -10,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(classes = Member.class)
-public class MemberRepositoryTest extends BaseRepositoryTest {
+public class MemberRepositoryTest extends BaseTest {
 
     @Autowired
     private MemberRepository memberRepository;

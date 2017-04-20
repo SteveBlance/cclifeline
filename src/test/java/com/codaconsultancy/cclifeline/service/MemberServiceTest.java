@@ -55,6 +55,7 @@ public class MemberServiceTest {
         assertEquals(87L, memberCount.longValue());
     }
 
+    @Test
     public void findMemberByMembershipNumber_success() {
         Member member = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
 
