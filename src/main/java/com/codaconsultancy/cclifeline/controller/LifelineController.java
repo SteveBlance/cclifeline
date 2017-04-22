@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,10 @@ public class LifelineController {
         return "index";
     }
 
-    @RequestMapping("/member/{number}")
-    public String member(Map<String, Object> model, @PathVariable String number) {
+    @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)
+    public String memberDetails(Map<String, Object> model, @PathVariable Long number) {
         model.put("memberNumber", number);
-        Long memberNumber = Long.parseLong(number);
-        Member member = memberService.findMemberByMembershipNumber(memberNumber);
+        Member member = memberService.findMemberByMembershipNumber(number);
         model.put("member", member);
         return "member";
     }
