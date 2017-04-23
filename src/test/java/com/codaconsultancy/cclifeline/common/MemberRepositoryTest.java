@@ -4,11 +4,13 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @SpringBootTest(classes = Member.class)
 public class MemberRepositoryTest extends BaseTest {
@@ -45,23 +47,30 @@ public class MemberRepositoryTest extends BaseTest {
     @Test
     public void count() throws Exception {
         long membersInDatabase = memberRepository.count();
-        Assert.assertEquals(4L, membersInDatabase);
+        assertEquals(4L, membersInDatabase);
     }
 
     @Test
     public void findByMembershipNumber() {
         Member foundMember = memberRepository.findByMembershipNumber(1818L);
-        Assert.assertEquals("Frank", foundMember.getForename());
-        Assert.assertEquals("Jones", foundMember.getSurname());
-        Assert.assertEquals("frank@email.com", foundMember.getEmail());
+        assertEquals("Frank", foundMember.getForename());
+        assertEquals("Jones", foundMember.getSurname());
+        assertEquals("frank@email.com", foundMember.getEmail());
 
         foundMember = memberRepository.findByMembershipNumber(1819L);
-        Assert.assertEquals("Jane", foundMember.getForename());
-        Assert.assertEquals("Smith", foundMember.getSurname());
-        Assert.assertEquals("jsmith@email.com", foundMember.getEmail());
+        assertEquals("Jane", foundMember.getForename());
+        assertEquals("Smith", foundMember.getSurname());
+        assertEquals("jsmith@email.com", foundMember.getEmail());
 
         foundMember = memberRepository.findByMembershipNumber(9900L);
-        Assert.assertNull(foundMember);
+        assertNull(foundMember);
+    }
+
+    @Test
+    public void nextMembershipNumber() {
+        Long nextMemberShipNumber = memberRepository.nextMembershipNumber();
+        Long expectedNextNumber = member4.getMembershipNumber() + 1L;
+        assertEquals(expectedNextNumber, nextMemberShipNumber);
 
     }
 

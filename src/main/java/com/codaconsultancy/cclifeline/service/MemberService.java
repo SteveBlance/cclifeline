@@ -25,4 +25,10 @@ public class MemberService {
     public Member findMemberByMembershipNumber(Long memberNumber) {
         return memberRepository.findByMembershipNumber(memberNumber);
     }
+
+    public Member saveMember(Member member) {
+        Long nextMembershipNumber = memberRepository.nextMembershipNumber();
+        member.setMembershipNumber(nextMembershipNumber);
+        return memberRepository.save(member);
+    }
 }

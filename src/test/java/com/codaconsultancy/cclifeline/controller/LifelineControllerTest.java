@@ -12,8 +12,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,16 +73,6 @@ public class LifelineControllerTest extends BaseTest {
 
     }
 
-    /*
-        public String member(Map<String, Object> model, @PathVariable String number) {
-        model.put("memberNumber", number);
-        Long memberNumber = Long.parseLong(number);
-        Member member = memberService.findMemberByMembershipNumber(memberNumber);
-        model.put("member", member);
-        return "member";
-    }
-     */
-
     @Test
     public void getMemberDetails() throws Exception {
         Map<String, Object> model = new HashMap<>();
@@ -89,6 +86,56 @@ public class LifelineControllerTest extends BaseTest {
         assertEquals("Bobby", ((Member) model.get("member")).getForename());
         assertEquals("member", response);
 
+    }
+
+    /*
+        @RequestMapping(value = "/member", method = RequestMethod.POST)
+    public ResponseEntity<?> addMember(@RequestBody Member member, UriComponentsBuilder ucBuilder)  {
+
+        memberService.saveMember(member);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(ucBuilder.path("/member/{number}").buildAndExpand(member.getMembershipNumber()).toUri());
+        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    }
+     */
+
+    @Test
+    public void addMember() {
+
+        Member member = TestHelper.newMember(0L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        HttpRequest request = getHttpRequest();
+
+        ResponseEntity<?> responseEntity = lifelineController.addMember(member, UriComponentsBuilder.fromHttpRequest(request));
+
+        verify(memberService, times(1)).saveMember(member);
+
+        assertEquals("{Location=[http://localhost:8080/member/0]}", responseEntity.getHeaders().toString());
+
+    }
+
+    private HttpRequest getHttpRequest() {
+        return new HttpRequest() {
+            @Override
+            public HttpMethod getMethod() {
+                return HttpMethod.POST;
+            }
+
+            @Override
+            public URI getURI() {
+                try {
+                    return new URI("http://localhost:8080");
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            public HttpHeaders getHeaders() {
+                return new HttpHeaders();
+            }
+        };
     }
 
 }
