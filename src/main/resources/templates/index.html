@@ -21,7 +21,9 @@
     <h2 th:text="${message}"></h2>
     <p>Member count <span th:text="${memberCount}"/></p>
 </div>
-
+<br/>
+<button th:onclick="window.location='/add-member.html'">Add New Member</button>
+<br/>
 <table id="members_tab" class="stripe hover compact" cellspacing="0" width="100%">
     <thead>
     <tr>

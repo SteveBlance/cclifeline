@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -88,18 +85,6 @@ public class LifelineControllerTest extends BaseTest {
 
     }
 
-    /*
-        @RequestMapping(value = "/member", method = RequestMethod.POST)
-    public ResponseEntity<?> addMember(@RequestBody Member member, UriComponentsBuilder ucBuilder)  {
-
-        memberService.saveMember(member);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/member/{number}").buildAndExpand(member.getMembershipNumber()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
-    }
-     */
-
     @Test
     public void addMember() {
 
@@ -111,6 +96,7 @@ public class LifelineControllerTest extends BaseTest {
         verify(memberService, times(1)).saveMember(member);
 
         assertEquals("{Location=[http://localhost:8080/member/0]}", responseEntity.getHeaders().toString());
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
     }
 
