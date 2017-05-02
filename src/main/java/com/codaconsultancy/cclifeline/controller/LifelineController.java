@@ -1,7 +1,6 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.Member;
-import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -19,9 +18,6 @@ import java.util.Map;
 
 @Controller
 public class LifelineController {
-
-    @Autowired
-    MemberRepository memberRepository;
 
     @Autowired
     private MemberService memberService;

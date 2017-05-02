@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableAutoConfiguration
 @ComponentScan({"com.codaconsultancy"})
 @EntityScan("com.codaconsultancy.cclifeline.domain")
-@EnableJpaRepositories("com.codaconsultancy.cclifeline.repository")
+@EnableJpaRepositories("com.codaconsultancy.cclifeline.repositories")
 public class SpringBootThymeleafApplication {
 
     public static void main(String[] args) {
