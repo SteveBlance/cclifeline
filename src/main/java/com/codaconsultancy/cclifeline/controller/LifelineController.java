@@ -24,12 +24,17 @@ public class LifelineController {
 
     @RequestMapping("/")
     public String home(Map<String, Object> model) {
+        return "index";
+    }
+
+    @RequestMapping("/members")
+    public String members(Map<String, Object> model) {
         long count = memberService.countAllMembers();
         model.put("message", "Hello World");
         model.put("memberCount", count);
         List<Member> allMembers = memberService.findAllMembers();
         model.put("members", allMembers);
-        return "index";
+        return "members";
     }
 
     @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)
@@ -48,6 +53,13 @@ public class LifelineController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/member/{number}").buildAndExpand(member.getMembershipNumber()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(value = "/add-member", method = RequestMethod.GET)
+    public String navigateToAddMember(Map<String, Object> model) {
+        Member member = new Member();
+        model.put("member", member);
+        return "add-member";
     }
 
 }

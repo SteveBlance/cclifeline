@@ -23,8 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -51,6 +50,15 @@ public class LifelineControllerTest extends BaseTest {
     @Test
     public void home() throws Exception {
         Map<String, Object> model = new HashMap<>();
+
+        String response = lifelineController.home(model);
+
+        assertEquals("index", response);
+    }
+
+    @Test
+    public void members() throws Exception {
+        Map<String, Object> model = new HashMap<>();
         when(memberService.countAllMembers()).thenReturn(2L);
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(123L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
@@ -59,14 +67,14 @@ public class LifelineControllerTest extends BaseTest {
         members.add(member2);
         when(memberService.findAllMembers()).thenReturn(members);
 
-        String response = lifelineController.home(model);
+        String response = lifelineController.members(model);
 
         verify(memberService, times(1)).countAllMembers();
         verify(memberService, times(1)).findAllMembers();
         assertEquals("Hello World", model.get("message"));
         assertEquals(2L, model.get("memberCount"));
         assertSame(members, model.get("members"));
-        assertEquals("index", response);
+        assertEquals("members", response);
 
     }
 
@@ -98,6 +106,15 @@ public class LifelineControllerTest extends BaseTest {
         assertEquals("{Location=[http://localhost:8080/member/0]}", responseEntity.getHeaders().toString());
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
 
+    }
+
+    @Test
+    public void navigateToAddMember() {
+        Map<String, Object> model = new HashMap<>();
+
+        String response = lifelineController.navigateToAddMember(model);
+        assertEquals("add-member", response);
+        assertTrue(model.get("member") instanceof Member);
     }
 
     private HttpRequest getHttpRequest() {

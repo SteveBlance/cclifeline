@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Centenary Club Lifeline</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"/>
+    <link rel="manifest" href="/images/manifest.json"/>
+    <meta name="msapplication-TileColor" content="#ffffff"/>
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png"/>
+    <meta name="theme-color" content="#ffffff"/>
+
+</head>
+<body>
+<div class="starter-template">
+    <h1>Centenary Club Lifeline</h1>
+    <h2 th:text="${message}"></h2>
+    <p>Member count <span th:text="${memberCount}"/></p>
+</div>
+<br/>
+<a th:href="@{/add-member}">Add New Member</a>
+<br/>
+<table id="members_tab" class="stripe hover compact" cellspacing="0" width="100%">
+    <thead>
+    <tr>
+        <th>Member No</th>
+        <th>Forename</th>
+        <th>Surname</th>
+        <th>Member Type</th>
+        <th>Status</th>
+        <th>Payer Type</th>
+        <th>Join Date</th>
+        <th>Leave Date</th>
+        <th>Email</th>
+        <th>Phone No</th>
+        <th>Mobile No</th>
+        <th>Card Requested</th>
+        <th>Card Issued</th>
+        <th>Welcome Letter Issued</th>
+        <th>Comments</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="member: ${members}" style="cursor: pointer"
+        th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">
+        <td th:text="${member.membershipNumber}">Membership No</td>
+        <td th:text="${member.forename}">Forename</td>
+        <td th:text="${member.surname}">Surname</td>
+        <td th:text="${member.membershipType}">Membership Type</td>
+        <td th:text="${member.status}">Status</td>
+        <td th:text="${member.payerType}">Payer Type</td>
+        <td th:text="${member.joinDate}">Join Date</td>
+        <td th:text="${member.leaveDate}">Leave Date</td>
+        <td th:text="${member.email}">Email</td>
+        <td th:text="${member.landlineNumber}">Phone Number</td>
+        <td th:text="${member.mobileNumber}">Mobile Number</td>
+        <td th:text="${member.cardRequestDate}">Card Request Date</td>
+        <td th:text="${member.cardIssuedDate}">Card Issue Date</td>
+        <td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>
+        <td th:text="${member.comments}">Comments</td>
+
+    </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.dataTables.js"></script>
+
+<script>
+    function rowClicked(value) {
+        location.href = "/member/" + value;
+    }
+</script>
+
+<script type="text/javascript" language="javascript" class="init">
+
+    $(document).ready(function () {
+        $('#members_tab').DataTable();
+    });
+
+</script>
+</body>
+</html>
