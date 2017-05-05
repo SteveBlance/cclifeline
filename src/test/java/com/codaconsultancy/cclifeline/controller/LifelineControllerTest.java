@@ -50,16 +50,18 @@ public class LifelineControllerTest extends BaseTest {
     @Test
     public void home() throws Exception {
         Map<String, Object> model = new HashMap<>();
+        when(memberService.countAllMembers()).thenReturn(22L);
 
         String response = lifelineController.home(model);
 
+        verify(memberService, times(1)).countAllMembers();
+        assertEquals(22L, model.get("memberCount"));
         assertEquals("index", response);
     }
 
     @Test
     public void members() throws Exception {
         Map<String, Object> model = new HashMap<>();
-        when(memberService.countAllMembers()).thenReturn(2L);
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(123L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         Member member2 = TestHelper.newMember(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
@@ -69,10 +71,7 @@ public class LifelineControllerTest extends BaseTest {
 
         String response = lifelineController.members(model);
 
-        verify(memberService, times(1)).countAllMembers();
         verify(memberService, times(1)).findAllMembers();
-        assertEquals("Hello World", model.get("message"));
-        assertEquals(2L, model.get("memberCount"));
         assertSame(members, model.get("members"));
         assertEquals("members", response);
 

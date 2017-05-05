@@ -24,14 +24,13 @@ public class LifelineController {
 
     @RequestMapping("/")
     public String home(Map<String, Object> model) {
+        long count = memberService.countAllMembers();
+        model.put("memberCount", count);
         return "index";
     }
 
     @RequestMapping("/members")
     public String members(Map<String, Object> model) {
-        long count = memberService.countAllMembers();
-        model.put("message", "Hello World");
-        model.put("memberCount", count);
         List<Member> allMembers = memberService.findAllMembers();
         model.put("members", allMembers);
         return "members";
