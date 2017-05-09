@@ -116,6 +116,36 @@ public class LifelineControllerTest extends BaseTest {
         assertTrue(model.get("member") instanceof Member);
     }
 
+    @Test
+    public void navigateToPayments() {
+        assertEquals("payments", lifelineController.navigateToPayments(new HashMap<>()));
+    }
+
+    @Test
+    public void navigateToAddPayment() {
+        assertEquals("add-payment", lifelineController.navigateToAddPayment(new HashMap<>()));
+    }
+
+    @Test
+    public void navigateToReports() {
+        assertEquals("reports", lifelineController.navigateToReports(new HashMap<>()));
+    }
+
+    @Test
+    public void navigateToWinners() {
+        assertEquals("winners", lifelineController.navigateToWinners(new HashMap<>()));
+    }
+
+    @Test
+    public void navigateMakeDraw() {
+        assertEquals("make-draw", lifelineController.navigateMakeDraw(new HashMap<>()));
+    }
+
+    @Test
+    public void navigateExportData() {
+        assertEquals("export-data", lifelineController.navigateExportData(new HashMap<>()));
+    }
+
     private HttpRequest getHttpRequest() {
         return new HttpRequest() {
             @Override

@@ -61,4 +61,34 @@ public class LifelineController {
         return "add-member";
     }
 
+    @RequestMapping(value = "/payments", method = RequestMethod.GET)
+    public String navigateToPayments(Map<String, Object> model) {
+        return "payments";
+    }
+
+    @RequestMapping(value = "/add-payment", method = RequestMethod.GET)
+    public String navigateToAddPayment(Map<String, Object> model) {
+        return "add-payment";
+    }
+
+    @RequestMapping(value = "/reports", method = RequestMethod.GET)
+    public String navigateToReports(Map<String, Object> model) {
+        return "reports";
+    }
+
+    @RequestMapping(value = "/winners", method = RequestMethod.GET)
+    public String navigateToWinners(Map<String, Object> model) {
+        return "winners";
+    }
+
+    @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
+    public String navigateMakeDraw(Map<String, Object> model) {
+        return "make-draw";
+    }
+
+    @RequestMapping(value = "/export-data", method = RequestMethod.GET)
+    public String navigateExportData(Map<String, Object> model) {
+        return "export-data";
+    }
+
 }

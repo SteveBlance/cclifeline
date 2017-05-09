@@ -2,7 +2,6 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Centenary Club Lifeline - Member details</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="/css/jquery-ui.css"/>
     <link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css"/>
@@ -14,93 +13,130 @@
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png"/>
     <meta name="theme-color" content="#ffffff"/>
 
+    <title>Centenary Club Lifeline - Member Details</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+
+    <!-- MetisMenu CSS -->
+    <link th:href="@{/vendor/metisMenu/metisMenu.min.css}" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link th:href="@{/dist/css/sb-admin-2.css}" rel="stylesheet"/>
+
+    <!-- Morris Charts CSS -->
+    <link th:href="@{/vendor/morrisjs/morris.css}" rel="stylesheet"/>
+
+    <!-- Custom Fonts -->
+    <link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script th:src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script th:src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 
 </head>
 <body>
-<div class="starter-template">
-    <h1>Member Details : <span th:text="${memberNumber}"/></h1>
+<div id="wrapper">
 
-    <table>
-        <table id="member_tab" class="stripe hover compact" cellspacing="0" width="50%">
-            <thead></thead>
-            <tbody>
-            <tr>
-                <td>Membership No</td>
-                <td th:text="${member.membershipNumber}">Membership No</td>
-            </tr>
-            <tr>
-                <td>Forename</td>
-                <td th:text="${member.forename}">Forename</td>
-            </tr>
-            <tr>
-                <td>Surname</td>
-                <td th:text="${member.surname}">Surname</td>
-            </tr>
-            <tr>
-                <td>Membership Type</td>
-                <td th:text="${member.membershipType}">Membership Type</td>
-            </tr>
-            <tr>
-                <td>Status</td>
-                <td th:text="${member.status}">Status</td>
-            </tr>
-            <tr>
-                <td>Payer Type</td>
-                <td th:text="${member.payerType}">Payer Type</td>
-            </tr>
-            <tr>
-                <td>Join Date</td>
-                <td th:text="${member.joinDate}">Join Date</td>
-            </tr>
-            <tr>
-                <td>Leave Date</td>
-                <td th:text="${member.leaveDate}">Leave Date</td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td th:text="${member.email}">Email</td>
-            </tr>
-            <tr>
-                <td>Phone Number</td>
-                <td th:text="${member.landlineNumber}">Phone Number</td>
-            </tr>
-            <tr>
-                <td>Mobile Number</td>
-                <td th:text="${member.mobileNumber}">Mobile Number</td>
-            </tr>
-            <tr>
-                <td>Card Request Date</td>
-                <td th:text="${member.cardRequestDate}">Card Request Date</td>
-            </tr>
-            <tr>
-                <td>Card Issue Date</td>
-                <td th:text="${member.cardIssuedDate}">Card Issue Date</td>
-            </tr>
-            <tr>
-                <td>Welcome Letter Issue Date</td>
-                <td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>
-            </tr>
-            <tr>
-                <td>Comments</td>
-                <td th:text="${member.comments}">Comments</td>
-            </tr>
-            </tbody>
+    <!-- Navigation -->
+    <div th:include="/fragments/navigation :: header-side-nav"></div>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Member Details : <span th:text="${memberNumber}"/></h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <br/>
+
+        <table>
+            <table id="member_tab" class="stripe hover compact" cellspacing="0" width="50%">
+                <thead></thead>
+                <tbody>
+                <tr>
+                    <td>Membership No</td>
+                    <td th:text="${member.membershipNumber}">Membership No</td>
+                </tr>
+                <tr>
+                    <td>Forename</td>
+                    <td th:text="${member.forename}">Forename</td>
+                </tr>
+                <tr>
+                    <td>Surname</td>
+                    <td th:text="${member.surname}">Surname</td>
+                </tr>
+                <tr>
+                    <td>Membership Type</td>
+                    <td th:text="${member.membershipType}">Membership Type</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td th:text="${member.status}">Status</td>
+                </tr>
+                <tr>
+                    <td>Payer Type</td>
+                    <td th:text="${member.payerType}">Payer Type</td>
+                </tr>
+                <tr>
+                    <td>Join Date</td>
+                    <td th:text="${member.joinDate}">Join Date</td>
+                </tr>
+                <tr>
+                    <td>Leave Date</td>
+                    <td th:text="${member.leaveDate}">Leave Date</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td th:text="${member.email}">Email</td>
+                </tr>
+                <tr>
+                    <td>Phone Number</td>
+                    <td th:text="${member.landlineNumber}">Phone Number</td>
+                </tr>
+                <tr>
+                    <td>Mobile Number</td>
+                    <td th:text="${member.mobileNumber}">Mobile Number</td>
+                </tr>
+                <tr>
+                    <td>Card Request Date</td>
+                    <td th:text="${member.cardRequestDate}">Card Request Date</td>
+                </tr>
+                <tr>
+                    <td>Card Issue Date</td>
+                    <td th:text="${member.cardIssuedDate}">Card Issue Date</td>
+                </tr>
+                <tr>
+                    <td>Welcome Letter Issue Date</td>
+                    <td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>
+                </tr>
+                <tr>
+                    <td>Comments</td>
+                    <td th:text="${member.comments}">Comments</td>
+                </tr>
+                </tbody>
+            </table>
         </table>
-    </table>
+    </div>
+
+
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="/js/jquery.dataTables.js"></script>
+
+
+    <script type="text/javascript" language="javascript" class="init">
+
+        $(document).ready(function () {
+            $('#member_tab').DataTable();
+        });
+
+    </script>
 </div>
 
-
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/jquery-ui.js"></script>
-<script type="text/javascript" src="/js/jquery.dataTables.js"></script>
-
-
-<script type="text/javascript" language="javascript" class="init">
-
-    $(document).ready(function () {
-        $('#member_tab').DataTable();
-    });
-
-</script>
 </body>
 </html>

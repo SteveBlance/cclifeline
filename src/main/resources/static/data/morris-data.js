@@ -55,7 +55,7 @@ $(function () {
         }],
         xkey: 'period',
         ykeys: ['iphone', 'ipad', 'itouch'],
-        labels: ['iPhone', 'iPad', 'iPod Touch'],
+        labels: ['New Members', 'Leaving Members', 'Deferments'],
         pointSize: 2,
         hideHover: 'auto',
         resize: true
@@ -64,14 +64,14 @@ $(function () {
     Morris.Donut({
         element: 'morris-donut-chart',
         data: [{
-            label: "Download Sales",
+            label: "Legacy Members",
             value: 12
         }, {
-            label: "In-Store Sales",
+            label: "Lifeline Members",
             value: 30
         }, {
-            label: "Mail-Order Sales",
-            value: 20
+            label: "Other Members",
+            value: 3
         }],
         resize: true
     });
