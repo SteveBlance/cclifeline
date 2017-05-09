@@ -32,6 +32,8 @@ public class LifelineController {
     @RequestMapping("/members")
     public String members(Map<String, Object> model) {
         List<Member> allMembers = memberService.findAllMembers();
+        long count = memberService.countAllMembers();
+        model.put("memberCount", count);
         model.put("members", allMembers);
         return "members";
     }

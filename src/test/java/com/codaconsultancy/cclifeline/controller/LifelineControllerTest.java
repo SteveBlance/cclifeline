@@ -67,11 +67,15 @@ public class LifelineControllerTest extends BaseTest {
         Member member2 = TestHelper.newMember(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
         members.add(member1);
         members.add(member2);
+        when(memberService.countAllMembers()).thenReturn(22L);
         when(memberService.findAllMembers()).thenReturn(members);
 
         String response = lifelineController.members(model);
 
         verify(memberService, times(1)).findAllMembers();
+
+        verify(memberService, times(1)).countAllMembers();
+        assertEquals(22L, model.get("memberCount"));
         assertSame(members, model.get("members"));
         assertEquals("members", response);
 

@@ -5,3 +5,8 @@ h1 {
 h2 {
     color: #FF0000;
 }
+
+.cclifeline-header {
+    padding-bottom: 9px;
+    margin: 10px 0 10px;
+}
