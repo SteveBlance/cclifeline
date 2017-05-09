@@ -3,8 +3,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link rel="stylesheet" href="/css/jquery-ui.css"/>
-    <link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css"/>
+    <link rel="stylesheet" th:href="@{/css/jquery-ui.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/jquery.dataTables.css}"/>
     <link th:href="@{/css/main.css}" rel="stylesheet"/>
     <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"/>
     <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png"/>
@@ -37,7 +37,15 @@
     <script th:src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script th:src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-
+    <script th:src="@{/js/jquery.js}"></script>
+    <script th:src="@{/js/jquery-ui.js}"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker({
+                dateFormat: "dd/mm/yy"
+            });
+        });
+    </script>
 
 </head>
 <body>
@@ -68,77 +76,89 @@
             </div>
         </div>
     </div>
+
     <form class="form-horizontal" th:object="${member}" th:action="@{/member}" method="post">
         <div class="form-group">
-            <label class="col-sm-2 control-label">Forename:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">Forename:</label>
+            <div class="col-sm-7">
                 <input type="text" class="form-control" th:field="*{forename}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Surname:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">Surname:</label>
+            <div class="col-sm-7">
                 <input type="text" class="form-control" th:field="*{surname}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Membership Type:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" th:field="*{membershipType}"/>
+            <label class="col-sm-3 control-label">Membership Type:</label>
+            <div class="col-sm-7">
+                <select class="form-control" th:field="*{membershipType}">
+                    <option th:value="Lifeline" th:selected="selected">Lifeline</option>
+                    <option th:value="Legacy">Legacy</option>
+                    <option th:value="PremiumLegacy">Premium Legacy</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Status:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" th:field="*{status}"/>
+            <label class="col-sm-3 control-label">Status:</label>
+            <div class="col-sm-7">
+                <select class="form-control" th:field="*{status}">
+                    <option th:value="Open" th:selected="selected">Open</option>
+                    <option th:value="Closed">Closed</option>
+                    <option th:value="Cancelled">Cancelled</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Payer Type:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" th:field="*{payerType}"/>
+            <label class="col-sm-3 control-label">Payer Type:</label>
+            <div class="col-sm-7">
+                <select class="form-control" th:field="*{payerType}">
+                    <option th:value="Monthly" th:selected="selected">Monthly</option>
+                    <option th:value="Annual">Annual</option>
+                </select>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Join Date:</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" th:field="*{joinDate}"/>
+            <label class="col-sm-3 control-label">Join Date:</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control datepicker" th:field="*{joinDate}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Email:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">Email:</label>
+            <div class="col-sm-7">
                 <input type="email" class="form-control" th:field="*{email}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Phone Number:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">Phone Number:</label>
+            <div class="col-sm-7">
                 <input type="text" class="form-control" th:field="*{landlineNumber}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Mobile Number:</label>
-            <div class="col-sm-10">
+            <label class="col-sm-3 control-label">Mobile Number:</label>
+            <div class="col-sm-7">
                 <input type="text" class="form-control" th:field="*{mobileNumber}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Card Request Date:</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" th:field="*{cardRequestDate}"/>
+            <label class="col-sm-3 control-label">Card Request Date:</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control datepicker" th:field="*{cardRequestDate}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Card Issue Date:</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" th:field="*{cardIssuedDate}"/>
+            <label class="col-sm-3 control-label">Card Issue Date:</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control datepicker" th:field="*{cardIssuedDate}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-2 control-label">Welcome Letter Issue Date:</label>
-            <div class="col-sm-10">
-                <input type="date" class="form-control" th:field="*{welcomeLetterIssuedDate}"/>
+            <label class="col-sm-3 control-label">Welcome Letter Issue Date:</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control datepicker" th:field="*{welcomeLetterIssuedDate}"/>
             </div>
         </div>
 
@@ -146,6 +166,7 @@
             <button type="submit" class="btn btn-default">Submit</button>
         </div>
     </form>
+    <br/>
 
 </div>
 
