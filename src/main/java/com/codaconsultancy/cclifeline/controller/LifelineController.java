@@ -2,17 +2,21 @@ package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.view.MemberViewBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.mustache.MustacheTemplateAvailabilityProvider;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -22,75 +26,77 @@ public class LifelineController {
     @Autowired
     private MemberService memberService;
 
+    private Logger logger = LoggerFactory.getLogger(LifelineController.class);
+
     @RequestMapping("/")
-    public String home(Map<String, Object> model) {
+    public ModelAndView home() {
         long count = memberService.countAllMembers();
-        model.put("memberCount", count);
-        return "index";
+        return modelAndView("index").addObject("memberCount", count);
     }
 
     @RequestMapping("/members")
-    public String members(Map<String, Object> model) {
+    public ModelAndView members() {
         List<Member> allMembers = memberService.findAllMembers();
         long count = memberService.countAllMembers();
-        model.put("memberCount", count);
-        model.put("members", allMembers);
-        return "members";
+        return modelAndView("members").addObject("memberCount", count).addObject("members", allMembers);
     }
 
     @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)
-    public String memberDetails(Map<String, Object> model, @PathVariable Long number) {
-        model.put("memberNumber", number);
+    public ModelAndView memberDetails(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
-        model.put("member", member);
-        return "member";
+        return modelAndView("member").addObject("member", member);
     }
 
     @RequestMapping(value = "/member", method = RequestMethod.POST)
-    public ResponseEntity<?> addMember(@RequestBody Member member, UriComponentsBuilder ucBuilder) {
+    public ModelAndView addMember(@Valid @ModelAttribute("member") MemberViewBean memberViewBean, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) {
+            logger.debug("Validation errors for member: ",memberViewBean);
+            return navigateToAddMember() ;
+        }
 
-        memberService.saveMember(member);
+        Member newMember = memberService.saveMember(memberViewBean.toEntity());
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/member/{number}").buildAndExpand(member.getMembershipNumber()).toUri());
-        return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
+        return memberDetails(newMember.getMembershipNumber());
     }
 
     @RequestMapping(value = "/add-member", method = RequestMethod.GET)
-    public String navigateToAddMember(Map<String, Object> model) {
-        Member member = new Member();
-        model.put("member", member);
-        return "add-member";
+    public ModelAndView navigateToAddMember() {
+        MemberViewBean member = new MemberViewBean();
+        return modelAndView("add-member").addObject("member", member);
     }
 
     @RequestMapping(value = "/payments", method = RequestMethod.GET)
-    public String navigateToPayments(Map<String, Object> model) {
-        return "payments";
+    public ModelAndView navigateToPayments() {
+        return modelAndView("payments");
     }
 
     @RequestMapping(value = "/add-payment", method = RequestMethod.GET)
-    public String navigateToAddPayment(Map<String, Object> model) {
-        return "add-payment";
+    public ModelAndView navigateToAddPayment() {
+        return modelAndView("add-payment");
     }
 
     @RequestMapping(value = "/reports", method = RequestMethod.GET)
-    public String navigateToReports(Map<String, Object> model) {
-        return "reports";
+    public ModelAndView navigateToReports() {
+        return modelAndView("reports");
     }
 
     @RequestMapping(value = "/winners", method = RequestMethod.GET)
-    public String navigateToWinners(Map<String, Object> model) {
-        return "winners";
+    public ModelAndView navigateToWinners() {
+        return modelAndView("winners");
     }
 
     @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
-    public String navigateMakeDraw(Map<String, Object> model) {
-        return "make-draw";
+    public ModelAndView navigateMakeDraw() {
+        return modelAndView("make-draw");
     }
 
     @RequestMapping(value = "/export-data", method = RequestMethod.GET)
-    public String navigateExportData(Map<String, Object> model) {
-        return "export-data";
+    public ModelAndView navigateExportData() {
+        return modelAndView("export-data");
+    }
+
+    private ModelAndView modelAndView(String page) {
+        return new ModelAndView(page);
     }
 
 }

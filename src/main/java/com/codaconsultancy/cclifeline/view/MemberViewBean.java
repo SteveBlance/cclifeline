@@ -1,74 +1,57 @@
-package com.codaconsultancy.cclifeline.domain;
+package com.codaconsultancy.cclifeline.view;
 
-import javax.persistence.*;
+import com.codaconsultancy.cclifeline.domain.Member;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Entity
-@Table(name = "MEMBERS")
-public class Member {
+public class MemberViewBean {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @NotNull()
-    @Column(name = "MEMBERSHIP_NUMBER")
     private Long membershipNumber;
 
     @NotNull
-    @Column(name = "MEMBERSHIP_TYPE")
     private String membershipType;
 
     @NotNull
-    @Column(name = "STATUS")
     private String status;
 
     @NotNull
-    @Column(name = "FORENAME")
     private String forename;
 
     @NotNull
-    @Column(name = "SURNAME")
     private String surname;
 
     @NotNull
-    @Column(name = "PAYER_TYPE")
     private String payerType;
 
-    @Column(name = "JOIN_DATE")
+    @NotNull
     private Date joinDate;
 
-    @Column(name = "LEAVE_DATE")
     private Date leaveDate;
 
-    @Column(name = "COMMENTS")
     private String comments;
 
-    @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "LANDLINE_NUMBER")
     private String landlineNumber;
 
-    @Column(name = "MOBILE_NUMBER")
     private String mobileNumber;
 
-    @Column(name = "CARD_REQUEST_DATE")
     private Date cardRequestDate;
 
-    @Column(name = "CARD_ISSUED_DATE")
     private Date cardIssuedDate;
 
-    @Column(name = "WELCOME_LETTER_ISSUED_DATE")
     private Date welcomeLetterIssuedDate;
 
-    public Long getId() {
-        return id;
+    public Long getMembershipNumber() {
+        return membershipNumber;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setMembershipNumber(Long membershipNumber) {
+        this.membershipNumber = membershipNumber;
     }
 
     public String getMembershipType() {
@@ -159,14 +142,6 @@ public class Member {
         this.mobileNumber = mobileNumber;
     }
 
-    public void setMembershipNumber(Long membershipNumber) {
-        this.membershipNumber = membershipNumber;
-    }
-
-    public Long getMembershipNumber() {
-        return membershipNumber;
-    }
-
     public Date getCardRequestDate() {
         return cardRequestDate;
     }
@@ -189,5 +164,11 @@ public class Member {
 
     public void setWelcomeLetterIssuedDate(Date welcomeLetterIssuedDate) {
         this.welcomeLetterIssuedDate = welcomeLetterIssuedDate;
+    }
+
+    public Member toEntity() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(this, Member.class);
     }
 }

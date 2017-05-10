@@ -10,3 +10,7 @@ h2 {
     padding-bottom: 9px;
     margin: 10px 0 10px;
 }
+
+.form-group .required .control-label:after {
+    content:"*";color:red;
+}

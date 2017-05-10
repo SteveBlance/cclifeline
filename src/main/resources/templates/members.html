@@ -70,9 +70,6 @@
             </div>
         </div>
 
-        <br/>
-        <a th:href="@{/add-member}">Add New Member</a>
-        <br/>
         <table id="members_tab" class="table-condensed table-striped table-bordered table-hover" cellspacing="0" width="100%">
             <thead>
             <tr>
@@ -102,14 +99,20 @@
                 <td th:text="${member.membershipType}">Membership Type</td>
                 <td th:text="${member.status}">Status</td>
                 <td th:text="${member.payerType}">Payer Type</td>
-                <td th:text="${member.joinDate}">Join Date</td>
-                <td th:text="${member.leaveDate}">Leave Date</td>
+                <td th:text="${member.joinDate} ? ${#dates.format(member.joinDate, 'dd/MM/yyyy')}">Join Date</td>
+                <td th:text="${member.leaveDate} ? ${#dates.format(member.leaveDate, 'dd/MM/yyyy')}">Leave Date</td>
                 <td th:text="${member.email}">Email</td>
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
-                <td th:text="${member.cardRequestDate}">Card Request Date</td>
-                <td th:text="${member.cardIssuedDate}">Card Issue Date</td>
-                <td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>
+                <td th:text="${member.cardRequestDate} ? ${#dates.format(member.cardRequestDate, 'dd/MM/yyyy')}">Card
+                    Request Date
+                </td>
+                <td th:text="${member.cardIssuedDate} ? ${#dates.format(member.cardIssuedDate, 'dd/MM/yyyy')}">Card
+                    Issue Date
+                </td>
+                <td th:text="${member.welcomeLetterIssuedDate} ? ${#dates.format(member.welcomeLetterIssuedDate, 'dd/MM/yyyy')}">
+                    Welcome Letter Issue Date
+                </td>
                 <td th:text="${member.comments}">Comments</td>
 
             </tr>
@@ -133,6 +136,11 @@
             });
 
         </script>
+
+        <br/>
+        <div class="row">
+            <a th:href="@{/}" class="btn btn-default active" role="button">Back</a>
+        </div>
     </div>
 </div>
 </body>

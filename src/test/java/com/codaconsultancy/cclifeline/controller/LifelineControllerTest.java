@@ -4,24 +4,27 @@ import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.MemberService;
-import org.junit.After;
-import org.junit.Before;
+import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.util.UriComponentsBuilder;
+import org.springframework.validation.AbstractBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -37,31 +40,19 @@ public class LifelineControllerTest extends BaseTest {
     @MockBean
     MemberService memberService;
 
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void home() throws Exception {
-        Map<String, Object> model = new HashMap<>();
         when(memberService.countAllMembers()).thenReturn(22L);
 
-        String response = lifelineController.home(model);
+        ModelAndView response = lifelineController.home();
 
         verify(memberService, times(1)).countAllMembers();
-        assertEquals(22L, model.get("memberCount"));
-        assertEquals("index", response);
+        assertEquals(22L, response.getModel().get("memberCount"));
+        assertEquals("index", response.getViewName());
     }
 
     @Test
     public void members() throws Exception {
-        Map<String, Object> model = new HashMap<>();
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(123L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         Member member2 = TestHelper.newMember(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
@@ -70,84 +61,113 @@ public class LifelineControllerTest extends BaseTest {
         when(memberService.countAllMembers()).thenReturn(22L);
         when(memberService.findAllMembers()).thenReturn(members);
 
-        String response = lifelineController.members(model);
+        ModelAndView response = lifelineController.members();
 
         verify(memberService, times(1)).findAllMembers();
 
         verify(memberService, times(1)).countAllMembers();
-        assertEquals(22L, model.get("memberCount"));
-        assertSame(members, model.get("members"));
-        assertEquals("members", response);
-
+        assertEquals(22L, response.getModel().get("memberCount"));
+        assertSame(members, response.getModel().get("members"));
+        assertEquals("members", response.getViewName());
     }
 
     @Test
     public void getMemberDetails() throws Exception {
-        Map<String, Object> model = new HashMap<>();
         long memberNumber = 1234L;
         Member member1234 = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
 
-        String response = lifelineController.memberDetails(model, memberNumber);
+        ModelAndView response = lifelineController.memberDetails(memberNumber);
 
         verify(memberService, times(1)).findMemberByMembershipNumber(1234L);
-        assertEquals("Bobby", ((Member) model.get("member")).getForename());
-        assertEquals("member", response);
+        assertEquals("Bobby", ((Member) response.getModel().get("member")).getForename());
+        assertEquals("member", response.getViewName());
 
     }
 
     @Test
-    public void addMember() {
+    public void addMember_success() {
 
-        Member member = TestHelper.newMember(0L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
-        HttpRequest request = getHttpRequest();
+        MemberViewBean memberViewBean = TestHelper.newMemberViewBean(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        Member member = memberViewBean.toEntity();
+        when(memberService.saveMember(any(Member.class))).thenReturn(member);
+        BindingResult bindingResult = new AbstractBindingResult("member") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
 
-        ResponseEntity<?> responseEntity = lifelineController.addMember(member, UriComponentsBuilder.fromHttpRequest(request));
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+        ModelAndView modelAndView = lifelineController.addMember(memberViewBean, bindingResult);
 
-        verify(memberService, times(1)).saveMember(member);
+        verify(memberService, times(1)).saveMember(any(Member.class));
 
-        assertEquals("{Location=[http://localhost:8080/member/0]}", responseEntity.getHeaders().toString());
-        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals("member", modelAndView.getViewName());
+    }
 
+    @Test
+    public void addMember_validationErrors() {
+
+        MemberViewBean memberViewBean = TestHelper.newMemberViewBean(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        Member member = memberViewBean.toEntity();
+        BindingResult bindingResult = new AbstractBindingResult("member") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
+
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+        bindingResult.addError(new ObjectError("surname", "Surname cannot be blank"));
+        ModelAndView modelAndView = lifelineController.addMember(memberViewBean, bindingResult);
+
+        verify(memberService, never()).saveMember(member);
+
+        assertEquals("add-member", modelAndView.getViewName());
     }
 
     @Test
     public void navigateToAddMember() {
-        Map<String, Object> model = new HashMap<>();
-
-        String response = lifelineController.navigateToAddMember(model);
-        assertEquals("add-member", response);
-        assertTrue(model.get("member") instanceof Member);
+        ModelAndView response = lifelineController.navigateToAddMember();
+        assertEquals("add-member", response.getViewName());
+        assertTrue(response.getModel().get("member") instanceof MemberViewBean);
     }
 
     @Test
     public void navigateToPayments() {
-        assertEquals("payments", lifelineController.navigateToPayments(new HashMap<>()));
+        assertEquals("payments", lifelineController.navigateToPayments().getViewName());
     }
 
     @Test
     public void navigateToAddPayment() {
-        assertEquals("add-payment", lifelineController.navigateToAddPayment(new HashMap<>()));
+        assertEquals("add-payment", lifelineController.navigateToAddPayment().getViewName());
     }
 
     @Test
     public void navigateToReports() {
-        assertEquals("reports", lifelineController.navigateToReports(new HashMap<>()));
+        assertEquals("reports", lifelineController.navigateToReports().getViewName());
     }
 
     @Test
     public void navigateToWinners() {
-        assertEquals("winners", lifelineController.navigateToWinners(new HashMap<>()));
+        assertEquals("winners", lifelineController.navigateToWinners().getViewName());
     }
 
     @Test
     public void navigateMakeDraw() {
-        assertEquals("make-draw", lifelineController.navigateMakeDraw(new HashMap<>()));
+        assertEquals("make-draw", lifelineController.navigateMakeDraw().getViewName());
     }
 
     @Test
     public void navigateExportData() {
-        assertEquals("export-data", lifelineController.navigateExportData(new HashMap<>()));
+        assertEquals("export-data", lifelineController.navigateExportData().getViewName());
     }
 
     private HttpRequest getHttpRequest() {
