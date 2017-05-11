@@ -114,4 +114,24 @@ $(function () {
         resize: true
     });
 
+    Morris.Line({
+        // ID of the element in which to draw the chart.
+        element: 'morris-line-chart',
+        // Chart data records -- each entry in this array corresponds to a point on
+        // the chart.
+        data: [
+            { year: '2014', value: 878 },
+            { year: '2015', value: 998 },
+            { year: '2016', value: 1003 },
+            { year: '2017', value: 999 }
+        ],
+        // The name of the data record attribute that contains x-values.
+        xkey: 'year',
+        // A list of names of data record attributes that contain y-values.
+        ykeys: ['value'],
+        // Labels for the ykeys -- will be displayed when you hover over the
+        // chart.
+        labels: ['Value']
+    });
+
 });

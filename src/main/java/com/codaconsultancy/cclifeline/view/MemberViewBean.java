@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -28,8 +29,10 @@ public class MemberViewBean {
     private String payerType;
 
     @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date joinDate;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date leaveDate;
 
     private String comments;
@@ -40,10 +43,13 @@ public class MemberViewBean {
 
     private String mobileNumber;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date cardRequestDate;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date cardIssuedDate;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date welcomeLetterIssuedDate;
 
     public Long getMembershipNumber() {
