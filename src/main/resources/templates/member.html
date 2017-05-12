@@ -148,6 +148,10 @@
                         </td>
                     </tr>
                     <tr>
+                        <td><strong>Address</strong></td>
+                        <td th:utext="${member.addresses.get(0).formattedAddress}"></td>
+                    </tr>
+                    <tr>
                         <td><strong>Comments</strong></td>
                         <td th:text="${member.comments}">Comments</td>
                     </tr>

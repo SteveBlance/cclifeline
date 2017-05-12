@@ -70,6 +70,24 @@ public class AddressTest {
     }
 
     @Test
+    public void getFormattedAddress() {
+        assertEquals(
+                "Line1<br/>" +
+                        "Line2<br/>" +
+                        "Line3<br/>" +
+                        "Dunfermline<br/>" +
+                        "Fife<br/>" +
+                        "KY12 9AB", address.getFormattedAddress());
+        address.setAddressLine2("");
+        address.setPostcode("");
+        assertEquals(
+                "Line1<br/>" +
+                        "Line3<br/>" +
+                        "Dunfermline<br/>" +
+                        "Fife", address.getFormattedAddress());
+    }
+
+    @Test
     public void getMember() {
         Member member = address.getMember();
         assertEquals("Hamish", member.getForename());

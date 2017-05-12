@@ -5,7 +5,9 @@ import org.junit.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,6 +39,14 @@ public class MemberViewBeanTest {
         memberViewBean.setMobileNumber("07766554433");
         memberViewBean.setPayerType("Monthly");
         memberViewBean.setStatus("Closed");
+        List<AddressViewBean> addresses = new ArrayList<>();
+        AddressViewBean address1 = new AddressViewBean();
+        address1.setId(23L);
+        AddressViewBean address2 = new AddressViewBean();
+        address2.setId(84L);
+        addresses.add(address1);
+        addresses.add(address2);
+        memberViewBean.setAddresses(addresses);
     }
 
     @Test
@@ -133,6 +143,13 @@ public class MemberViewBeanTest {
         Date welcomeLetterIssuedDate = memberViewBean.getWelcomeLetterIssuedDate();
         String dateString = sdf.format(welcomeLetterIssuedDate);
         assertEquals("31-08-2014", dateString);
+    }
+
+    @Test
+    public void getAddresses() {
+        assertEquals(2, memberViewBean.getAddresses().size());
+        assertEquals(23L, memberViewBean.getAddresses().get(0).getId().longValue());
+        assertEquals(84L, memberViewBean.getAddresses().get(1).getId().longValue());
     }
 
 }

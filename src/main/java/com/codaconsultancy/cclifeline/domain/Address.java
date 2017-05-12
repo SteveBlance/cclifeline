@@ -40,6 +40,9 @@ public class Address {
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
 
+    @Transient
+    private String formattedAddress;
+
     @ManyToOne
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
@@ -106,6 +109,22 @@ public class Address {
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public String getFormattedAddress() {
+        StringBuilder formattedAddress = new StringBuilder(addressLine1);
+        if (!addressLine2.isEmpty()) {
+            formattedAddress.append("<br/>").append(addressLine2);
+        }
+        if (!addressLine3.isEmpty()) {
+            formattedAddress.append("<br/>").append(addressLine3);
+        }
+        formattedAddress.append("<br/>").append(town);
+        formattedAddress.append("<br/>").append(region);
+        if (!postcode.isEmpty()) {
+            formattedAddress.append("<br/>").append(postcode);
+        }
+        return formattedAddress.toString();
     }
 
     public Member getMember() {

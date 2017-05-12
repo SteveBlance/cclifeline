@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 public class MemberViewBean {
 
@@ -53,6 +54,8 @@ public class MemberViewBean {
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date welcomeLetterIssuedDate;
+
+    private List<AddressViewBean> addresses;
 
     public Long getId() {
         return id;
@@ -180,6 +183,14 @@ public class MemberViewBean {
 
     public void setWelcomeLetterIssuedDate(Date welcomeLetterIssuedDate) {
         this.welcomeLetterIssuedDate = welcomeLetterIssuedDate;
+    }
+
+    public List<AddressViewBean> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<AddressViewBean> addresses) {
+        this.addresses = addresses;
     }
 
     public Member toEntity() {

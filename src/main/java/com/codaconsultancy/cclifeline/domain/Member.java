@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "MEMBERS")
@@ -73,6 +74,9 @@ public class Member {
     @Column(name = "WELCOME_LETTER_ISSUED_DATE")
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date welcomeLetterIssuedDate;
+
+    @OneToMany(mappedBy = "member")
+    private List<Address> addresses;
 
     public Long getId() {
         return id;
@@ -200,6 +204,14 @@ public class Member {
 
     public void setWelcomeLetterIssuedDate(Date welcomeLetterIssuedDate) {
         this.welcomeLetterIssuedDate = welcomeLetterIssuedDate;
+    }
+
+    public List<Address> getAddresses() {
+        return addresses;
+    }
+
+    public void setAddresses(List<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public MemberViewBean toViewBean() {
