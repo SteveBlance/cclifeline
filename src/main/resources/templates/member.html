@@ -146,7 +146,9 @@
             </div>
             <br />
             <div class="row">
-                <a th:href="@{/}" class="btn btn-default active" role="button">Back</a>
+                <a th:href="@{/members}" class="btn btn-default active" role="button">Back</a>
+                <a th:href="@{/edit-member/} + ${member.membershipNumber}" class="btn btn-primary"
+                   role="button">Edit</a>
             </div>
         </div>
 

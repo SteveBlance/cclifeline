@@ -43,11 +43,14 @@ public class MemberTest {
     @Test
     public void getId() {
         assertEquals(27L, member.getId().longValue());
+        assertEquals(27L, member.toViewBean().getId().longValue());
+
     }
 
     @Test
     public void getMembershipNumber() {
         assertEquals(1818L, member.getMembershipNumber().longValue());
+        assertEquals(1818L, member.toViewBean().getMembershipNumber().longValue());
     }
 
     @Test

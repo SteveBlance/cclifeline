@@ -14,7 +14,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.AbstractBindingResult;
 import org.springframework.validation.BindingResult;
@@ -138,6 +137,63 @@ public class LifelineControllerTest extends BaseTest {
         ModelAndView response = lifelineController.navigateToAddMember();
         assertEquals("add-member", response.getViewName());
         assertTrue(response.getModel().get("member") instanceof MemberViewBean);
+    }
+
+    @Test
+    public void navigateToEditMember() {
+        long memberNumber = 1234L;
+        Member member1234 = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
+
+        ModelAndView response = lifelineController.navigateToEditMember(1234L);
+        assertEquals("edit-member", response.getViewName());
+        assertTrue(response.getModel().get("member") instanceof Member);
+    }
+
+    @Test
+    public void editMember_success() {
+
+        Member member = TestHelper.newMember(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        when(memberService.updateMember(any(Member.class))).thenReturn(member);
+        BindingResult bindingResult = new AbstractBindingResult("member") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
+
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+        ModelAndView modelAndView = lifelineController.editMember(member, bindingResult);
+
+        verify(memberService, times(1)).updateMember(any(Member.class));
+
+        assertEquals("member", modelAndView.getViewName());
+    }
+
+    @Test
+    public void editMember_validationErrors() {
+
+        Member member = TestHelper.newMember(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        BindingResult bindingResult = new AbstractBindingResult("member") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
+
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+        bindingResult.addError(new ObjectError("surname", "Surname cannot be blank"));
+        ModelAndView modelAndView = lifelineController.editMember(member, bindingResult);
+
+        verify(memberService, never()).updateMember(member);
+
+        assertEquals("edit-member", modelAndView.getViewName());
     }
 
     @Test

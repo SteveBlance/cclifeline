@@ -15,6 +15,7 @@ public class MemberViewBeanTest {
     @Before
     public void setUp() throws ParseException {
         memberViewBean = new MemberViewBean();
+        memberViewBean.setId(99L);
         memberViewBean.setMembershipNumber(1818L);
         memberViewBean.setForename("Hamish");
         memberViewBean.setSurname("Petrie");
@@ -36,6 +37,11 @@ public class MemberViewBeanTest {
         memberViewBean.setMobileNumber("07766554433");
         memberViewBean.setPayerType("Monthly");
         memberViewBean.setStatus("Closed");
+    }
+
+    @Test
+    public void getId() {
+        assertEquals(99L, memberViewBean.getId().longValue());
     }
 
     @Test

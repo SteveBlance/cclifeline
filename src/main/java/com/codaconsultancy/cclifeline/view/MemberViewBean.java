@@ -11,6 +11,8 @@ import java.util.Date;
 
 public class MemberViewBean {
 
+    private Long id;
+
     private Long membershipNumber;
 
     @NotNull
@@ -51,6 +53,14 @@ public class MemberViewBean {
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date welcomeLetterIssuedDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getMembershipNumber() {
         return membershipNumber;

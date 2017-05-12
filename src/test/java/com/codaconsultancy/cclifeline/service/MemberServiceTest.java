@@ -84,5 +84,21 @@ public class MemberServiceTest {
 
     }
 
+    @Test
+    public void updateMember() {
+        Member member = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
+
+        when(memberRepository.save(member)).thenReturn(member);
+
+        Member newMember = memberService.updateMember(member);
+
+        verify(memberRepository, never()).nextMembershipNumber();
+        verify(memberRepository, times(1)).save(member);
+        assertEquals(23L, newMember.getMembershipNumber().longValue());
+        assertEquals("Billy", newMember.getForename());
+        assertEquals("Whiz", newMember.getSurname());
+
+    }
+
 
 }

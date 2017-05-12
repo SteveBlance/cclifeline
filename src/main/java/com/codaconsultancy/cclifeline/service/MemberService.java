@@ -31,4 +31,8 @@ public class MemberService {
         member.setMembershipNumber(nextMembershipNumber);
         return memberRepository.save(member);
     }
+
+    public Member updateMember(Member member) {
+        return memberRepository.save(member);
+    }
 }

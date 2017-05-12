@@ -1,5 +1,11 @@
 package com.codaconsultancy.cclifeline.domain;
 
+import com.codaconsultancy.cclifeline.view.MemberViewBean;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -37,9 +43,11 @@ public class Member {
     private String payerType;
 
     @Column(name = "JOIN_DATE")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date joinDate;
 
     @Column(name = "LEAVE_DATE")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date leaveDate;
 
     @Column(name = "COMMENTS")
@@ -55,12 +63,15 @@ public class Member {
     private String mobileNumber;
 
     @Column(name = "CARD_REQUEST_DATE")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date cardRequestDate;
 
     @Column(name = "CARD_ISSUED_DATE")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date cardIssuedDate;
 
     @Column(name = "WELCOME_LETTER_ISSUED_DATE")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date welcomeLetterIssuedDate;
 
     public Long getId() {
@@ -189,5 +200,11 @@ public class Member {
 
     public void setWelcomeLetterIssuedDate(Date welcomeLetterIssuedDate) {
         this.welcomeLetterIssuedDate = welcomeLetterIssuedDate;
+    }
+
+    public MemberViewBean toViewBean() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(this, MemberViewBean.class);
     }
 }

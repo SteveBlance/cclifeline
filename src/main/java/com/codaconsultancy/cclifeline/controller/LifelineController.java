@@ -6,19 +6,16 @@ import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.mustache.MustacheTemplateAvailabilityProvider;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class LifelineController {
@@ -47,6 +44,12 @@ public class LifelineController {
         return modelAndView("member").addObject("member", member);
     }
 
+    @RequestMapping(value = "/add-member", method = RequestMethod.GET)
+    public ModelAndView navigateToAddMember() {
+        MemberViewBean member = new MemberViewBean();
+        return modelAndView("add-member").addObject("member", member);
+    }
+
     @RequestMapping(value = "/member", method = RequestMethod.POST)
     public ModelAndView addMember(@Valid @ModelAttribute("member") MemberViewBean memberViewBean, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) {
@@ -59,10 +62,22 @@ public class LifelineController {
         return memberDetails(newMember.getMembershipNumber());
     }
 
-    @RequestMapping(value = "/add-member", method = RequestMethod.GET)
-    public ModelAndView navigateToAddMember() {
-        MemberViewBean member = new MemberViewBean();
-        return modelAndView("add-member").addObject("member", member);
+    @RequestMapping(value = "/edit-member/{number}", method = RequestMethod.GET)
+    public ModelAndView navigateToEditMember(@PathVariable Long number) {
+        Member member = memberService.findMemberByMembershipNumber(number);
+        return modelAndView("edit-member").addObject("member", member);
+    }
+
+    @RequestMapping(value = "/edit-member", method = RequestMethod.POST)
+    public ModelAndView editMember(@Valid @ModelAttribute("member") Member member, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for member: ", member);
+            return navigateToEditMember(member.getMembershipNumber());
+        }
+
+        Member updatedMember = memberService.updateMember(member);
+
+        return memberDetails(updatedMember.getMembershipNumber());
     }
 
     @RequestMapping(value = "/payments", method = RequestMethod.GET)
