@@ -1,48 +1,34 @@
-package com.codaconsultancy.cclifeline.domain;
+package com.codaconsultancy.cclifeline.view;
 
-import com.codaconsultancy.cclifeline.view.AddressViewBean;
+import com.codaconsultancy.cclifeline.domain.Address;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = "ADDRESSES")
-public class Address {
+public class AddressViewBean {
 
-    @Id
-    @GeneratedValue
     private Long id;
 
     @NotNull
-    @Column(name = "ADDRESS_LINE_1")
     private String addressLine1;
 
-    @Column(name = "ADDRESS_LINE_2")
     private String addressLine2;
 
-    @Column(name = "ADDRESS_LINE_3")
     private String addressLine3;
 
     @NotNull
-    @Column(name = "TOWN")
     private String town;
 
     @NotNull
-    @Column(name = "REGION")
     private String region;
 
-    @Column(name = "POSTCODE")
     private String postcode;
 
-    @Column(name = "IS_ACTIVE")
     private Boolean isActive;
 
-    @ManyToOne
-    @JoinColumn(name = "MEMBER_ID")
-    private Member member;
+    private Long memberId;
 
     public Long getId() {
         return id;
@@ -108,17 +94,19 @@ public class Address {
         this.isActive = isActive;
     }
 
-    public Member getMember() {
-        return member;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public AddressViewBean toViewBean() {
+    public Address toEntity() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(this, AddressViewBean.class);
+        return mapper.map(this, Address.class);
     }
+
 }
+

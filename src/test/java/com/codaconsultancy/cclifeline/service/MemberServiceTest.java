@@ -68,6 +68,18 @@ public class MemberServiceTest {
     }
 
     @Test
+    public void findMemberById_success() {
+        Member member = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        member.setId(564L);
+        when(memberRepository.findOne(564L)).thenReturn(member);
+
+        Member foundMember = memberService.findMemberById(564L);
+
+        verify(memberRepository, times(1)).findOne(564L);
+        assertEquals("fz@email.com", foundMember.getEmail());
+    }
+
+    @Test
     public void saveMember() {
         Member member = TestHelper.newMember(0L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
 

@@ -59,6 +59,11 @@ public class AddressRepositoryTest extends BaseTest {
     }
 
     @Test
+    public void test() {
+        assertEquals(1, 1);
+    }
+
+    @Test
     public void findByMember() throws Exception {
         List<Address> addressesForMember = addressRepository.findByMember(member);
         assertEquals(2, addressesForMember.size());

@@ -1,12 +1,16 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.common.TestHelper;
+import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
+import com.codaconsultancy.cclifeline.service.AddressService;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -38,6 +42,9 @@ public class LifelineControllerTest extends BaseTest {
 
     @MockBean
     MemberService memberService;
+
+    @MockBean
+    AddressService addressService;
 
     @Test
     public void home() throws Exception {
@@ -105,7 +112,7 @@ public class LifelineControllerTest extends BaseTest {
 
         verify(memberService, times(1)).saveMember(any(Member.class));
 
-        assertEquals("member", modelAndView.getViewName());
+        assertEquals("add-address", modelAndView.getViewName());
     }
 
     @Test
@@ -137,6 +144,73 @@ public class LifelineControllerTest extends BaseTest {
         ModelAndView response = lifelineController.navigateToAddMember();
         assertEquals("add-member", response.getViewName());
         assertTrue(response.getModel().get("member") instanceof MemberViewBean);
+    }
+
+    @Test
+    public void navigateToAddAddress() {
+        Member member = new Member();
+        member.setId(964L);
+        ModelAndView response = lifelineController.navigateToAddAddress(member.getId());
+
+        assertEquals("add-address", response.getViewName());
+        AddressViewBean address = (AddressViewBean) response.getModel().get("address");
+        assertEquals(member.getId(), address.getMemberId());
+        assertTrue(address.getIsActive());
+    }
+
+    @Test
+    public void addAddress_success() {
+
+        Member member = new Member();
+        member.setId(888L);
+        AddressViewBean address = new AddressViewBean();
+        address.setMemberId(member.getId());
+
+        BindingResult bindingResult = new AbstractBindingResult("address") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
+
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+
+        when(memberService.findMemberById(888L)).thenReturn(member);
+        ArgumentCaptor<Address> addressArgumentCaptor = ArgumentCaptor.forClass(Address.class);
+
+        ModelAndView modelAndView = lifelineController.addAddress(address, bindingResult);
+
+        verify(addressService, times(1)).saveAddress(addressArgumentCaptor.capture());
+        verify(memberService, times(1)).findMemberById(888L);
+
+        assertEquals("members", modelAndView.getViewName());
+        assertEquals(888L, addressArgumentCaptor.getValue().getMember().getId().longValue());
+    }
+
+    @Test
+    public void addAddress_validationErrors() {
+
+        AddressViewBean address = new AddressViewBean();
+        BindingResult bindingResult = new AbstractBindingResult("address") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
+
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+        bindingResult.addError(new ObjectError("line 1", "line 1 cannot be blank"));
+        ModelAndView modelAndView = lifelineController.addAddress(address, bindingResult);
+
+        verify(addressService, never()).saveAddress(any(Address.class));
+
+        assertEquals("add-address", modelAndView.getViewName());
     }
 
     @Test

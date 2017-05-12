@@ -31,11 +31,12 @@ public class AddressTest {
     @Test
     public void getId() {
         assertEquals(86L, address.getId().longValue());
+        assertEquals(86L, address.toViewBean().getId().longValue());
     }
 
     @Test
     public void getAddressLine1() {
-        assertEquals("Line1", address.getAddressLine1());
+        assertEquals("Line1", address.toViewBean().getAddressLine1());
     }
 
     @Test

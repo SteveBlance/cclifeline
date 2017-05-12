@@ -84,10 +84,6 @@
                 <th>Email</th>
                 <th>Phone No</th>
                 <th>Mobile No</th>
-                <th>Card Requested</th>
-                <th>Card Issued</th>
-                <th>Welcome Letter Issued</th>
-                <th>Comments</th>
             </tr>
             </thead>
             <tbody>
@@ -104,16 +100,6 @@
                 <td th:text="${member.email}">Email</td>
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
-                <td th:text="${member.cardRequestDate} ? ${#dates.format(member.cardRequestDate, 'dd/MM/yyyy')}">Card
-                    Request Date
-                </td>
-                <td th:text="${member.cardIssuedDate} ? ${#dates.format(member.cardIssuedDate, 'dd/MM/yyyy')}">Card
-                    Issue Date
-                </td>
-                <td th:text="${member.welcomeLetterIssuedDate} ? ${#dates.format(member.welcomeLetterIssuedDate, 'dd/MM/yyyy')}">
-                    Welcome Letter Issue Date
-                </td>
-                <td th:text="${member.comments}">Comments</td>
 
             </tr>
             </tbody>
