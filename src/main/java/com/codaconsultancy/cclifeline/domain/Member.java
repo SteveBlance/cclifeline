@@ -8,6 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class Member {
     private Date welcomeLetterIssuedDate;
 
     @OneToMany(mappedBy = "member")
-    private List<Address> addresses;
+    private List<Address> addresses = new ArrayList<>();
 
     public Long getId() {
         return id;

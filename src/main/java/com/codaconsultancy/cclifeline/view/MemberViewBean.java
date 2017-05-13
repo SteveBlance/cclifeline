@@ -7,6 +7,7 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class MemberViewBean {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date welcomeLetterIssuedDate;
 
-    private List<AddressViewBean> addresses;
+    private List<AddressViewBean> addresses = new ArrayList<>();
 
     public Long getId() {
         return id;

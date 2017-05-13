@@ -147,9 +147,10 @@
                             Welcome Letter Issue Date
                         </td>
                     </tr>
-                    <tr>
+                    <tr th:if="${!member.addresses.isEmpty()}">
                         <td><strong>Address</strong></td>
-                        <td th:utext="${member.addresses.get(0).formattedAddress}"></td>
+                        <td th:utext="${member.addresses.get(0).formattedAddress}">
+                        </td>
                     </tr>
                     <tr>
                         <td><strong>Comments</strong></td>
