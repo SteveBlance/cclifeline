@@ -95,6 +95,20 @@ public class LifelineController {
         return modelAndView("add-address").addObject("address", addressViewBean);
     }
 
+    @RequestMapping(value = "/member/{memberId}/edit-address", method = RequestMethod.GET)
+    public ModelAndView navigateToEditAddress(@PathVariable Long memberId) {
+        Member member = memberService.findMemberById(memberId);
+        AddressViewBean addressViewBean;
+        if (!member.getAddresses().isEmpty()) {
+            addressViewBean = member.getAddresses().get(0).toViewBean();
+        } else {
+            addressViewBean = new AddressViewBean();
+        }
+        addressViewBean.setIsActive(true);
+        addressViewBean.setMemberId(memberId);
+        return modelAndView("edit-address").addObject("address", addressViewBean).addObject("member", member);
+    }
+
     @RequestMapping(value = "/address", method = RequestMethod.POST)
     public ModelAndView addAddress(@Valid @ModelAttribute("address") AddressViewBean addressViewBean, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

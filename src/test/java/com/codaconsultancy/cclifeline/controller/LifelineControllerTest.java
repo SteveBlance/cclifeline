@@ -220,8 +220,46 @@ public class LifelineControllerTest extends BaseTest {
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
 
         ModelAndView response = lifelineController.navigateToEditMember(1234L);
+
         assertEquals("edit-member", response.getViewName());
         assertTrue(response.getModel().get("member") instanceof Member);
+    }
+
+    @Test
+    public void navigateToEditAddress_success_memberWithAddress() {
+        long memberId = 98L;
+        Member member = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        List<Address> addresses = new ArrayList<>();
+        Address address = new Address();
+        address.setAddressLine1("1 New Row");
+        addresses.add(address);
+        member.setAddresses(addresses);
+        when(memberService.findMemberById(98L)).thenReturn(member);
+
+        ModelAndView response = lifelineController.navigateToEditAddress(98L);
+
+        assertEquals("edit-address", response.getViewName());
+        assertTrue(response.getModel().get("address") instanceof AddressViewBean);
+        AddressViewBean foundAddress = (AddressViewBean) response.getModel().get("address");
+        assertEquals("1 New Row", foundAddress.getAddressLine1());
+        assertEquals(memberId, foundAddress.getMemberId().longValue());
+        assertTrue(foundAddress.getIsActive());
+    }
+
+    @Test
+    public void navigateToEditAddress_success_memberWithNoAddress() {
+        long memberId = 98L;
+        Member member = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        when(memberService.findMemberById(98L)).thenReturn(member);
+
+        ModelAndView response = lifelineController.navigateToEditAddress(98L);
+
+        assertEquals("edit-address", response.getViewName());
+        assertTrue(response.getModel().get("address") instanceof AddressViewBean);
+        AddressViewBean foundAddress = (AddressViewBean) response.getModel().get("address");
+        assertNull(foundAddress.getAddressLine1());
+        assertEquals(memberId, foundAddress.getMemberId().longValue());
+        assertTrue(foundAddress.getIsActive());
     }
 
     @Test

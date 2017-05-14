@@ -191,6 +191,8 @@
 
         <div class="row">
             <a th:href="@{/member/} + ${member.membershipNumber}" class="btn btn-default " role="button">Cancel</a>
+            <a th:href="@{/member/} + ${member.id} + @{/edit-address}" class="btn btn-primary " role="button">Edit
+                Address</a>
             <button id="updateBtn" type="submit" class="btn btn-default btn-success active">Save</button>
 
         </div>
