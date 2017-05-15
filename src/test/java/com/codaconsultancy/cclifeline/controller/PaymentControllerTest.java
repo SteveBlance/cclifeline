@@ -36,9 +36,9 @@ public class PaymentControllerTest extends BaseTest {
         List<Payment> payments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "83776900435093BZ");
-        Payment payment2 = new Payment(paymentDate, 240.00F, "83776900435093BZ");
-        Payment payment3 = new Payment(paymentDate, 20.00F, "83776900435093BZ");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 3344 LINDSAY", "83776900435093BZ");
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0998 JONES", "83776900435093BZ");
+        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ");
         payments.add(payment1);
         payments.add(payment2);
         payments.add(payment3);
@@ -50,8 +50,11 @@ public class PaymentControllerTest extends BaseTest {
         List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
         assertEquals(3, foundPayments.size());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002F);
+        assertEquals("FPS CREDIT 3344 LINDSAY", payments.get(0).getCreditReference());
         assertEquals(240.00F, payments.get(1).getPaymentAmount(), 0.002F);
+        assertEquals("FPS CREDIT 0998 JONES", payments.get(1).getCreditReference());
         assertEquals(20.00F, payments.get(2).getPaymentAmount(), 0.002F);
+        assertEquals("FPS CREDIT 0101 THOMAS", payments.get(2).getCreditReference());
     }
 
     @Test

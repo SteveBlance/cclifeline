@@ -18,6 +18,7 @@ public class PaymentTest {
         payment = new Payment();
         payment.setId(44L);
         payment.setPaymentAmount(23.89F);
+        payment.setCreditReference("FPS CREDIT 0299 SMITH");
         payment.setCreditedAccount("800599 0011223344");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dateInString = "30/09/2017";
@@ -48,6 +49,11 @@ public class PaymentTest {
     }
 
     @Test
+    public void getCreditReference() {
+        assertEquals("FPS CREDIT 0299 SMITH", payment.getCreditReference());
+    }
+
+    @Test
     public void getCreditedAccount() {
         assertEquals("800599 0011223344", payment.getCreditedAccount());
     }
@@ -62,9 +68,10 @@ public class PaymentTest {
     public void testConstructor() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse("26/03/2016");
-        Payment payment = new Payment(date, 20.00F, "Lifeline Account");
+        Payment payment = new Payment(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account");
         assertEquals("26/03/2016", simpleDateFormat.format(payment.getPaymentDate()));
         assertEquals(20.00F, payment.getPaymentAmount(), 0.001);
+        assertEquals("FPS CREDIT 9888 MONK", payment.getCreditReference());
         assertEquals("Lifeline Account", payment.getCreditedAccount());
     }
 

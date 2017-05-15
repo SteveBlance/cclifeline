@@ -35,9 +35,9 @@ public class PaymentServiceTest {
         List<Payment> payments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "83776900435093BZ");
-        Payment payment2 = new Payment(paymentDate, 240.00F, "83776900435093BZ");
-        Payment payment3 = new Payment(paymentDate, 20.00F, "83776900435093BZ");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ");
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ");
+        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ");
         payments.add(payment1);
         payments.add(payment2);
         payments.add(payment3);
@@ -46,7 +46,7 @@ public class PaymentServiceTest {
         List<Payment> foundPayments = paymentService.findAllPayments();
 
         assertEquals(3, foundPayments.size());
-
+        assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
     }
 
 }

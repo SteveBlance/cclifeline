@@ -62,7 +62,7 @@
                                 <i class="fa fa-money fa-5x"></i>
                             </div>
                             <div class="col-xs-9 text-right">
-                                <div class="huge">12</div>
+                                <div class="huge"><i class="fa fa-gbp" aria-hidden="true"></i></div>
                                 <div>Payments</div>
                             </div>
                         </div>
@@ -70,51 +70,30 @@
                 </div>
             </div>
         </div>
-        <br/>
-        <a th:href="@{/add-payment}">Enter New Payment</a>
-        <br/>
-        <!--<table id="members_tab" class="table-condensed table-striped table-bordered table-hover" cellspacing="0" width="100%">-->
-            <!--<thead>-->
-            <!--<tr>-->
-                <!--<th>Member No</th>-->
-                <!--<th>Forename</th>-->
-                <!--<th>Surname</th>-->
-                <!--<th>Member Type</th>-->
-                <!--<th>Status</th>-->
-                <!--<th>Payer Type</th>-->
-                <!--<th>Join Date</th>-->
-                <!--<th>Leave Date</th>-->
-                <!--<th>Email</th>-->
-                <!--<th>Phone No</th>-->
-                <!--<th>Mobile No</th>-->
-                <!--<th>Card Requested</th>-->
-                <!--<th>Card Issued</th>-->
-                <!--<th>Welcome Letter Issued</th>-->
-                <!--<th>Comments</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--<tr th:each="member: ${members}" style="cursor: pointer"-->
-                <!--th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">-->
-                <!--<td th:text="${member.membershipNumber}">Membership No</td>-->
-                <!--<td th:text="${member.forename}">Forename</td>-->
-                <!--<td th:text="${member.surname}">Surname</td>-->
-                <!--<td th:text="${member.membershipType}">Membership Type</td>-->
-                <!--<td th:text="${member.status}">Status</td>-->
-                <!--<td th:text="${member.payerType}">Payer Type</td>-->
-                <!--<td th:text="${member.joinDate}">Join Date</td>-->
-                <!--<td th:text="${member.leaveDate}">Leave Date</td>-->
-                <!--<td th:text="${member.email}">Email</td>-->
-                <!--<td th:text="${member.landlineNumber}">Phone Number</td>-->
-                <!--<td th:text="${member.mobileNumber}">Mobile Number</td>-->
-                <!--<td th:text="${member.cardRequestDate}">Card Request Date</td>-->
-                <!--<td th:text="${member.cardIssuedDate}">Card Issue Date</td>-->
-                <!--<td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>-->
-                <!--<td th:text="${member.comments}">Comments</td>-->
 
-            <!--</tr>-->
-            <!--</tbody>-->
-        <!--</table>-->
+        <table id="payments_tab" class="table-condensed table-striped table-bordered table-hover" cellspacing="0"
+               width="100%">
+            <thead>
+            <tr>
+                <th>Payment Date</th>
+                <th>Payment Amount (£)</th>
+                <th>Credit Reference</th>
+                <th>Credited Account</th>
+            </tr>
+            </thead>
+            <tbody>
+
+
+            <tr th:each="payment: ${payments}" style="cursor: pointer">
+                <!--th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">-->
+                <td th:text="${#dates.format(payment.paymentDate, 'dd/MM/yyyy')}">Payment Date</td>
+                <td th:text="${#numbers.formatDecimal(payment.paymentAmount, 0, 'COMMA', 2, 'POINT')}">Payment Amount
+                </td>
+                <td th:text="${payment.creditReference}">Credit Reference</td>
+                <td th:text="${payment.creditedAccount}">Credited Account</td>
+            </tr>
+            </tbody>
+        </table>
 
         <script type="text/javascript" src="/js/jquery.js"></script>
         <script type="text/javascript" src="/js/jquery-ui.js"></script>
@@ -126,18 +105,20 @@
             <!--}-->
         <!--</script>-->
 
-        <!--<script type="text/javascript" language="javascript" class="init">-->
+        <script type="text/javascript" language="javascript" class="init">
 
-            <!--$(document).ready(function () {-->
-                <!--$('#members_tab').DataTable();-->
-            <!--});-->
+            $(document).ready(function () {
+                $('#payments_tab').DataTable();
+            });
 
-        <!--</script>-->
+        </script>
         <br/>
         <div class="row">
             <a th:href="@{/}" class="btn btn-default active" role="button">Back</a>
+            <a th:href="@{/add-payment}" class="btn btn-success" role="button">Add Payment</a>
         </div>
     </div>
 </div>
+<br/>
 </body>
 </html>

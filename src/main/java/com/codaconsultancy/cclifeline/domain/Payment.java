@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -10,9 +11,10 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(Date paymentDate, Float paymentAmount, String creditedAccount) {
+    public Payment(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount) {
         this.paymentDate = paymentDate;
         this.paymentAmount = paymentAmount;
+        this.creditReference = creditReference;
         this.creditedAccount = creditedAccount;
     }
 
@@ -20,11 +22,17 @@ public class Payment {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     @Column(name = "PAYMENT_DATE")
     private Date paymentDate;
 
+    @NotNull
     @Column(name = "PAYMENT_AMOUNT")
     private Float paymentAmount;
+
+    @NotNull
+    @Column(name = "CREDIT_REFERENCE")
+    private String creditReference;
 
     @Column(name = "CREDITED_ACCOUNT")
     private String creditedAccount;
@@ -62,6 +70,14 @@ public class Payment {
 
     public void setCreditedAccount(String creditedAccount) {
         this.creditedAccount = creditedAccount;
+    }
+
+    public String getCreditReference() {
+        return creditReference;
+    }
+
+    public void setCreditReference(String creditReference) {
+        this.creditReference = creditReference;
     }
 
     public Member getMember() {
