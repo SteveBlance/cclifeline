@@ -14,8 +14,7 @@ public class MemberService {
     private MemberRepository memberRepository;
 
     public List<Member> findAllMembers() {
-        List<Member> members = memberRepository.findAll();
-        return members;
+        return memberRepository.findAll();
     }
 
     public Long countAllMembers() {

@@ -312,16 +312,6 @@ public class LifelineControllerTest extends BaseTest {
     }
 
     @Test
-    public void navigateToPayments() {
-        assertEquals("payments", lifelineController.navigateToPayments().getViewName());
-    }
-
-    @Test
-    public void navigateToAddPayment() {
-        assertEquals("add-payment", lifelineController.navigateToAddPayment().getViewName());
-    }
-
-    @Test
     public void navigateToReports() {
         assertEquals("reports", lifelineController.navigateToReports().getViewName());
     }

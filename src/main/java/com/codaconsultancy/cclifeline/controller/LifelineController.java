@@ -123,16 +123,6 @@ public class LifelineController {
         return memberDetails(member.getMembershipNumber());
     }
 
-    @RequestMapping(value = "/payments", method = RequestMethod.GET)
-    public ModelAndView navigateToPayments() {
-        return modelAndView("payments");
-    }
-
-    @RequestMapping(value = "/add-payment", method = RequestMethod.GET)
-    public ModelAndView navigateToAddPayment() {
-        return modelAndView("add-payment");
-    }
-
     @RequestMapping(value = "/reports", method = RequestMethod.GET)
     public ModelAndView navigateToReports() {
         return modelAndView("reports");
