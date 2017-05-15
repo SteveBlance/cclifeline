@@ -186,7 +186,7 @@ public class LifelineControllerTest extends BaseTest {
         verify(addressService, times(1)).saveAddress(addressArgumentCaptor.capture());
         verify(memberService, times(1)).findMemberById(888L);
 
-        assertEquals("members", modelAndView.getViewName());
+        assertEquals("member", modelAndView.getViewName());
         assertEquals(888L, addressArgumentCaptor.getValue().getMember().getId().longValue());
     }
 
@@ -229,14 +229,15 @@ public class LifelineControllerTest extends BaseTest {
     public void navigateToEditAddress_success_memberWithAddress() {
         long memberId = 98L;
         Member member = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        member.setId(memberId);
         List<Address> addresses = new ArrayList<>();
         Address address = new Address();
         address.setAddressLine1("1 New Row");
         addresses.add(address);
         member.setAddresses(addresses);
-        when(memberService.findMemberById(98L)).thenReturn(member);
+        when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member);
 
-        ModelAndView response = lifelineController.navigateToEditAddress(98L);
+        ModelAndView response = lifelineController.navigateToEditAddress(1234L);
 
         assertEquals("edit-address", response.getViewName());
         assertTrue(response.getModel().get("address") instanceof AddressViewBean);
@@ -250,9 +251,10 @@ public class LifelineControllerTest extends BaseTest {
     public void navigateToEditAddress_success_memberWithNoAddress() {
         long memberId = 98L;
         Member member = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
-        when(memberService.findMemberById(98L)).thenReturn(member);
+        member.setId(memberId);
+        when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member);
 
-        ModelAndView response = lifelineController.navigateToEditAddress(98L);
+        ModelAndView response = lifelineController.navigateToEditAddress(1234L);
 
         assertEquals("edit-address", response.getViewName());
         assertTrue(response.getModel().get("address") instanceof AddressViewBean);
@@ -267,6 +269,7 @@ public class LifelineControllerTest extends BaseTest {
 
         Member member = TestHelper.newMember(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.updateMember(any(Member.class))).thenReturn(member);
+        when(memberService.findMemberByMembershipNumber(2L)).thenReturn(member);
         BindingResult bindingResult = new AbstractBindingResult("member") {
             @Override
             public Object getTarget() {
@@ -282,7 +285,7 @@ public class LifelineControllerTest extends BaseTest {
 
         verify(memberService, times(1)).updateMember(any(Member.class));
 
-        assertEquals("member", modelAndView.getViewName());
+        assertEquals("edit-address", modelAndView.getViewName());
     }
 
     @Test

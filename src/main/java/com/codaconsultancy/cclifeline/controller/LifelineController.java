@@ -84,7 +84,7 @@ public class LifelineController {
 
         Member updatedMember = memberService.updateMember(member);
 
-        return memberDetails(updatedMember.getMembershipNumber());
+        return navigateToEditAddress(updatedMember.getMembershipNumber());
     }
 
     @RequestMapping(value = "/add-address", method = RequestMethod.GET)
@@ -95,9 +95,9 @@ public class LifelineController {
         return modelAndView("add-address").addObject("address", addressViewBean);
     }
 
-    @RequestMapping(value = "/member/{memberId}/edit-address", method = RequestMethod.GET)
-    public ModelAndView navigateToEditAddress(@PathVariable Long memberId) {
-        Member member = memberService.findMemberById(memberId);
+    @RequestMapping(value = "/member/{membershipNumber}/edit-address", method = RequestMethod.GET)
+    public ModelAndView navigateToEditAddress(@PathVariable Long membershipNumber) {
+        Member member = memberService.findMemberByMembershipNumber(membershipNumber);
         AddressViewBean addressViewBean;
         if (!member.getAddresses().isEmpty()) {
             addressViewBean = member.getAddresses().get(0).toViewBean();
@@ -105,7 +105,7 @@ public class LifelineController {
             addressViewBean = new AddressViewBean();
         }
         addressViewBean.setIsActive(true);
-        addressViewBean.setMemberId(memberId);
+        addressViewBean.setMemberId(member.getId());
         return modelAndView("edit-address").addObject("address", addressViewBean).addObject("member", member);
     }
 
@@ -120,7 +120,7 @@ public class LifelineController {
         address.setMember(member);
         addressService.saveAddress(address);
 
-        return members();
+        return memberDetails(member.getMembershipNumber());
     }
 
     @RequestMapping(value = "/payments", method = RequestMethod.GET)
