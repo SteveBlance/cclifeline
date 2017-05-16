@@ -39,6 +39,7 @@ public class PaymentController {
     public ModelAndView navigateToAddPayment() {
         List<Member> members = memberService.findAllMembers();
         PaymentViewBean payment = new PaymentViewBean();
+        payment.setCreditedAccount("82621900174982CA");
         return modelAndView("add-payment").addObject("payment", payment).addObject("members", members);
     }
 

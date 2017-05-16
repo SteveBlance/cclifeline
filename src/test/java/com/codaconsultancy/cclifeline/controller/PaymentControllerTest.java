@@ -9,11 +9,15 @@ import com.codaconsultancy.cclifeline.service.PaymentService;
 import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.validation.AbstractBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
@@ -81,7 +85,72 @@ public class PaymentControllerTest extends BaseTest {
         verify(memberService, times(1)).findAllMembers();
         assertEquals("add-payment", modelAndView.getViewName());
         assertEquals(3, ((List) modelAndView.getModel().get("members")).size());
-        assertTrue(modelAndView.getModel().get("payment") instanceof PaymentViewBean);
+        Object payment = modelAndView.getModel().get("payment");
+        assertTrue(payment instanceof PaymentViewBean);
+        String defaultAccount = "82621900174982CA";
+        assertEquals(defaultAccount, ((PaymentViewBean) payment).getCreditedAccount());
+    }
+
+    @Test
+    public void addPayment_success() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ");
+        paymentViewBean.setId(367L);
+        paymentViewBean.setMemberId(555L);
+        BindingResult bindingResult = new AbstractBindingResult("member") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
+
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+        ArgumentCaptor<Payment> paymentArgumentCaptor = ArgumentCaptor.forClass(Payment.class);
+        Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
+        member.setId(555L);
+        when(memberService.findMemberById(member.getId())).thenReturn(member);
+
+        ModelAndView modelAndView = paymentController.addPayment(paymentViewBean, bindingResult);
+
+        verify(memberService, times(1)).findMemberById(555L);
+        verify(paymentService, times(1)).savePayment(paymentArgumentCaptor.capture());
+        Payment savedPayment = paymentArgumentCaptor.getValue();
+        assertEquals(367L, savedPayment.getId().longValue());
+        assertEquals(12.23F, savedPayment.getPaymentAmount(), 0.002F);
+        assertEquals("f@mail.com", savedPayment.getMember().getEmail());
+    }
+
+    @Test
+    public void addPayment_validationErrors() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ");
+        paymentViewBean.setId(367L);
+        paymentViewBean.setMemberId(555L);
+        BindingResult bindingResult = new AbstractBindingResult("member") {
+            @Override
+            public Object getTarget() {
+                return null;
+            }
+
+            @Override
+            protected Object getActualFieldValue(String s) {
+                return null;
+            }
+        };
+        bindingResult.addError(new ObjectError("paymentAmount", "Payment amount cannot be blank"));
+        Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
+        member.setId(555L);
+        when(memberService.findMemberById(member.getId())).thenReturn(member);
+
+        paymentController.addPayment(paymentViewBean, bindingResult);
+
+        verify(memberService, never()).findMemberById(555L);
+        verify(paymentService, never()).savePayment(any(Payment.class));
     }
 
 }

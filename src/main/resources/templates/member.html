@@ -179,7 +179,9 @@
     <script type="text/javascript" language="javascript" class="init">
 
         $(document).ready(function () {
-            $('#member_tab').DataTable();
+            $('#member_tab').DataTable({
+                "order": [[0, 'desc']]
+            });
         });
 
     </script>

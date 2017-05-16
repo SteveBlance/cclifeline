@@ -95,8 +95,8 @@
                 <td th:text="${member.membershipType}">Membership Type</td>
                 <td th:text="${member.status}">Status</td>
                 <td th:text="${member.payerType}">Payer Type</td>
-                <td th:text="${member.joinDate} ? ${#dates.format(member.joinDate, 'dd/MM/yyyy')}">Join Date</td>
-                <td th:text="${member.leaveDate} ? ${#dates.format(member.leaveDate, 'dd/MM/yyyy')}">Leave Date</td>
+                <td th:text="${member.joinDate} ? ${#dates.format(member.joinDate, 'yyyy/MM/dd')}">Join Date</td>
+                <td th:text="${member.leaveDate} ? ${#dates.format(member.leaveDate, 'yyyy/MM/dd')}">Leave Date</td>
                 <td th:text="${member.email}">Email</td>
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
@@ -118,7 +118,11 @@
         <script type="text/javascript" language="javascript" class="init">
 
             $(document).ready(function () {
-                $('#members_tab').DataTable();
+                $('#members_tab').DataTable(
+                    {
+                        "order": [[0, 'desc']]
+                    }
+                );
             });
 
         </script>

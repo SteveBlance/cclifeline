@@ -82,11 +82,9 @@
             </tr>
             </thead>
             <tbody>
-
-
             <tr th:each="payment: ${payments}" style="cursor: pointer">
                 <!--th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">-->
-                <td th:text="${#dates.format(payment.paymentDate, 'dd/MM/yyyy')}">Payment Date</td>
+                <td th:text="${#dates.format(payment.paymentDate, 'yyyy/MM/dd')}">Payment Date</td>
                 <td th:text="${#numbers.formatDecimal(payment.paymentAmount, 0, 'COMMA', 2, 'POINT')}">Payment Amount
                 </td>
                 <td th:text="${payment.creditReference}">Credit Reference</td>
@@ -106,12 +104,13 @@
         <!--</script>-->
 
         <script type="text/javascript" language="javascript" class="init">
-
             $(document).ready(function () {
-                $('#payments_tab').DataTable();
+                $('#payments_tab').DataTable({
+                    "order": [[0, 'desc']]
+                });
             });
-
         </script>
+
         <br/>
         <div class="row">
             <a th:href="@{/}" class="btn btn-default active" role="button">Back</a>

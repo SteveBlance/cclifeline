@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.domain.Payment;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -23,6 +24,7 @@ public class PaymentViewBean {
     private Long id;
 
     @NotNull
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date paymentDate;
 
     @NotNull
