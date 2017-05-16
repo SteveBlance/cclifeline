@@ -66,7 +66,6 @@ public class LifelineController {
         Member newMember = memberService.saveMember(memberViewBean.toEntity());
 
         return navigateToAddAddress(newMember.getId());
-
     }
 
     @RequestMapping(value = "/edit-member/{number}", method = RequestMethod.GET)

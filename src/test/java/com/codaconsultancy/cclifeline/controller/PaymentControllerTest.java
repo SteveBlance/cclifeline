@@ -1,8 +1,12 @@
 package com.codaconsultancy.cclifeline.controller;
 
+import com.codaconsultancy.cclifeline.common.TestHelper;
+import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
+import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.PaymentService;
+import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +22,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @EnableJpaRepositories(basePackages = {"com.codaconsultancy.cclifeline.repositories"})
@@ -30,6 +35,9 @@ public class PaymentControllerTest extends BaseTest {
 
     @MockBean
     PaymentService paymentService;
+
+    @MockBean
+    MemberService memberService;
 
     @Test
     public void navigateToPayments() throws Exception {
@@ -59,7 +67,21 @@ public class PaymentControllerTest extends BaseTest {
 
     @Test
     public void navigateToAddPayment() {
-        assertEquals("add-payment", paymentController.navigateToAddPayment().getViewName());
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(5678L, "Bob", "Beth", "e@mail.com", "01323232", null, "Monthly", "Lifeline", null, "Open");
+        Member member2 = TestHelper.newMember(4678L, "Jane", "Kent", "j@mail.com", "01323233", null, "Monthly", "Lifeline", null, "Open");
+        Member member3 = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
+        members.add(member1);
+        members.add(member2);
+        members.add(member3);
+        when(memberService.findAllMembers()).thenReturn(members);
+
+        ModelAndView modelAndView = paymentController.navigateToAddPayment();
+
+        verify(memberService, times(1)).findAllMembers();
+        assertEquals("add-payment", modelAndView.getViewName());
+        assertEquals(3, ((List) modelAndView.getModel().get("members")).size());
+        assertTrue(modelAndView.getModel().get("payment") instanceof PaymentViewBean);
     }
 
 }

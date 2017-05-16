@@ -33,6 +33,7 @@ public class PaymentTest {
     @Test
     public void getId() {
         assertEquals(44L, payment.getId().longValue());
+        assertEquals(44L, payment.toViewBean().getId().longValue());
     }
 
     @Test
@@ -46,6 +47,7 @@ public class PaymentTest {
     @Test
     public void getPaymentAmount() {
         assertEquals(23.89F, payment.getPaymentAmount(), 0.001);
+        assertEquals(23.89F, payment.toViewBean().getPaymentAmount(), 0.001);
     }
 
     @Test

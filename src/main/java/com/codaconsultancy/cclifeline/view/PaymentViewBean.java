@@ -1,49 +1,39 @@
-package com.codaconsultancy.cclifeline.domain;
+package com.codaconsultancy.cclifeline.view;
 
-import com.codaconsultancy.cclifeline.view.PaymentViewBean;
+import com.codaconsultancy.cclifeline.domain.Payment;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@Entity
-@Table(name = "PAYMENTS")
-public class Payment {
+public class PaymentViewBean {
 
-    public Payment() {
+    public PaymentViewBean() {
     }
 
-    public Payment(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount) {
+    public PaymentViewBean(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount) {
         this.paymentDate = paymentDate;
         this.paymentAmount = paymentAmount;
         this.creditReference = creditReference;
         this.creditedAccount = creditedAccount;
     }
 
-    @Id
-    @GeneratedValue
     private Long id;
 
     @NotNull
-    @Column(name = "PAYMENT_DATE")
     private Date paymentDate;
 
     @NotNull
-    @Column(name = "PAYMENT_AMOUNT")
     private Float paymentAmount;
 
     @NotNull
-    @Column(name = "CREDIT_REFERENCE")
     private String creditReference;
 
-    @Column(name = "CREDITED_ACCOUNT")
     private String creditedAccount;
 
-    @ManyToOne
-    private Member member;
+    private Long memberId;
 
     public Long getId() {
         return id;
@@ -85,17 +75,18 @@ public class Payment {
         this.creditReference = creditReference;
     }
 
-    public Member getMember() {
-        return member;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
-    public PaymentViewBean toViewBean() {
+    public Payment toEntity() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(this, PaymentViewBean.class);
+        return mapper.map(this, Payment.class);
     }
 }
+

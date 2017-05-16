@@ -16,7 +16,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @EntityScan("com.codaconsultancy.cclifeline.domain")
@@ -31,7 +32,6 @@ public class PaymentServiceTest {
 
     @Test
     public void findAllPayments() throws Exception {
-
         List<Payment> payments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
@@ -47,6 +47,21 @@ public class PaymentServiceTest {
 
         assertEquals(3, foundPayments.size());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
+    }
+
+    @Test
+    public void savePayment() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ");
+        when(paymentRepository.save(payment)).thenReturn(payment);
+
+        Payment savedPayment = paymentService.savePayment(payment);
+
+        verify(paymentRepository, times(1)).save(payment);
+
+        assertSame(payment, savedPayment);
+
     }
 
 }
