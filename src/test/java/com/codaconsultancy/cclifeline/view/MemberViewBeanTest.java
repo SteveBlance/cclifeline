@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.view;
 
+import com.codaconsultancy.cclifeline.domain.Prize;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -150,6 +151,16 @@ public class MemberViewBeanTest {
         assertEquals(2, memberViewBean.getAddresses().size());
         assertEquals(23L, memberViewBean.getAddresses().get(0).getId().longValue());
         assertEquals(84L, memberViewBean.getAddresses().get(1).getId().longValue());
+    }
+
+    @Test
+    public void getPrizeWins() {
+        List<Prize> wins = new ArrayList<>();
+        wins.add(new Prize());
+        wins.add(new Prize());
+        wins.add(new Prize());
+        memberViewBean.setPrizeWins(wins);
+        assertEquals(3, memberViewBean.getPrizeWins().size());
     }
 
 }

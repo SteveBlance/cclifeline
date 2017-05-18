@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.view;
 
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Prize;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
@@ -57,6 +58,7 @@ public class MemberViewBean {
     private Date welcomeLetterIssuedDate;
 
     private List<AddressViewBean> addresses = new ArrayList<>();
+    private List<Prize> prizeWins;
 
     public Long getId() {
         return id;
@@ -198,5 +200,13 @@ public class MemberViewBean {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         MapperFacade mapper = mapperFactory.getMapperFacade();
         return mapper.map(this, Member.class);
+    }
+
+    public void setPrizeWins(List<Prize> prizeWins) {
+        this.prizeWins = prizeWins;
+    }
+
+    public List<Prize> getPrizeWins() {
+        return prizeWins;
     }
 }

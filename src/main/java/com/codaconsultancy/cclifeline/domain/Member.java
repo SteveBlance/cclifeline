@@ -79,6 +79,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<Address> addresses = new ArrayList<>();
 
+    @OneToMany(mappedBy = "winner")
+    private List<Prize> prizeWins = new ArrayList<>();
+
     public Long getId() {
         return id;
     }
@@ -213,6 +216,14 @@ public class Member {
 
     public void setAddresses(List<Address> addresses) {
         this.addresses = addresses;
+    }
+
+    public List<Prize> getPrizeWins() {
+        return prizeWins;
+    }
+
+    public void setPrizeWins(List<Prize> prizeWins) {
+        this.prizeWins = prizeWins;
     }
 
     public MemberViewBean toViewBean() {

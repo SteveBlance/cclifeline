@@ -154,4 +154,13 @@ public class MemberTest {
         assertEquals(23L, member.getAddresses().get(0).getId().longValue());
         assertEquals(84L, member.getAddresses().get(1).getId().longValue());
     }
+
+    @Test
+    public void getPrizeWins() {
+        List<Prize> wins = new ArrayList<>();
+        wins.add(new Prize());
+        wins.add(new Prize());
+        member.setPrizeWins(wins);
+        assertEquals(2, member.getPrizeWins().size());
+    }
 }

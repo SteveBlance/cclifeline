@@ -11,12 +11,17 @@ public class Prize {
     @GeneratedValue
     private Long id;
 
+    @Column(name = "PRIZE")
     private String prize;
 
+    @ManyToOne
+    @JoinColumn(name = "WINNER_ID")
     private Member winner;
 
+    @Column(name = "PRIZE_COLLECTED")
     private boolean prizeCollected;
 
+    @Column(name = "PRIZE_COLLECTED_DATE")
     private Date prizeCollectedDate;
 
     @ManyToOne
