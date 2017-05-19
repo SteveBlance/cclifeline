@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-public class LifelineController {
+public class MemberController {
 
     @Autowired
     private MemberService memberService;
@@ -29,7 +29,7 @@ public class LifelineController {
     @Autowired
     private AddressService addressService;
 
-    private Logger logger = LoggerFactory.getLogger(LifelineController.class);
+    private Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @RequestMapping("/")
     public ModelAndView home() {
@@ -125,16 +125,6 @@ public class LifelineController {
     @RequestMapping(value = "/reports", method = RequestMethod.GET)
     public ModelAndView navigateToReports() {
         return modelAndView("reports");
-    }
-
-    @RequestMapping(value = "/winners", method = RequestMethod.GET)
-    public ModelAndView navigateToWinners() {
-        return modelAndView("winners");
-    }
-
-    @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
-    public ModelAndView navigateMakeDraw() {
-        return modelAndView("make-draw");
     }
 
     @RequestMapping(value = "/export-data", method = RequestMethod.GET)

@@ -34,11 +34,11 @@ import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @EnableJpaRepositories(basePackages = {"com.codaconsultancy.cclifeline.repositories"})
-@SpringBootTest(classes = LifelineController.class)
-public class LifelineControllerTest extends BaseTest {
+@SpringBootTest(classes = MemberController.class)
+public class MemberControllerTest extends BaseTest {
 
     @Autowired
-    LifelineController lifelineController;
+    MemberController memberController;
 
     @MockBean
     MemberService memberService;
@@ -50,7 +50,7 @@ public class LifelineControllerTest extends BaseTest {
     public void home() throws Exception {
         when(memberService.countAllMembers()).thenReturn(22L);
 
-        ModelAndView response = lifelineController.home();
+        ModelAndView response = memberController.home();
 
         verify(memberService, times(1)).countAllMembers();
         assertEquals(22L, response.getModel().get("memberCount"));
@@ -67,7 +67,7 @@ public class LifelineControllerTest extends BaseTest {
         when(memberService.countAllMembers()).thenReturn(22L);
         when(memberService.findAllMembers()).thenReturn(members);
 
-        ModelAndView response = lifelineController.members();
+        ModelAndView response = memberController.members();
 
         verify(memberService, times(1)).findAllMembers();
 
@@ -83,7 +83,7 @@ public class LifelineControllerTest extends BaseTest {
         Member member1234 = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
 
-        ModelAndView response = lifelineController.memberDetails(memberNumber);
+        ModelAndView response = memberController.memberDetails(memberNumber);
 
         verify(memberService, times(1)).findMemberByMembershipNumber(1234L);
         assertEquals("Bobby", ((Member) response.getModel().get("member")).getForename());
@@ -108,7 +108,7 @@ public class LifelineControllerTest extends BaseTest {
                 return null;
             }
         };
-        ModelAndView modelAndView = lifelineController.addMember(memberViewBean, bindingResult);
+        ModelAndView modelAndView = memberController.addMember(memberViewBean, bindingResult);
 
         verify(memberService, times(1)).saveMember(any(Member.class));
 
@@ -132,7 +132,7 @@ public class LifelineControllerTest extends BaseTest {
             }
         };
         bindingResult.addError(new ObjectError("surname", "Surname cannot be blank"));
-        ModelAndView modelAndView = lifelineController.addMember(memberViewBean, bindingResult);
+        ModelAndView modelAndView = memberController.addMember(memberViewBean, bindingResult);
 
         verify(memberService, never()).saveMember(member);
 
@@ -141,7 +141,7 @@ public class LifelineControllerTest extends BaseTest {
 
     @Test
     public void navigateToAddMember() {
-        ModelAndView response = lifelineController.navigateToAddMember();
+        ModelAndView response = memberController.navigateToAddMember();
         assertEquals("add-member", response.getViewName());
         assertTrue(response.getModel().get("member") instanceof MemberViewBean);
     }
@@ -150,7 +150,7 @@ public class LifelineControllerTest extends BaseTest {
     public void navigateToAddAddress() {
         Member member = new Member();
         member.setId(964L);
-        ModelAndView response = lifelineController.navigateToAddAddress(member.getId());
+        ModelAndView response = memberController.navigateToAddAddress(member.getId());
 
         assertEquals("add-address", response.getViewName());
         AddressViewBean address = (AddressViewBean) response.getModel().get("address");
@@ -181,7 +181,7 @@ public class LifelineControllerTest extends BaseTest {
         when(memberService.findMemberById(888L)).thenReturn(member);
         ArgumentCaptor<Address> addressArgumentCaptor = ArgumentCaptor.forClass(Address.class);
 
-        ModelAndView modelAndView = lifelineController.addAddress(address, bindingResult);
+        ModelAndView modelAndView = memberController.addAddress(address, bindingResult);
 
         verify(addressService, times(1)).saveAddress(addressArgumentCaptor.capture());
         verify(memberService, times(1)).findMemberById(888L);
@@ -206,7 +206,7 @@ public class LifelineControllerTest extends BaseTest {
             }
         };
         bindingResult.addError(new ObjectError("line 1", "line 1 cannot be blank"));
-        ModelAndView modelAndView = lifelineController.addAddress(address, bindingResult);
+        ModelAndView modelAndView = memberController.addAddress(address, bindingResult);
 
         verify(addressService, never()).saveAddress(any(Address.class));
 
@@ -219,7 +219,7 @@ public class LifelineControllerTest extends BaseTest {
         Member member1234 = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
 
-        ModelAndView response = lifelineController.navigateToEditMember(1234L);
+        ModelAndView response = memberController.navigateToEditMember(1234L);
 
         assertEquals("edit-member", response.getViewName());
         assertTrue(response.getModel().get("member") instanceof Member);
@@ -237,7 +237,7 @@ public class LifelineControllerTest extends BaseTest {
         member.setAddresses(addresses);
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member);
 
-        ModelAndView response = lifelineController.navigateToEditAddress(1234L);
+        ModelAndView response = memberController.navigateToEditAddress(1234L);
 
         assertEquals("edit-address", response.getViewName());
         assertTrue(response.getModel().get("address") instanceof AddressViewBean);
@@ -254,7 +254,7 @@ public class LifelineControllerTest extends BaseTest {
         member.setId(memberId);
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member);
 
-        ModelAndView response = lifelineController.navigateToEditAddress(1234L);
+        ModelAndView response = memberController.navigateToEditAddress(1234L);
 
         assertEquals("edit-address", response.getViewName());
         assertTrue(response.getModel().get("address") instanceof AddressViewBean);
@@ -281,7 +281,7 @@ public class LifelineControllerTest extends BaseTest {
                 return null;
             }
         };
-        ModelAndView modelAndView = lifelineController.editMember(member, bindingResult);
+        ModelAndView modelAndView = memberController.editMember(member, bindingResult);
 
         verify(memberService, times(1)).updateMember(any(Member.class));
 
@@ -304,7 +304,7 @@ public class LifelineControllerTest extends BaseTest {
             }
         };
         bindingResult.addError(new ObjectError("surname", "Surname cannot be blank"));
-        ModelAndView modelAndView = lifelineController.editMember(member, bindingResult);
+        ModelAndView modelAndView = memberController.editMember(member, bindingResult);
 
         verify(memberService, never()).updateMember(member);
 
@@ -313,22 +313,12 @@ public class LifelineControllerTest extends BaseTest {
 
     @Test
     public void navigateToReports() {
-        assertEquals("reports", lifelineController.navigateToReports().getViewName());
-    }
-
-    @Test
-    public void navigateToWinners() {
-        assertEquals("winners", lifelineController.navigateToWinners().getViewName());
-    }
-
-    @Test
-    public void navigateMakeDraw() {
-        assertEquals("make-draw", lifelineController.navigateMakeDraw().getViewName());
+        assertEquals("reports", memberController.navigateToReports().getViewName());
     }
 
     @Test
     public void navigateExportData() {
-        assertEquals("export-data", lifelineController.navigateExportData().getViewName());
+        assertEquals("export-data", memberController.navigateExportData().getViewName());
     }
 
     private HttpRequest getHttpRequest() {
