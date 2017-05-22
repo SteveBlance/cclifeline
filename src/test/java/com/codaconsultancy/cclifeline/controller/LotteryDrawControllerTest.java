@@ -3,6 +3,7 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,9 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @MockBean
     private LotteryDrawService lotteryDrawService;
+
+    @MockBean
+    private SecurityService securityService;
 
     @Test
     public void navigateToWinners() {

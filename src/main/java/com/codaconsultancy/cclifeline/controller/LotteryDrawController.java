@@ -1,7 +1,9 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
+import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,9 @@ public class LotteryDrawController {
     @Autowired
     private LotteryDrawService lotteryDrawService;
 
+    @Autowired
+    private SecurityService securityService;
+
     @RequestMapping(value = "/draws", method = RequestMethod.GET)
     public ModelAndView navigateToWinners() {
         List<LotteryDraw> lotteryDraws = lotteryDrawService.fetchAllLotteryDraws();
@@ -26,7 +31,8 @@ public class LotteryDrawController {
     @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
     public ModelAndView navigateMakeDraw() {
         LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
-        return modelAndView("make-draw").addObject("lotteryDraw", lotteryDrawViewBean);
+        List<SecuritySubject> securitySubjects = securityService.findAllSecuritySubjects();
+        return modelAndView("make-draw").addObject("lotteryDraw", lotteryDrawViewBean).addObject("securitySubjects", securitySubjects);
     }
 
     private ModelAndView modelAndView(String page) {
