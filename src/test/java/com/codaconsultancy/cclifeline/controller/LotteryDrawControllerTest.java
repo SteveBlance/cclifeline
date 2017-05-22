@@ -3,6 +3,7 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,8 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @Test
     public void navigateMakeDraw() {
-        assertEquals("make-draw", lotteryDrawController.navigateMakeDraw().getViewName());
+        ModelAndView modelAndView = lotteryDrawController.navigateMakeDraw();
+        assertEquals("make-draw", modelAndView.getViewName());
+        assertTrue(modelAndView.getModel().get("lotteryDraw") instanceof LotteryDrawViewBean);
     }
 }

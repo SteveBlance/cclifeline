@@ -2,6 +2,7 @@ package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,8 @@ public class LotteryDrawController {
 
     @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
     public ModelAndView navigateMakeDraw() {
-        return modelAndView("make-draw");
+        LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
+        return modelAndView("make-draw").addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
     private ModelAndView modelAndView(String page) {
