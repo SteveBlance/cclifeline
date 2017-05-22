@@ -21,6 +21,9 @@ public class LotteryDraw {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date drawDate;
 
+    @Column(name = "NAME")
+    private String name;
+
     @Column(name = "DRAW_MASTER")
     @NotNull
     private String drawMaster;
@@ -42,6 +45,14 @@ public class LotteryDraw {
 
     public void setDrawDate(Date drawDate) {
         this.drawDate = drawDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDrawMaster() {

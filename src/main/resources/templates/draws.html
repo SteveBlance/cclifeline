@@ -69,49 +69,24 @@
                 </div>
             </div>
         </div>
-        <br/>
-        <!--<table id="members_tab" class="table-condensed table-striped table-bordered table-hover" cellspacing="0" width="100%">-->
-        <!--<thead>-->
-        <!--<tr>-->
-        <!--<th>Member No</th>-->
-        <!--<th>Forename</th>-->
-        <!--<th>Surname</th>-->
-        <!--<th>Member Type</th>-->
-        <!--<th>Status</th>-->
-        <!--<th>Payer Type</th>-->
-        <!--<th>Join Date</th>-->
-        <!--<th>Leave Date</th>-->
-        <!--<th>Email</th>-->
-        <!--<th>Phone No</th>-->
-        <!--<th>Mobile No</th>-->
-        <!--<th>Card Requested</th>-->
-        <!--<th>Card Issued</th>-->
-        <!--<th>Welcome Letter Issued</th>-->
-        <!--<th>Comments</th>-->
-        <!--</tr>-->
-        <!--</thead>-->
-        <!--<tbody>-->
-        <!--<tr th:each="member: ${members}" style="cursor: pointer"-->
-        <!--th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">-->
-        <!--<td th:text="${member.membershipNumber}">Membership No</td>-->
-        <!--<td th:text="${member.forename}">Forename</td>-->
-        <!--<td th:text="${member.surname}">Surname</td>-->
-        <!--<td th:text="${member.membershipType}">Membership Type</td>-->
-        <!--<td th:text="${member.status}">Status</td>-->
-        <!--<td th:text="${member.payerType}">Payer Type</td>-->
-        <!--<td th:text="${member.joinDate}">Join Date</td>-->
-        <!--<td th:text="${member.leaveDate}">Leave Date</td>-->
-        <!--<td th:text="${member.email}">Email</td>-->
-        <!--<td th:text="${member.landlineNumber}">Phone Number</td>-->
-        <!--<td th:text="${member.mobileNumber}">Mobile Number</td>-->
-        <!--<td th:text="${member.cardRequestDate}">Card Request Date</td>-->
-        <!--<td th:text="${member.cardIssuedDate}">Card Issue Date</td>-->
-        <!--<td th:text="${member.welcomeLetterIssuedDate}">Welcome Letter Issue Date</td>-->
-        <!--<td th:text="${member.comments}">Comments</td>-->
+        <table id="draws_tab" class="table-condensed table-striped table-bordered table-hover" cellspacing="0"
+               width="100%">
+            <thead>
+            <tr>
+                <th>Lottery Draw Date</th>
+                <th>Draw Name</th>
+                <th>Drawn By</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="draw: ${lotteryDraws}" style="cursor: pointer">
+                <td th:text="${draw.drawDate} ? ${#dates.format(draw.drawDate, 'yyyy/MM/dd')}">Draw Date</td>
+                <td th:text="${draw.name}">Draw Name</td>
+                <td th:text="${draw.drawMaster}">Drawn By</td>
 
-        <!--</tr>-->
-        <!--</tbody>-->
-        <!--</table>-->
+            </tr>
+            </tbody>
+        </table>
 
         <script type="text/javascript" src="/js/jquery.js"></script>
         <script type="text/javascript" src="/js/jquery-ui.js"></script>

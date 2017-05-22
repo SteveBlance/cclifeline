@@ -21,6 +21,7 @@ public class LotteryDrawTest {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
         Date drawDate = sdf.parse("01/05/2017");
         lotteryDraw.setDrawDate(drawDate);
+        lotteryDraw.setName("March Mayhem");
         lotteryDraw.setDrawMaster("Ross");
         List<Prize> prizes = new ArrayList<>();
         Prize prize1 = new Prize();
@@ -54,6 +55,11 @@ public class LotteryDrawTest {
         Date drawDate = lotteryDraw.getDrawDate();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
         assertEquals("01/05/2017", sdf.format(drawDate));
+    }
+
+    @Test
+    public void getName() throws Exception {
+        assertEquals("March Mayhem", lotteryDraw.getName());
     }
 
     @Test
