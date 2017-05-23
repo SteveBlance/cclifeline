@@ -1,16 +1,23 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
+import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -22,17 +29,41 @@ public class LotteryDrawController {
     @Autowired
     private SecurityService securityService;
 
+    private Logger logger = LoggerFactory.getLogger(LotteryDrawController.class);
+
+
     @RequestMapping(value = "/draws", method = RequestMethod.GET)
     public ModelAndView navigateToWinners() {
         List<LotteryDraw> lotteryDraws = lotteryDrawService.fetchAllLotteryDraws();
         return modelAndView("draws").addObject("lotteryDraws", lotteryDraws);
     }
 
-    @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
-    public ModelAndView navigateMakeDraw() {
+    @RequestMapping(value = "/prepare-draw", method = RequestMethod.GET)
+    public ModelAndView navigateToPrepareDraw() {
         LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
         List<SecuritySubject> securitySubjects = securityService.findAllSecuritySubjects();
-        return modelAndView("make-draw").addObject("lotteryDraw", lotteryDrawViewBean).addObject("securitySubjects", securitySubjects);
+        return modelAndView("prepare-draw").addObject("lotteryDraw", lotteryDrawViewBean).addObject("securitySubjects", securitySubjects);
+    }
+
+    @RequestMapping(value = "/prepare-draw", method = RequestMethod.POST)
+    public ModelAndView prepareDraw(@Valid @ModelAttribute("lotteryDraw") LotteryDrawViewBean lotteryDrawViewBean, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for lotteryDraw: ", lotteryDrawViewBean);
+            return navigateToPrepareDraw();
+        }
+        Integer numberOfPrizes = lotteryDrawViewBean.getNumberOfPrizes();
+        List<Prize> drawPrizes = new ArrayList<>(numberOfPrizes);
+        for (int i = 0; i < numberOfPrizes; i++) {
+            drawPrizes.add(new Prize());
+        }
+        lotteryDrawViewBean.setPrizes(drawPrizes);
+
+        return navigateToMakeDraw(lotteryDrawViewBean);
+    }
+
+    @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
+    private ModelAndView navigateToMakeDraw(LotteryDrawViewBean lotteryDrawViewBean) {
+        return modelAndView("make-draw").addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
     private ModelAndView modelAndView(String page) {

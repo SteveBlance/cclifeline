@@ -25,6 +25,7 @@ public class LotteryDrawViewBeanTest {
         lotteryDraw.setDrawDate(drawDate);
         lotteryDraw.setName("March Mayhem");
         lotteryDraw.setDrawMaster("Ross");
+
         List<Prize> prizes = new ArrayList<>();
         Prize prize1 = new Prize();
         prize1.setId(1L);
@@ -35,7 +36,7 @@ public class LotteryDrawViewBeanTest {
         prize2.setId(2L);
         prize2.setWinner(newMember(1010L));
         prizes.add(prize2);
-
+        lotteryDraw.setNumberOfPrizes(prizes.size());
         lotteryDraw.setPrizes(prizes);
     }
 
@@ -72,6 +73,11 @@ public class LotteryDrawViewBeanTest {
         assertEquals(2, lotteryDraw.getPrizes().size());
         assertEquals(1L, lotteryDraw.getPrizes().get(0).getId().longValue());
         assertEquals(2L, lotteryDraw.getPrizes().get(1).getId().longValue());
+    }
+
+    @Test
+    public void getNumberOfPrizes() throws Exception {
+        assertEquals(2, lotteryDraw.getNumberOfPrizes().intValue());
     }
 
 }

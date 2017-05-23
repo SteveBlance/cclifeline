@@ -21,6 +21,8 @@ public class LotteryDrawViewBean {
     @NotNull
     private String drawMaster;
 
+    private Integer numberOfPrizes;
+
     private List<Prize> prizes = new ArrayList<>();
 
     public Long getId() {
@@ -61,6 +63,14 @@ public class LotteryDrawViewBean {
 
     public void setPrizes(List<Prize> prizes) {
         this.prizes = prizes;
+    }
+
+    public Integer getNumberOfPrizes() {
+        return numberOfPrizes;
+    }
+
+    public void setNumberOfPrizes(Integer numberOfPrizes) {
+        this.numberOfPrizes = numberOfPrizes;
     }
 }
 
