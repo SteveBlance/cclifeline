@@ -1,9 +1,11 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
+import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Controller
 public class LotteryDrawController {
@@ -28,6 +31,9 @@ public class LotteryDrawController {
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    private MemberService memberService;
 
     private Logger logger = LoggerFactory.getLogger(LotteryDrawController.class);
 
@@ -64,6 +70,25 @@ public class LotteryDrawController {
     @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
     private ModelAndView navigateToMakeDraw(LotteryDrawViewBean lotteryDrawViewBean) {
         return modelAndView("make-draw").addObject("lotteryDraw", lotteryDrawViewBean);
+    }
+
+    @RequestMapping(value = "/make-draw", method = RequestMethod.POST)
+    public ModelAndView makeDraw(@Valid @ModelAttribute("lotteryDraw") LotteryDrawViewBean lotteryDrawViewBean, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for lotteryDraw: ", lotteryDrawViewBean);
+            return navigateToPrepareDraw();
+        }
+        List<Prize> prizes = lotteryDrawViewBean.getPrizes();
+        List<Member> membersDrawEntries = memberService.fetchMemberDrawEntries();
+
+        for (Prize prize : prizes) {
+            int index = ThreadLocalRandom.current().nextInt(membersDrawEntries.size());
+            Member winner = membersDrawEntries.get(index);
+            prize.setWinner(winner);
+            membersDrawEntries.remove(winner);
+        }
+
+        return navigateToMakeDraw(lotteryDrawViewBean);
     }
 
     private ModelAndView modelAndView(String page) {

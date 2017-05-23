@@ -5,6 +5,7 @@ import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,5 +38,11 @@ public class MemberService {
 
     public Member findMemberById(Long memberId) {
         return memberRepository.findOne(memberId);
+    }
+
+    public List<Member> fetchMemberDrawEntries() {
+        List<Member> memberDrawEntries = new ArrayList<>();
+        //TODO: implement and test
+        return null;
     }
 }
