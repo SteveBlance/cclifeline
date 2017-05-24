@@ -3,6 +3,8 @@ package com.codaconsultancy.cclifeline.service;
 import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
+import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -27,6 +29,9 @@ public class MemberServiceTest {
 
     @MockBean
     MemberRepository memberRepository;
+
+    @MockBean
+    PaymentRepository paymentRepository;
 
     @Test
     public void findAllMembers() {
@@ -110,6 +115,73 @@ public class MemberServiceTest {
         assertEquals("Billy", newMember.getForename());
         assertEquals("Whiz", newMember.getSurname());
 
+    }
+
+    @Test
+    public void fetchLifelineMemberDrawEntries() {
+        Member lifelineMember1 = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
+        Member lifelineMember2 = TestHelper.newMember(24L, "Jimmy", "Whiz", "jw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
+        Member closedLifelineMember = TestHelper.newMember(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Closed");
+        Member cancelledLifelineMember = TestHelper.newMember(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Cancelled");
+
+        List<Member> allMembers = new ArrayList<>();
+        allMembers.add(lifelineMember1);
+        allMembers.add(lifelineMember2);
+        allMembers.add(closedLifelineMember);
+        allMembers.add(cancelledLifelineMember);
+        when(memberRepository.findAll()).thenReturn(allMembers);
+
+        List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
+
+        assertEquals(6, memberDrawEntries.size());
+        assertTrue(memberDrawEntries.contains(lifelineMember1));
+        assertTrue(memberDrawEntries.contains(lifelineMember2));
+        assertFalse(memberDrawEntries.contains(closedLifelineMember));
+        assertFalse(memberDrawEntries.contains(cancelledLifelineMember));
+    }
+
+    @Test
+    public void fetchLegacyMemberDrawEntries() {
+        Member legacyMember1 = TestHelper.newMember(23L, "David", "Jones", "bw@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Open");
+        Member premiumLegacyMember2 = TestHelper.newMember(24L, "Jimmy", "Jones", "jw@email.com", "0131991188", null, "Annual", "Premium Legacy", "New member", "Open");
+        Member closedLegacyMember = TestHelper.newMember(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Closed");
+        Member cancelledLegacyMember = TestHelper.newMember(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Cancelled");
+
+        List<Member> allMembers = new ArrayList<>();
+        allMembers.add(legacyMember1);
+        allMembers.add(premiumLegacyMember2);
+        allMembers.add(closedLegacyMember);
+        allMembers.add(cancelledLegacyMember);
+        when(memberRepository.findAll()).thenReturn(allMembers);
+
+        List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
+
+        assertEquals(2, memberDrawEntries.size());
+        assertTrue(memberDrawEntries.contains(legacyMember1));
+        assertTrue(memberDrawEntries.contains(premiumLegacyMember2));
+        assertFalse(memberDrawEntries.contains(closedLegacyMember));
+        assertFalse(memberDrawEntries.contains(cancelledLegacyMember));
+    }
+
+    @Test
+    public void getLastExpectedPaymentDate() {
+        DateTime fromDate = new DateTime(2017, 5, 2, 0, 0);
+        System.out.println(fromDate.toString("dd/MM/yyyy"));
+
+        DateTime lastExpectedPaymentDate = memberService.getLastExpectedPaymentDate(fromDate, "Monthly");
+
+        DateTime lastDate = new DateTime(2017, 4, 2, 0, 0);
+        assertEquals(lastDate, lastExpectedPaymentDate);
+
+        lastExpectedPaymentDate = memberService.getLastExpectedPaymentDate(fromDate, "Quarterly");
+
+        lastDate = new DateTime(2017, 2, 2, 0, 0);
+        assertEquals(lastDate, lastExpectedPaymentDate);
+
+        lastExpectedPaymentDate = memberService.getLastExpectedPaymentDate(fromDate, "Annual");
+
+        lastDate = new DateTime(2016, 5, 2, 0, 0);
+        assertEquals(lastDate, lastExpectedPaymentDate);
     }
 
 

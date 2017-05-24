@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.junit.Test;
@@ -37,6 +38,9 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @MockBean
     private SecurityService securityService;
+
+    @MockBean
+    private MemberService memberService;
 
     @Test
     public void navigateToWinners() {
