@@ -5,8 +5,12 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
 import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -119,20 +124,40 @@ public class MemberServiceTest {
 
     @Test
     public void fetchLifelineMemberDrawEntries() {
-        Member lifelineMember1 = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
-        Member lifelineMember2 = TestHelper.newMember(24L, "Jimmy", "Whiz", "jw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
+        Member lifelineMember1 = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Monthly", "Lifeline", "New member", "Open");
+        lifelineMember1.setId(66L);
+        Member lifelineMember2 = TestHelper.newMember(24L, "Jimmy", "Whiz", "jw@email.com", "0131991188", null, "Quarterly", "Lifeline", "New member", "Open");
+        lifelineMember2.setId(404L);
+        Member underpaidMember = TestHelper.newMember(97L, "Jen", "Underwood", "under@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
+        underpaidMember.setId(999L);
         Member closedLifelineMember = TestHelper.newMember(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Closed");
         Member cancelledLifelineMember = TestHelper.newMember(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Cancelled");
 
         List<Member> allMembers = new ArrayList<>();
         allMembers.add(lifelineMember1);
         allMembers.add(lifelineMember2);
+        allMembers.add(underpaidMember);
         allMembers.add(closedLifelineMember);
         allMembers.add(cancelledLifelineMember);
         when(memberRepository.findAll()).thenReturn(allMembers);
+        ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
+        ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
+        ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
+        when(paymentRepository.getTotalPaymentSince(monthlyLastPaymentCutoffDate.capture(), eq(66L))).thenReturn(20.00D);
+        when(paymentRepository.getTotalPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(404L))).thenReturn(60.00D);
+        when(paymentRepository.getTotalPaymentSince(annualLastPaymentCutoffDate.capture(), eq(999L))).thenReturn(239.00D);
 
         List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
 
+        DateTime now = new DateTime();
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+        DateTime expectedLastPaymentForMonthly = now.minus(Period.months(1)).minus(Period.days(30));
+        DateTime expectedLastPaymentForQuarterly = now.minus(Period.months(3)).minus(Period.days(30));
+        DateTime expectedLastPaymentForAnnual = now.minus(Period.years(1)).minus(Period.days(30));
+        assertEquals(expectedLastPaymentForMonthly.toString(dtf), new DateTime(monthlyLastPaymentCutoffDate.getValue()).toString(dtf));
+        assertEquals(expectedLastPaymentForQuarterly.toString(dtf), new DateTime(quarterlyLastPaymentCutoffDate.getValue()).toString(dtf));
+        assertEquals(expectedLastPaymentForAnnual.toString(dtf), new DateTime(annualLastPaymentCutoffDate.getValue()).toString(dtf));
+        verify(paymentRepository, times(3)).getTotalPaymentSince(any(Date.class), any(Long.class));
         assertEquals(6, memberDrawEntries.size());
         assertTrue(memberDrawEntries.contains(lifelineMember1));
         assertTrue(memberDrawEntries.contains(lifelineMember2));
@@ -142,20 +167,39 @@ public class MemberServiceTest {
 
     @Test
     public void fetchLegacyMemberDrawEntries() {
-        Member legacyMember1 = TestHelper.newMember(23L, "David", "Jones", "bw@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Open");
-        Member premiumLegacyMember2 = TestHelper.newMember(24L, "Jimmy", "Jones", "jw@email.com", "0131991188", null, "Annual", "Premium Legacy", "New member", "Open");
+        Member legacyMember1 = TestHelper.newMember(23L, "David", "Jones", "bw@email.com", "0131991188", null, "Monthly", "Legacy", "New member", "Open");
+        legacyMember1.setId(87L);
+        Member premiumLegacyMember2 = TestHelper.newMember(24L, "Jimmy", "Jones", "jw@email.com", "0131991188", null, "Quarterly", "Premium Legacy", "New member", "Open");
+        premiumLegacyMember2.setId(4L);
+        Member legacyMember3 = TestHelper.newMember(24L, "Ann", "Smith", "smithy@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Open");
+        legacyMember3.setId(89L);
         Member closedLegacyMember = TestHelper.newMember(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Closed");
         Member cancelledLegacyMember = TestHelper.newMember(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Cancelled");
 
         List<Member> allMembers = new ArrayList<>();
         allMembers.add(legacyMember1);
         allMembers.add(premiumLegacyMember2);
+        allMembers.add(legacyMember3);
         allMembers.add(closedLegacyMember);
         allMembers.add(cancelledLegacyMember);
         when(memberRepository.findAll()).thenReturn(allMembers);
+        ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
+        ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
+        ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
+        when(paymentRepository.getTotalPaymentSince(monthlyLastPaymentCutoffDate.capture(), eq(87L))).thenReturn(8.66D);
+        when(paymentRepository.getTotalPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(4L))).thenReturn(26.00D);
+        when(paymentRepository.getTotalPaymentSince(annualLastPaymentCutoffDate.capture(), eq(89L))).thenReturn(103.00D);
 
         List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
 
+        DateTime now = new DateTime();
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
+        DateTime expectedLastPaymentForMonthly = now.minus(Period.months(1)).minus(Period.days(30));
+        DateTime expectedLastPaymentForQuarterly = now.minus(Period.months(3)).minus(Period.days(30));
+        DateTime expectedLastPaymentForAnnual = now.minus(Period.years(1)).minus(Period.days(30));
+        assertEquals(expectedLastPaymentForMonthly.toString(dtf), new DateTime(monthlyLastPaymentCutoffDate.getValue()).toString(dtf));
+        assertEquals(expectedLastPaymentForQuarterly.toString(dtf), new DateTime(quarterlyLastPaymentCutoffDate.getValue()).toString(dtf));
+        assertEquals(expectedLastPaymentForAnnual.toString(dtf), new DateTime(annualLastPaymentCutoffDate.getValue()).toString(dtf));
         assertEquals(2, memberDrawEntries.size());
         assertTrue(memberDrawEntries.contains(legacyMember1));
         assertTrue(memberDrawEntries.contains(premiumLegacyMember2));

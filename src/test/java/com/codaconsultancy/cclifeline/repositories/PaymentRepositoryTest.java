@@ -3,6 +3,7 @@ package com.codaconsultancy.cclifeline.repositories;
 import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +25,7 @@ public class PaymentRepositoryTest extends BaseTest {
     private Member member;
     private Payment payment1;
     private Payment payment2;
+    private Payment payment3;
 
     @Before
     public void setUp() throws Exception {
@@ -35,31 +37,45 @@ public class PaymentRepositoryTest extends BaseTest {
         payment1 = new Payment(date1, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account");
         payment1.setMember(member);
         payment2 = new Payment(date2, 8.66F, "FPS CREDIT 0222 LINDSAY", "Legacy Current Account");
+        payment3 = new Payment(date2, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account");
+        payment3.setMember(member);
         entityManager.persist(payment1);
         entityManager.persist(payment2);
+        entityManager.persist(payment3);
     }
 
     @After
     public void tearDown() throws Exception {
         entityManager.remove(payment1);
         entityManager.remove(payment2);
+        entityManager.remove(payment3);
         entityManager.remove(member);
     }
 
     @Test
     public void findAll() throws Exception {
-        assertEquals(2, paymentRepository.findAll().size());
+        assertEquals(3, paymentRepository.findAll().size());
     }
 
     @Test
     public void findByMember() throws Exception {
         List<Payment> paymentsByMember = paymentRepository.findByMember(member);
 
-        assertEquals(1, paymentsByMember.size());
+        assertEquals(2, paymentsByMember.size());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         assertEquals("23/11/2014", simpleDateFormat.format(paymentsByMember.get(0).getPaymentDate()));
         assertEquals(20.00F, paymentsByMember.get(0).getPaymentAmount(), 0.001F);
         assertEquals("Lifeline Current Account", paymentsByMember.get(0).getCreditedAccount());
+
+    }
+
+    @Test
+    public void getTotalPaymentSince() {
+        DateTime dateTime = new DateTime(2014, 11, 23, 0, 0);
+        Double totalPayment = paymentRepository.getTotalPaymentSince(dateTime.toDate(), member.getId());
+        assertEquals(40.00D, totalPayment, 0.001D);
+        totalPayment = paymentRepository.getTotalPaymentSince(new DateTime().toDate(), member.getId());
+        assertEquals(0.00D, totalPayment, 0.001D);
 
     }
 

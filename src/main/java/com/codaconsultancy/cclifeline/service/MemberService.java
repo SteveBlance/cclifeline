@@ -84,8 +84,7 @@ public class MemberService {
 
         DateTime lastExpectedPaymentDate = getLastExpectedPaymentDate(today, payerType).minus(Period.days(gracePeriodInDays));
 
-        //TODO: complete
-        Double paymentTotalThisPeriod = 999999.99;  //paymentRepository.getTotalPaymentSince(lastExpectedPaymentDate.toDate());
+        Double paymentTotalThisPeriod = paymentRepository.getTotalPaymentSince(lastExpectedPaymentDate.toDate(), member.getId());
 
         return (paymentTotalThisPeriod >= requiredPaymentFrom(payerType, membershipType));
     }
