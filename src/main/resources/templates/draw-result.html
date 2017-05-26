@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/css/jquery-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css"/>
+    <link th:href="@{/css/main.css}" rel="stylesheet"/>
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"/>
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png"/>
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"/>
+    <link rel="manifest" href="/images/manifest.json"/>
+    <meta name="msapplication-TileColor" content="#ffffff"/>
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png"/>
+    <meta name="theme-color" content="#ffffff"/>
+
+    <title>Centenary Club Lifeline - Draw Result</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
+
+    <!-- MetisMenu CSS -->
+    <link th:href="@{/vendor/metisMenu/metisMenu.min.css}" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link th:href="@{/dist/css/sb-admin-2.css}" rel="stylesheet"/>
+
+    <!-- Morris Charts CSS -->
+    <link th:href="@{/vendor/morrisjs/morris.css}" rel="stylesheet"/>
+
+    <!-- Custom Fonts -->
+    <link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script th:src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script th:src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+</head>
+<body>
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <div th:include="/fragments/navigation :: header-side-nav"></div>
+
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="cclifeline-header"></h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-trophy fa-5x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><i class="fa fa-ticket" aria-hidden="true"></i></div>
+                                <div>Draw Result - <span
+                                        th:text="${lotteryDraw.drawDate} ? ${#dates.format(lotteryDraw.drawDate, 'dd/MM/yyyy')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+                <table id="lottery_draw_tab" class="table-condensed table-striped table-bordered" cellspacing="0"
+                       width="100%">
+                    <thead></thead>
+                    <tbody>
+                    <tr>
+                        <td class="col-sm-3"><strong>Draw Date</strong></td>
+                        <td class="col-sm-8"
+                            th:text="${lotteryDraw.drawDate} ? ${#dates.format(lotteryDraw.drawDate, 'dd/MM/yyyy')}">
+                            Draw Date
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Draw Name</strong></td>
+                        <td th:text="${lotteryDraw.name}">Draw Name</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Drawn By</strong></td>
+                        <td th:text="${lotteryDraw.drawMaster}">Drawn By</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Number of Prizes</strong></td>
+                        <td th:text="${lotteryDraw.numberOfPrizes}">Number of Prizes</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br/>
+            <div class="row">
+                <table id="winners_tab" class="table-condensed table-striped table-bordered table-hover"
+                       cellspacing="0"
+                       width="100%">
+                    <thead>
+                    <tr>
+                        <th>Prize</th>
+                        <th>Membership Number</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Mobile</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="prize: ${lotteryDraw.prizes}" style="cursor: pointer"
+                        th:onclick="'javascript:rowClicked(\'' + ${prize.winner.membershipNumber} + '\');'">
+                        <td th:text="${prize.prize}">Prize</td>
+                        <td th:text="${prize.winner.membershipNumber}">Membership Number</td>
+                        <td th:text="${prize.winner.forename + ' ' + prize.winner.surname}">Name</td>
+                        <td th:text="${prize.winner.email}">Email</td>
+                        <td th:text="${prize.winner.landlineNumber}">Phone</td>
+                        <td th:text="${prize.winner.landlineNumber}">Mobile</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <a th:href="@{/}" class="btn btn-default active" role="button">Home</a>
+            </div>
+        </div>
+        <br/>
+
+    </div>
+
+
+    <script type="text/javascript" src="/js/jquery.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui.js"></script>
+    <script type="text/javascript" src="/js/jquery.dataTables.js"></script>
+
+
+    <script type="text/javascript" language="javascript" class="init">
+
+        $(document).ready(function () {
+            $('#lottery_draw_tab').DataTable();
+            $('#winners_tab').DataTable();
+        });
+
+    </script>
+
+    <script>
+        function rowClicked(value) {
+            location.href = "/member/" + value;
+        }
+    </script>
+</div>
+
+</body>
+</html>

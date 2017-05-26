@@ -1,6 +1,8 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
+import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
@@ -14,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.validation.AbstractBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
@@ -75,38 +76,9 @@ public class LotteryDrawControllerTest extends BaseTest {
         assertEquals(2, retrievedSubjects.size());
     }
 
-//    @Test
-//    public void navigateToMakeDrawWithLotteryDrawBean() {
-//        List<SecuritySubject> securitySubjects = new ArrayList<>();
-//        SecuritySubject securitySubject1 = new SecuritySubject();
-//        SecuritySubject securitySubject2 = new SecuritySubject();
-//        securitySubjects.add(securitySubject1);
-//        securitySubjects.add(securitySubject2);
-//        when(securityService.findAllSecuritySubjects()).thenReturn(securitySubjects);
-//        LotteryDrawViewBean lotteryDrawBean = new LotteryDrawViewBean();
-//
-//        ModelAndView modelAndView = lotteryDrawController.navigateToMakeDraw(lotteryDrawBean);
-//
-//        verify(securityService, times(1)).findAllSecuritySubjects();
-//        assertEquals("make-draw", modelAndView.getViewName());
-//        assertSame(lotteryDrawBean, modelAndView.getModel().get("lotteryDraw"));
-//        List<SecuritySubject> retrievedSubjects = (List<SecuritySubject>) modelAndView.getModel().get("securitySubjects");
-//        assertEquals(2, retrievedSubjects.size());
-//    }
-
     @Test
     public void prepareDraw_success() {
-        BindingResult bindingResult = new AbstractBindingResult("lotteryDraw") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("lotteryDraw");
         LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
         lotteryDrawViewBean.setNumberOfPrizes(7);
 
@@ -118,17 +90,7 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @Test
     public void prepareDraw_validationErrors() {
-        BindingResult bindingResult = new AbstractBindingResult("lotteryDraw") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("lotteryDraw");
         bindingResult.addError(new ObjectError("surname", "Draw master not set"));
         LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
         lotteryDrawViewBean.setNumberOfPrizes(7);
@@ -137,6 +99,74 @@ public class LotteryDrawControllerTest extends BaseTest {
 
         assertEquals(0, lotteryDrawViewBean.getPrizes().size());
         assertEquals("prepare-draw", modelAndView.getViewName());
+    }
+
+    /*
+        @RequestMapping(value = "/make-draw", method = RequestMethod.POST)
+    public ModelAndView makeDraw(@Valid @ModelAttribute("lotteryDraw") LotteryDrawViewBean lotteryDrawViewBean, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for lotteryDraw: ", lotteryDrawViewBean);
+            return navigateToPrepareDraw();
+        }
+        List<Prize> prizes = lotteryDrawViewBean.getPrizes();
+        List<Member> membersDrawEntries = memberService.fetchMemberDrawEntries();
+
+        for (Prize prize : prizes) {
+            int index = ThreadLocalRandom.current().nextInt(membersDrawEntries.size());
+            Member winner = membersDrawEntries.get(index);
+            prize.setWinner(winner);
+            membersDrawEntries.remove(winner);
+        }
+
+        return navigateToMakeDraw(lotteryDrawViewBean);
+    }
+     */
+
+    @Test
+    public void makeDraw_success() {
+        BindingResult bindingResult = getBindingResult("lotteryDraw");
+        LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
+        List<Prize> newPrizesWithoutWinners = new ArrayList<>();
+        Prize prize1 = new Prize();
+        prize1.setPrize("£250");
+        newPrizesWithoutWinners.add(prize1);
+        Prize prize2 = new Prize();
+        prize2.setPrize("£100");
+        newPrizesWithoutWinners.add(prize2);
+        Prize prize3 = new Prize();
+        prize2.setPrize("£50");
+        newPrizesWithoutWinners.add(prize3);
+        lotteryDrawViewBean.setPrizes(newPrizesWithoutWinners);
+        List<Member> memberDrawEntries = new ArrayList<>();
+        Member member1 = new Member();
+        member1.setId(1L);
+        Member member2 = new Member();
+        member1.setId(2L);
+        Member member3 = new Member();
+        member1.setId(3L);
+        Member member4 = new Member();
+        member1.setId(4L);
+        memberDrawEntries.add(member1);
+        memberDrawEntries.add(member1);
+        memberDrawEntries.add(member1);
+        memberDrawEntries.add(member2);
+        memberDrawEntries.add(member3);
+        memberDrawEntries.add(member4);
+        when(memberService.fetchMemberDrawEntries()).thenReturn(memberDrawEntries);
+
+        assertEquals(6, memberDrawEntries.size());
+        assertNull(prize1.getWinner());
+        assertNull(prize2.getWinner());
+        assertNull(prize3.getWinner());
+
+        ModelAndView modelAndView = lotteryDrawController.makeDraw(lotteryDrawViewBean, bindingResult);
+
+        assertEquals(3, memberDrawEntries.size());
+        assertNotNull(prize1.getWinner());
+        assertNotNull(prize2.getWinner());
+        assertNotNull(prize3.getWinner());
+
+
     }
 
 }

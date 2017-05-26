@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.validation.AbstractBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
@@ -98,17 +97,7 @@ public class PaymentControllerTest extends BaseTest {
         PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ");
         paymentViewBean.setId(367L);
         paymentViewBean.setMemberId(555L);
-        BindingResult bindingResult = new AbstractBindingResult("member") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("payment");
         ArgumentCaptor<Payment> paymentArgumentCaptor = ArgumentCaptor.forClass(Payment.class);
         Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
         member.setId(555L);
@@ -131,17 +120,7 @@ public class PaymentControllerTest extends BaseTest {
         PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ");
         paymentViewBean.setId(367L);
         paymentViewBean.setMemberId(555L);
-        BindingResult bindingResult = new AbstractBindingResult("member") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("payment");
         bindingResult.addError(new ObjectError("paymentAmount", "Payment amount cannot be blank"));
         Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
         member.setId(555L);

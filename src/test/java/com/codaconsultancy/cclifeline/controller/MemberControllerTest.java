@@ -19,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.validation.AbstractBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
@@ -97,17 +96,7 @@ public class MemberControllerTest extends BaseTest {
         MemberViewBean memberViewBean = TestHelper.newMemberViewBean(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         Member member = memberViewBean.toEntity();
         when(memberService.saveMember(any(Member.class))).thenReturn(member);
-        BindingResult bindingResult = new AbstractBindingResult("member") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("member");
         ModelAndView modelAndView = memberController.addMember(memberViewBean, bindingResult);
 
         verify(memberService, times(1)).saveMember(any(Member.class));
@@ -120,17 +109,7 @@ public class MemberControllerTest extends BaseTest {
 
         MemberViewBean memberViewBean = TestHelper.newMemberViewBean(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         Member member = memberViewBean.toEntity();
-        BindingResult bindingResult = new AbstractBindingResult("member") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("member");
         bindingResult.addError(new ObjectError("surname", "Surname cannot be blank"));
         ModelAndView modelAndView = memberController.addMember(memberViewBean, bindingResult);
 
@@ -166,17 +145,7 @@ public class MemberControllerTest extends BaseTest {
         AddressViewBean address = new AddressViewBean();
         address.setMemberId(member.getId());
 
-        BindingResult bindingResult = new AbstractBindingResult("address") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("address");
 
         when(memberService.findMemberById(888L)).thenReturn(member);
         ArgumentCaptor<Address> addressArgumentCaptor = ArgumentCaptor.forClass(Address.class);
@@ -194,17 +163,7 @@ public class MemberControllerTest extends BaseTest {
     public void addAddress_validationErrors() {
 
         AddressViewBean address = new AddressViewBean();
-        BindingResult bindingResult = new AbstractBindingResult("address") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("address");
         bindingResult.addError(new ObjectError("line 1", "line 1 cannot be blank"));
         ModelAndView modelAndView = memberController.addAddress(address, bindingResult);
 
@@ -270,17 +229,7 @@ public class MemberControllerTest extends BaseTest {
         Member member = TestHelper.newMember(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.updateMember(any(Member.class))).thenReturn(member);
         when(memberService.findMemberByMembershipNumber(2L)).thenReturn(member);
-        BindingResult bindingResult = new AbstractBindingResult("member") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("member");
         ModelAndView modelAndView = memberController.editMember(member, bindingResult);
 
         verify(memberService, times(1)).updateMember(any(Member.class));
@@ -292,17 +241,7 @@ public class MemberControllerTest extends BaseTest {
     public void editMember_validationErrors() {
 
         Member member = TestHelper.newMember(2L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
-        BindingResult bindingResult = new AbstractBindingResult("member") {
-            @Override
-            public Object getTarget() {
-                return null;
-            }
-
-            @Override
-            protected Object getActualFieldValue(String s) {
-                return null;
-            }
-        };
+        BindingResult bindingResult = getBindingResult("member");
         bindingResult.addError(new ObjectError("surname", "Surname cannot be blank"));
         ModelAndView modelAndView = memberController.editMember(member, bindingResult);
 

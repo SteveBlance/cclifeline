@@ -87,8 +87,16 @@ public class LotteryDrawController {
             prize.setWinner(winner);
             membersDrawEntries.remove(winner);
         }
+        lotteryDrawViewBean.setNumberOfPrizes(prizes.size());
 
-        return navigateToMakeDraw(lotteryDrawViewBean);
+//        TODO: save the completed draw, prizes and winners
+//        lotteryDrawService.saveLotteryDraw(lotteryDrawViewBean.toEntity());
+
+        return navigateToViewDrawResult(lotteryDrawViewBean);
+    }
+
+    private ModelAndView navigateToViewDrawResult(LotteryDrawViewBean lotteryDrawViewBean) {
+        return modelAndView("draw-result").addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
     private ModelAndView modelAndView(String page) {
