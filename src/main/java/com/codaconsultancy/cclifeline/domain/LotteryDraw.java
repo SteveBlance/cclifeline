@@ -70,4 +70,19 @@ public class LotteryDraw {
     public void setPrizes(List<Prize> prizes) {
         this.prizes = prizes;
     }
+
+    @Transient
+    public String showPrizesSummary() {
+        StringBuilder summary = new StringBuilder();
+        List<Prize> prizes = this.prizes;
+        for (Prize prize : prizes) {
+            Member winner = prize.getWinner();
+            summary.append(prize.getPrize()).append(": ")
+                    .append(winner.getForename()).append(" ").append(winner.getSurname())
+                    .append(" (").append(winner.getMembershipNumber()).append("), ");
+        }
+        summary.deleteCharAt(summary.length() - 1);
+        summary.deleteCharAt(summary.length() - 1);
+        return summary.toString();
+    }
 }

@@ -101,27 +101,6 @@ public class LotteryDrawControllerTest extends BaseTest {
         assertEquals("prepare-draw", modelAndView.getViewName());
     }
 
-    /*
-        @RequestMapping(value = "/make-draw", method = RequestMethod.POST)
-    public ModelAndView makeDraw(@Valid @ModelAttribute("lotteryDraw") LotteryDrawViewBean lotteryDrawViewBean, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            logger.debug("Validation errors for lotteryDraw: ", lotteryDrawViewBean);
-            return navigateToPrepareDraw();
-        }
-        List<Prize> prizes = lotteryDrawViewBean.getPrizes();
-        List<Member> membersDrawEntries = memberService.fetchMemberDrawEntries();
-
-        for (Prize prize : prizes) {
-            int index = ThreadLocalRandom.current().nextInt(membersDrawEntries.size());
-            Member winner = membersDrawEntries.get(index);
-            prize.setWinner(winner);
-            membersDrawEntries.remove(winner);
-        }
-
-        return navigateToMakeDraw(lotteryDrawViewBean);
-    }
-     */
-
     @Test
     public void makeDraw_success() {
         BindingResult bindingResult = getBindingResult("lotteryDraw");
@@ -141,31 +120,27 @@ public class LotteryDrawControllerTest extends BaseTest {
         Member member1 = new Member();
         member1.setId(1L);
         Member member2 = new Member();
-        member1.setId(2L);
+        member2.setId(2L);
         Member member3 = new Member();
-        member1.setId(3L);
-        Member member4 = new Member();
-        member1.setId(4L);
+        member3.setId(3L);
         memberDrawEntries.add(member1);
         memberDrawEntries.add(member1);
         memberDrawEntries.add(member1);
         memberDrawEntries.add(member2);
         memberDrawEntries.add(member3);
-        memberDrawEntries.add(member4);
         when(memberService.fetchMemberDrawEntries()).thenReturn(memberDrawEntries);
 
-        assertEquals(6, memberDrawEntries.size());
+        assertEquals(5, memberDrawEntries.size());
         assertNull(prize1.getWinner());
         assertNull(prize2.getWinner());
         assertNull(prize3.getWinner());
 
         ModelAndView modelAndView = lotteryDrawController.makeDraw(lotteryDrawViewBean, bindingResult);
 
-        assertEquals(3, memberDrawEntries.size());
+        assertEquals(0, memberDrawEntries.size());
         assertNotNull(prize1.getWinner());
         assertNotNull(prize2.getWinner());
         assertNotNull(prize3.getWinner());
-
 
     }
 

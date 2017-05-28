@@ -76,6 +76,7 @@
                 <th>Lottery Draw Date</th>
                 <th>Draw Name</th>
                 <th>Drawn By</th>
+                <th>Winners</th>
             </tr>
             </thead>
             <tbody>
@@ -83,6 +84,7 @@
                 <td th:text="${draw.drawDate} ? ${#dates.format(draw.drawDate, 'yyyy/MM/dd')}">Draw Date</td>
                 <td th:text="${draw.name}">Draw Name</td>
                 <td th:text="${draw.drawMaster}">Drawn By</td>
+                <td th:text="${draw.showPrizesSummary()}">Winners</td>
 
             </tr>
             </tbody>

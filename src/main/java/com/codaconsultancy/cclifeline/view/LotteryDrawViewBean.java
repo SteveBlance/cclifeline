@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.view;
 
+import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -71,6 +72,20 @@ public class LotteryDrawViewBean {
 
     public void setNumberOfPrizes(Integer numberOfPrizes) {
         this.numberOfPrizes = numberOfPrizes;
+    }
+
+    public String showPrizesSummary() {
+        StringBuilder prizeSummary = new StringBuilder();
+        List<Prize> prizes = this.prizes;
+        for (Prize prize : prizes) {
+            Member winner = prize.getWinner();
+            prizeSummary.append(prize.getPrize()).append(": ")
+                    .append(winner.getForename()).append(" ").append(winner.getSurname())
+                    .append(" (").append(winner.getMembershipNumber()).append("), ");
+        }
+        prizeSummary.deleteCharAt(prizeSummary.length() - 1);
+        prizeSummary.deleteCharAt(prizeSummary.length() - 1);
+        return prizeSummary.toString();
     }
 }
 

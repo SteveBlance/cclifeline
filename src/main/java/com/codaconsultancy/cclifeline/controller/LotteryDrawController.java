@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -85,7 +86,7 @@ public class LotteryDrawController {
             int index = ThreadLocalRandom.current().nextInt(membersDrawEntries.size());
             Member winner = membersDrawEntries.get(index);
             prize.setWinner(winner);
-            membersDrawEntries.remove(winner);
+            removeAllEntries(winner.getId(), membersDrawEntries);
         }
         lotteryDrawViewBean.setNumberOfPrizes(prizes.size());
 
@@ -93,6 +94,16 @@ public class LotteryDrawController {
 //        lotteryDrawService.saveLotteryDraw(lotteryDrawViewBean.toEntity());
 
         return navigateToViewDrawResult(lotteryDrawViewBean);
+    }
+
+    private void removeAllEntries(Long winnerId, List<Member> membersDrawEntries) {
+        for (Iterator<Member> iterator = membersDrawEntries.iterator(); iterator.hasNext(); ) {
+            Member member = iterator.next();
+            Long id = member.getId();
+            if (id.equals(winnerId)) {
+                iterator.remove();
+            }
+        }
     }
 
     private ModelAndView navigateToViewDrawResult(LotteryDrawViewBean lotteryDrawViewBean) {
