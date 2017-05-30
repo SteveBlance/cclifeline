@@ -98,8 +98,8 @@
                 <div class="col-sm-7">
                     <select id="drawnBySubject" class="form-control" name="drawnBySubjectId" th:field="*{drawMaster}">
                         <option th:each="securitySubject : ${securitySubjects}"
-                                th:value="${securitySubject.getForename()}"
-                                th:text="${securitySubject.getForename()}">Drawn By
+                                th:value="${securitySubject.forename + ' ' + securitySubject.surname}"
+                                th:text="${securitySubject.forename + ' ' + securitySubject.surname}">Drawn By
                         </option>
                     </select>
                 </div>
