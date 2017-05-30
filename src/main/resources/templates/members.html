@@ -84,10 +84,12 @@
                 <th>Email</th>
                 <th>Phone No</th>
                 <th>Mobile No</th>
+                <th>Eligible For Draw</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="member: ${members}" style="cursor: pointer"
+            <tr th:class="${member.isEligibleForDraw()}? success : danger" th:each="member: ${members}"
+                style="cursor: pointer"
                 th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">
                 <td th:text="${member.membershipNumber}">Membership No</td>
                 <td th:text="${member.forename}">Forename</td>
@@ -100,6 +102,10 @@
                 <td th:text="${member.email}">Email</td>
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
+                <td th:style="${member.isEligibleForDraw()}? 'color: green' : 'color: red'"
+                    th:utext="${member.isEligibleForDraw()}? '&lt;i class=&quot;fa fa-check fa-lg&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;' : '&lt;i class=&quot;fa fa-times fa-lg&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;'">
+                    Eligible For Draw
+                </td>
 
             </tr>
             </tbody>

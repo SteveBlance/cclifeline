@@ -72,15 +72,20 @@ public class MemberControllerTest extends BaseTest {
         members.add(member2);
         when(memberService.countAllMembers()).thenReturn(22L);
         when(memberService.findAllMembers()).thenReturn(members);
+        when(memberService.isEligibleForDraw(member1)).thenReturn(true);
+        when(memberService.isEligibleForDraw(member2)).thenReturn(false);
 
         ModelAndView response = memberController.members();
 
         verify(memberService, times(1)).findAllMembers();
+        verify(memberService, times(2)).isEligibleForDraw(any(Member.class));
 
         verify(memberService, times(1)).countAllMembers();
         assertEquals(22L, response.getModel().get("memberCount"));
         assertSame(members, response.getModel().get("members"));
         assertEquals("members", response.getViewName());
+        assertTrue(member1.isEligibleForDraw());
+        assertFalse(member2.isEligibleForDraw());
     }
 
     @Test
@@ -88,11 +93,14 @@ public class MemberControllerTest extends BaseTest {
         long memberNumber = 1234L;
         Member member1234 = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
+        when(memberService.isEligibleForDraw(member1234)).thenReturn(true);
 
         ModelAndView response = memberController.memberDetails(memberNumber);
 
+        verify(memberService, times(1)).isEligibleForDraw(member1234);
         verify(memberService, times(1)).findMemberByMembershipNumber(1234L);
         assertEquals("Bobby", ((Member) response.getModel().get("member")).getForename());
+        assertTrue(((Member) response.getModel().get("member")).isEligibleForDraw());
         assertEquals("member", response.getViewName());
 
     }
@@ -149,12 +157,15 @@ public class MemberControllerTest extends BaseTest {
 
         Member member = new Member();
         member.setId(888L);
+        member.setMembershipNumber(3399L);
         AddressViewBean address = new AddressViewBean();
         address.setMemberId(member.getId());
 
         BindingResult bindingResult = getBindingResult("address");
 
         when(memberService.findMemberById(888L)).thenReturn(member);
+        when(memberService.isEligibleForDraw(member)).thenReturn(true);
+        when(memberService.findMemberByMembershipNumber(3399L)).thenReturn(member);
         ArgumentCaptor<Address> addressArgumentCaptor = ArgumentCaptor.forClass(Address.class);
 
         ModelAndView modelAndView = memberController.addAddress(address, bindingResult);

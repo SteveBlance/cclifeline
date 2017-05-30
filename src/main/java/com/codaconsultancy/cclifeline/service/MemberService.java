@@ -70,7 +70,7 @@ public class MemberService {
         return member.getMembershipType().equalsIgnoreCase("Lifeline");
     }
 
-    private boolean isEligibleForDraw(Member member) {
+    public boolean isEligibleForDraw(Member member) {
         //TODO: use stored config for gracePeriodInDays
         int gracePeriodInDays = 30;
 

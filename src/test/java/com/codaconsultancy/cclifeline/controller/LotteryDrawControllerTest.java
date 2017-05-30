@@ -150,7 +150,20 @@ public class LotteryDrawControllerTest extends BaseTest {
         assertNotNull(prize1.getWinner());
         assertNotNull(prize2.getWinner());
         assertNotNull(prize3.getWinner());
+    }
 
+    @Test
+    public void makeDraw_validationErrors() {
+        BindingResult bindingResult = getBindingResult("lotteryDraw");
+        bindingResult.addError(new ObjectError("draw", "Draw date not set"));
+        LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
+
+        ModelAndView modelAndView = lotteryDrawController.makeDraw(lotteryDrawViewBean, bindingResult);
+
+        verify(memberService, never()).fetchMemberDrawEntries();
+        verify(lotteryDrawService, never()).saveLotteryDraw(any(LotteryDraw.class));
+
+        assertEquals("prepare-draw", modelAndView.getViewName());
     }
 
 }

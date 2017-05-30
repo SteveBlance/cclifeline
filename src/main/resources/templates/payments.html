@@ -79,6 +79,7 @@
                 <th>Payment Amount (£)</th>
                 <th>Credit Reference</th>
                 <th>Credited Account</th>
+                <th>Member</th>
             </tr>
             </thead>
             <tbody>
@@ -89,6 +90,9 @@
                 </td>
                 <td th:text="${payment.creditReference}">Credit Reference</td>
                 <td th:text="${payment.creditedAccount}">Credited Account</td>
+                <td th:text="${payment.member}? ${payment.member.membershipNumber + ': ' + payment.member.forename + ' '
+                + payment.member.surname}">Member
+                </td>
             </tr>
             </tbody>
         </table>
@@ -98,9 +102,9 @@
         <script type="text/javascript" src="/js/jquery.dataTables.js"></script>
 
         <!--<script>-->
-            <!--function rowClicked(value) {-->
-                <!--location.href = "/member/" + value;-->
-            <!--}-->
+        <!--function rowClicked(value) {-->
+        <!--location.href = "/member/" + value;-->
+        <!--}-->
         <!--</script>-->
 
         <script type="text/javascript" language="javascript" class="init">

@@ -82,6 +82,9 @@ public class Member {
     @OneToMany(mappedBy = "winner")
     private List<Prize> prizeWins = new ArrayList<>();
 
+    @Transient
+    private boolean isEligibleForDraw;
+
     public Long getId() {
         return id;
     }
@@ -230,5 +233,17 @@ public class Member {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         MapperFacade mapper = mapperFactory.getMapperFacade();
         return mapper.map(this, MemberViewBean.class);
+    }
+
+    public void setIsEligibleForDraw(boolean isEligibleForDraw) {
+        this.isEligibleForDraw = isEligibleForDraw;
+    }
+
+    public boolean isEligibleForDraw() {
+        return isEligibleForDraw;
+    }
+
+    public void setEligibleForDraw(boolean isEligibleForDraw) {
+        this.isEligibleForDraw = isEligibleForDraw;
     }
 }

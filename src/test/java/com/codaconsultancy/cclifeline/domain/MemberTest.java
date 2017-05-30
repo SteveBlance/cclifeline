@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MemberTest {
 
@@ -40,6 +41,7 @@ public class MemberTest {
         member.setMobileNumber("07766554433");
         member.setPayerType("Monthly");
         member.setStatus("Closed");
+        member.setIsEligibleForDraw(true);
         List<Address> addresses = new ArrayList<>();
         Address address1 = new Address();
         address1.setId(23L);
@@ -162,5 +164,10 @@ public class MemberTest {
         wins.add(new Prize());
         member.setPrizeWins(wins);
         assertEquals(2, member.getPrizeWins().size());
+    }
+
+    @Test
+    public void isElegibleForDraw() {
+        assertTrue(member.isEligibleForDraw());
     }
 }

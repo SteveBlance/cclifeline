@@ -45,6 +45,13 @@ public class MemberController {
     @RequestMapping("/members")
     public ModelAndView members() {
         List<Member> allMembers = memberService.findAllMembers();
+        for (Member member : allMembers) {
+            if (memberService.isEligibleForDraw(member)) {
+                member.setIsEligibleForDraw(true);
+            } else {
+                member.setIsEligibleForDraw(false);
+            }
+        }
         long count = memberService.countAllMembers();
         return modelAndView("members").addObject("memberCount", count).addObject("members", allMembers);
     }
@@ -52,6 +59,8 @@ public class MemberController {
     @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)
     public ModelAndView memberDetails(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
+        boolean isEligible = memberService.isEligibleForDraw(member);
+        member.setIsEligibleForDraw(isEligible);
         return modelAndView("member").addObject("member", member);
     }
 
