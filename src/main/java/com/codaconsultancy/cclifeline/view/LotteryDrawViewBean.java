@@ -1,7 +1,11 @@
 package com.codaconsultancy.cclifeline.view;
 
+import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -79,13 +83,19 @@ public class LotteryDrawViewBean {
         List<Prize> prizes = this.prizes;
         for (Prize prize : prizes) {
             Member winner = prize.getWinner();
-            prizeSummary.append(prize.getPrize()).append(": ")
-                    .append(winner.getForename()).append(" ").append(winner.getSurname())
+            prizeSummary.append(prize.getPrize()).append(": ").append(winner.getForename()).append(" ").append(winner.getSurname())
                     .append(" (").append(winner.getMembershipNumber()).append("), ");
         }
         prizeSummary.deleteCharAt(prizeSummary.length() - 1);
         prizeSummary.deleteCharAt(prizeSummary.length() - 1);
-        return prizeSummary.toString();
+        String summaryString = prizeSummary.toString();
+        return summaryString;
+    }
+
+    public LotteryDraw toEntity() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(this, LotteryDraw.class);
     }
 }
 

@@ -11,6 +11,7 @@ import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -130,6 +131,9 @@ public class LotteryDrawControllerTest extends BaseTest {
         memberDrawEntries.add(member3);
         when(memberService.fetchMemberDrawEntries()).thenReturn(memberDrawEntries);
 
+        ArgumentCaptor<LotteryDraw> lotteryDrawArgumentCaptor = ArgumentCaptor.forClass(LotteryDraw.class);
+        when(lotteryDrawService.saveLotteryDraw(lotteryDrawArgumentCaptor.capture())).thenReturn(new LotteryDraw());
+
         assertEquals(5, memberDrawEntries.size());
         assertNull(prize1.getWinner());
         assertNull(prize2.getWinner());
@@ -137,6 +141,11 @@ public class LotteryDrawControllerTest extends BaseTest {
 
         ModelAndView modelAndView = lotteryDrawController.makeDraw(lotteryDrawViewBean, bindingResult);
 
+        verify(memberService, times(1)).fetchMemberDrawEntries();
+        verify(lotteryDrawService, times(1)).saveLotteryDraw(lotteryDrawArgumentCaptor.capture());
+
+        assertEquals(3, lotteryDrawArgumentCaptor.getValue().getPrizes().size());
+        assertEquals("draw-result", modelAndView.getViewName());
         assertEquals(0, memberDrawEntries.size());
         assertNotNull(prize1.getWinner());
         assertNotNull(prize2.getWinner());

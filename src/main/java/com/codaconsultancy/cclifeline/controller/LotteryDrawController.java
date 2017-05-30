@@ -42,7 +42,8 @@ public class LotteryDrawController {
     @RequestMapping(value = "/draws", method = RequestMethod.GET)
     public ModelAndView navigateToWinners() {
         List<LotteryDraw> lotteryDraws = lotteryDrawService.fetchAllLotteryDraws();
-        return modelAndView("draws").addObject("lotteryDraws", lotteryDraws);
+        Long totalNumberOfWinners = lotteryDrawService.countAllWinners();
+        return modelAndView("draws").addObject("lotteryDraws", lotteryDraws).addObject("totalNumberOfWinners", totalNumberOfWinners);
     }
 
     @RequestMapping(value = "/prepare-draw", method = RequestMethod.GET)
@@ -86,17 +87,16 @@ public class LotteryDrawController {
             int index = ThreadLocalRandom.current().nextInt(membersDrawEntries.size());
             Member winner = membersDrawEntries.get(index);
             prize.setWinner(winner);
-            removeAllEntries(winner.getId(), membersDrawEntries);
+            removeAllEntriesForWinner(winner.getId(), membersDrawEntries);
         }
         lotteryDrawViewBean.setNumberOfPrizes(prizes.size());
 
-//        TODO: save the completed draw, prizes and winners
-//        lotteryDrawService.saveLotteryDraw(lotteryDrawViewBean.toEntity());
+        lotteryDrawService.saveLotteryDraw(lotteryDrawViewBean.toEntity());
 
         return navigateToViewDrawResult(lotteryDrawViewBean);
     }
 
-    private void removeAllEntries(Long winnerId, List<Member> membersDrawEntries) {
+    private void removeAllEntriesForWinner(Long winnerId, List<Member> membersDrawEntries) {
         for (Iterator<Member> iterator = membersDrawEntries.iterator(); iterator.hasNext(); ) {
             Member member = iterator.next();
             Long id = member.getId();

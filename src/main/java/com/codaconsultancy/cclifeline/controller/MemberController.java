@@ -3,6 +3,7 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.service.AddressService;
+import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
@@ -29,12 +30,16 @@ public class MemberController {
     @Autowired
     private AddressService addressService;
 
+    @Autowired
+    private LotteryDrawService lotteryDrawService;
+
     private Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @RequestMapping("/")
     public ModelAndView home() {
         long count = memberService.countAllMembers();
-        return modelAndView("index").addObject("memberCount", count);
+        Long totalNumberOfWinners = lotteryDrawService.countAllWinners();
+        return modelAndView("index").addObject("memberCount", count).addObject("totalNumberOfWinners", totalNumberOfWinners);
     }
 
     @RequestMapping("/members")

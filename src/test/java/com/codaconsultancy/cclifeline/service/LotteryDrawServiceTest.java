@@ -1,7 +1,9 @@
 package com.codaconsultancy.cclifeline.service;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
+import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.repositories.LotteryDrawRepository;
+import com.codaconsultancy.cclifeline.repositories.PrizeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class LotteryDrawServiceTest {
     @MockBean
     private LotteryDrawRepository lotteryDrawRepository;
 
+    @MockBean
+    private PrizeRepository prizeRepository;
+
     @Test
     public void fetchAllLotteryDraws() throws Exception {
         List<LotteryDraw> lotteryDraws = new ArrayList<>();
@@ -45,6 +50,30 @@ public class LotteryDrawServiceTest {
         assertEquals(2, foundDraws.size());
         assertEquals(9L, foundDraws.get(0).getId().longValue());
         assertEquals(10L, foundDraws.get(1).getId().longValue());
+    }
+
+    @Test
+    public void saveLotteryDraw() throws Exception {
+        LotteryDraw lotteryDraw = new LotteryDraw();
+        List<Prize> prizes = new ArrayList<>();
+        Prize prize1 = new Prize();
+        prize1.setPrize("£200");
+        prizes.add(prize1);
+        lotteryDraw.setPrizes(prizes);
+        when(lotteryDrawRepository.save(lotteryDraw)).thenReturn(lotteryDraw);
+
+        lotteryDrawService.saveLotteryDraw(lotteryDraw);
+
+        verify(lotteryDrawRepository, times(1)).save(lotteryDraw);
+        verify((prizeRepository), times(1)).save(prizes);
+    }
+
+    @Test
+    public void fetchAllWinners() {
+
+        lotteryDrawService.countAllWinners();
+
+        verify(prizeRepository, times(1)).count();
     }
 
 }

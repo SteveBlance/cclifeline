@@ -196,17 +196,17 @@ public class MemberViewBean {
         this.addresses = addresses;
     }
 
-    public Member toEntity() {
-        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(this, Member.class);
-    }
-
     public void setPrizeWins(List<Prize> prizeWins) {
         this.prizeWins = prizeWins;
     }
 
     public List<Prize> getPrizeWins() {
         return prizeWins;
+    }
+
+    public Member toEntity() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(this, Member.class);
     }
 }

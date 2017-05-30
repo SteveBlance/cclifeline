@@ -5,6 +5,7 @@ import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.AddressService;
+import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
@@ -36,6 +37,9 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = MemberController.class)
 public class MemberControllerTest extends BaseTest {
 
+    @MockBean
+    private LotteryDrawService lotteryDrawService;
+
     @Autowired
     MemberController memberController;
 
@@ -48,11 +52,14 @@ public class MemberControllerTest extends BaseTest {
     @Test
     public void home() throws Exception {
         when(memberService.countAllMembers()).thenReturn(22L);
+        when(lotteryDrawService.countAllWinners()).thenReturn(18L);
 
         ModelAndView response = memberController.home();
 
         verify(memberService, times(1)).countAllMembers();
+        verify(lotteryDrawService, times(1)).countAllWinners();
         assertEquals(22L, response.getModel().get("memberCount"));
+        assertEquals(18L, response.getModel().get("totalNumberOfWinners"));
         assertEquals("index", response.getViewName());
     }
 
