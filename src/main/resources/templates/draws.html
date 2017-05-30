@@ -80,7 +80,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="draw: ${lotteryDraws}" style="cursor: pointer">
+            <tr th:each="draw: ${lotteryDraws}">
                 <td th:text="${draw.drawDate} ? ${#dates.format(draw.drawDate, 'yyyy/MM/dd')}">Draw Date</td>
                 <td th:text="${draw.name}">Draw Name</td>
                 <td th:text="${draw.drawMaster}">Drawn By</td>

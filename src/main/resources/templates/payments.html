@@ -83,8 +83,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="payment: ${payments}" style="cursor: pointer">
-                <!--th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">-->
+            <tr th:each="payment: ${payments}">
                 <td th:text="${#dates.format(payment.paymentDate, 'yyyy/MM/dd')}">Payment Date</td>
                 <td th:text="${#numbers.formatDecimal(payment.paymentAmount, 0, 'COMMA', 2, 'POINT')}">Payment Amount
                 </td>
