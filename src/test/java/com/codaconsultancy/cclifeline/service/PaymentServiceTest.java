@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.service;
 
 import com.codaconsultancy.cclifeline.domain.Payment;
+import com.codaconsultancy.cclifeline.repositories.PaymentReferenceRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,9 @@ public class PaymentServiceTest {
 
     @MockBean
     private PaymentRepository paymentRepository;
+
+    @MockBean
+    private PaymentReferenceRepository paymentRepository;
 
     @Test
     public void findAllPayments() throws Exception {

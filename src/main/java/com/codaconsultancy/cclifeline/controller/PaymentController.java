@@ -74,17 +74,14 @@ public class PaymentController {
     }
 
     @RequestMapping(value = "/payment-reference", method = RequestMethod.POST)
-    public ModelAndView addPayment(@Valid @ModelAttribute("paymentReference") PaymentReference paymentReference, BindingResult bindingResult) {
+    public ModelAndView addPaymentReference(@Valid @ModelAttribute("paymentReference") PaymentReference paymentReference, BindingResult bindingResult) {
+        Member member = paymentReference.getMember();
         if (bindingResult.hasErrors()) {
             logger.debug("Validation errors for reference: ", paymentReference);
-            return navigateToAddPayment();
+            return navigateToAddPaymentReference(member.getMembershipNumber());
         }
-//        Payment payment = paymentViewBean.toEntity();
-//        Member member = memberService.findMemberById(paymentViewBean.getMemberId());
-//        payment.setMember(member);
-//        paymentService.savePayment(payment);
-
-        return navigateToPayments();
+        paymentService.savePaymentReference(paymentReference);
+        return navigateToPaymentReferencesForMember(member.getMembershipNumber());
     }
 
 
