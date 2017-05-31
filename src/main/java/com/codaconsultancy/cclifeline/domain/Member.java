@@ -82,6 +82,9 @@ public class Member {
     @OneToMany(mappedBy = "winner")
     private List<Prize> prizeWins = new ArrayList<>();
 
+    @OneToMany(mappedBy = "member")
+    private List<PaymentReference> paymentReferences = new ArrayList<>();
+
     @Transient
     private boolean isEligibleForDraw;
 
@@ -245,5 +248,13 @@ public class Member {
 
     public void setEligibleForDraw(boolean isEligibleForDraw) {
         this.isEligibleForDraw = isEligibleForDraw;
+    }
+
+    public List<PaymentReference> getPaymentReferences() {
+        return paymentReferences;
+    }
+
+    public void setPaymentReferences(List<PaymentReference> paymentReferences) {
+        this.paymentReferences = paymentReferences;
     }
 }

@@ -30,6 +30,7 @@ public class PaymentReference {
     private Boolean isActive;
 
     @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     public Long getId() {
