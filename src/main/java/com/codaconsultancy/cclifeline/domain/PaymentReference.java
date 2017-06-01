@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "PAYMENT_REFERENCES")
@@ -26,6 +27,7 @@ public class PaymentReference {
     @Column(name = "NAME")
     private String name;
 
+    @NotNull
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
 

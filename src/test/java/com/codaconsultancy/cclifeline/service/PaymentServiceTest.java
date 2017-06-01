@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.service;
 
 import com.codaconsultancy.cclifeline.domain.Payment;
+import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.repositories.PaymentReferenceRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class PaymentServiceTest {
     private PaymentRepository paymentRepository;
 
     @MockBean
-    private PaymentReferenceRepository paymentRepository;
+    private PaymentReferenceRepository paymentReferenceRepository;
 
     @Test
     public void findAllPayments() throws Exception {
@@ -65,7 +66,17 @@ public class PaymentServiceTest {
         verify(paymentRepository, times(1)).save(payment);
 
         assertSame(payment, savedPayment);
+    }
 
+    @Test
+    public void savePaymentReference() {
+        PaymentReference paymentReference = new PaymentReference("FPS CREDIT 1234 H PETRIE", "Hamish Petrie", true, null);
+        when(paymentReferenceRepository.save(paymentReference)).thenReturn(paymentReference);
+
+        PaymentReference saveReference = paymentService.savePaymentReference(paymentReference);
+
+        verify(paymentReferenceRepository, times(1)).save(paymentReference);
+        assertSame(saveReference, paymentReference);
     }
 
 }

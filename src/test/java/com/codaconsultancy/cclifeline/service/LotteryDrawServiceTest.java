@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -61,19 +61,25 @@ public class LotteryDrawServiceTest {
         prizes.add(prize1);
         lotteryDraw.setPrizes(prizes);
         when(lotteryDrawRepository.save(lotteryDraw)).thenReturn(lotteryDraw);
+        assertNull(prize1.getLotteryDraw());
 
         lotteryDrawService.saveLotteryDraw(lotteryDraw);
+
+        assertNotNull(prize1.getLotteryDraw());
+        assertSame(lotteryDraw, prize1.getLotteryDraw());
 
         verify(lotteryDrawRepository, times(1)).save(lotteryDraw);
         verify((prizeRepository), times(1)).save(prizes);
     }
 
     @Test
-    public void fetchAllWinners() {
+    public void countAllWinners() {
+        when(prizeRepository.count()).thenReturn(34L);
 
-        lotteryDrawService.countAllWinners();
+        Long winnerCount = lotteryDrawService.countAllWinners();
 
         verify(prizeRepository, times(1)).count();
+        assertEquals(34L, winnerCount.longValue());
     }
 
 }
