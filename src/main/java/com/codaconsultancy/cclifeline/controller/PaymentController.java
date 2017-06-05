@@ -12,10 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -90,6 +88,20 @@ public class PaymentController {
 
         paymentService.savePaymentReference(paymentReference);
         return navigateToPaymentReferencesForMember(member.getMembershipNumber());
+    }
+
+    @RequestMapping(value = "/upload-payments", method = RequestMethod.GET)
+    public ModelAndView navigateToUploadPayments() {
+        return modelAndView("upload-payments");
+    }
+
+    @RequestMapping(value = "/upload-payments", method = RequestMethod.POST)
+    public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) {
+
+//        storageService.store(file);
+
+        List<Payment> payments = paymentService.findAllPayments();
+        return modelAndView("upload-payments").addObject("payments", payments);
     }
 
 

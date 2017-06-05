@@ -8,16 +8,6 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 public class PaymentReferenceViewBean {
 
-    public PaymentReferenceViewBean() {
-    }
-
-    public PaymentReferenceViewBean(String reference, String name, Boolean isActive, Member member) {
-        this.reference = reference;
-        this.name = name;
-        this.isActive = isActive;
-        this.member = member;
-    }
-
     private Long id;
 
     private String reference;

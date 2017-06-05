@@ -132,4 +132,25 @@ public class PaymentControllerTest extends BaseTest {
         verify(paymentService, never()).savePayment(any(Payment.class));
     }
 
+    @Test
+    public void navigateToPaymentReferencesForMember() {
+        Member member = new Member();
+        member.setMembershipNumber(7676L);
+        member.setForename("Bob");
+        when(memberService.findMemberByMembershipNumber(7676L)).thenReturn(member);
+
+        ModelAndView modelAndView = paymentController.navigateToPaymentReferencesForMember(7676L);
+
+        verify(memberService, times(1)).findMemberByMembershipNumber(7676L);
+        assertEquals("payment-references", modelAndView.getViewName());
+        assertEquals("Bob", ((Member) modelAndView.getModel().get("member")).getForename());
+
+    }
+
+    @Test
+    public void navigateToUploadPayments() {
+        ModelAndView modelAndView = paymentController.navigateToUploadPayments();
+        assertEquals("upload-payments", modelAndView.getViewName());
+    }
+
 }

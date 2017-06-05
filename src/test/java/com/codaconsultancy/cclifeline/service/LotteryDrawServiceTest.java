@@ -63,10 +63,11 @@ public class LotteryDrawServiceTest {
         when(lotteryDrawRepository.save(lotteryDraw)).thenReturn(lotteryDraw);
         assertNull(prize1.getLotteryDraw());
 
-        lotteryDrawService.saveLotteryDraw(lotteryDraw);
+        LotteryDraw saveDraw = lotteryDrawService.saveLotteryDraw(lotteryDraw);
 
         assertNotNull(prize1.getLotteryDraw());
         assertSame(lotteryDraw, prize1.getLotteryDraw());
+        assertSame(saveDraw, prize1.getLotteryDraw());
 
         verify(lotteryDrawRepository, times(1)).save(lotteryDraw);
         verify((prizeRepository), times(1)).save(prizes);
