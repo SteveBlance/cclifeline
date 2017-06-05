@@ -5,6 +5,7 @@ import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.PaymentService;
+import com.codaconsultancy.cclifeline.view.PaymentReferenceViewBean;
 import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,18 +69,25 @@ public class PaymentController {
     @RequestMapping(value = "/add-payment-reference/member/{number}", method = RequestMethod.GET)
     public ModelAndView navigateToAddPaymentReference(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
-        PaymentReference paymentReference = new PaymentReference();
-        paymentReference.setMember(member);
-        return modelAndView("add-payment-reference").addObject("member", member).addObject("paymentReference", paymentReference);
+        PaymentReferenceViewBean paymentReferenceViewBean = new PaymentReferenceViewBean();
+        paymentReferenceViewBean.setMember(member);
+        return modelAndView("add-payment-reference").addObject("paymentReference", paymentReferenceViewBean);
     }
 
     @RequestMapping(value = "/payment-reference", method = RequestMethod.POST)
-    public ModelAndView addPaymentReference(@Valid @ModelAttribute("paymentReference") PaymentReference paymentReference, BindingResult bindingResult) {
-        Member member = paymentReference.getMember();
+    public ModelAndView addPaymentReference(@Valid @ModelAttribute("paymentReference") PaymentReferenceViewBean paymentReferenceViewBean, BindingResult bindingResult) {
+        Member member = memberService.findMemberByMembershipNumber(paymentReferenceViewBean.getMember().getMembershipNumber());
         if (bindingResult.hasErrors()) {
-            logger.debug("Validation errors for reference: ", paymentReference);
+            logger.debug("Validation errors for reference: ", paymentReferenceViewBean);
             return navigateToAddPaymentReference(member.getMembershipNumber());
         }
+        paymentReferenceViewBean.setIsActive(true);
+        paymentReferenceViewBean.setMember(member);
+        List<PaymentReference> paymentReferences = member.getPaymentReferences();
+        PaymentReference paymentReference = paymentReferenceViewBean.toEntity();
+        paymentReferences.add(paymentReference);
+        member.setPaymentReferences(paymentReferences);
+
         paymentService.savePaymentReference(paymentReference);
         return navigateToPaymentReferencesForMember(member.getMembershipNumber());
     }
