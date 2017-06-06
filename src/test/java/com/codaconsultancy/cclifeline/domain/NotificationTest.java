@@ -17,8 +17,7 @@ public class NotificationTest {
         notification = new Notification();
         notification.setId(92L);
         notification.setEventType("DRAW");
-        Long drawId = 88L;
-        notification.setEventId(drawId);
+        notification.setDescription("New Lottery Draw");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
         Date eventDate = sdf.parse("2017-05-13");
         notification.setEventDate(eventDate);
@@ -41,8 +40,8 @@ public class NotificationTest {
     }
 
     @Test
-    public void getEventId() throws Exception {
-        assertEquals(88L, notification.getEventId().longValue());
+    public void getDescription() throws Exception {
+        assertEquals("New Lottery Draw", notification.getDescription());
     }
 
 }

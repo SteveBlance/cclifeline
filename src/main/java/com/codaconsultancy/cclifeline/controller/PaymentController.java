@@ -7,6 +7,7 @@ import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.PaymentService;
 import com.codaconsultancy.cclifeline.view.PaymentReferenceViewBean;
 import com.codaconsultancy.cclifeline.view.PaymentViewBean;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -99,9 +102,17 @@ public class PaymentController {
     public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) {
 
 //        storageService.store(file);
-
+        String filename = file.getOriginalFilename();
+        String contents = "";
+        try {
+            ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
+            contents = IOUtils.toString(stream, "UTF-8");
+        } catch (IOException e) {
+            //TODO: properly handle error
+            e.printStackTrace();
+        }
         List<Payment> payments = paymentService.findAllPayments();
-        return modelAndView("upload-payments").addObject("payments", payments);
+        return modelAndView("upload-payments").addObject("payments", payments).addObject("filename", filename);
     }
 
 

@@ -10,6 +10,15 @@ import java.util.Date;
 @Table(name = "NOTIFICATIONS")
 public class Notification {
 
+    public Notification() {
+    }
+
+    public Notification(Date eventDate, String eventType, String description) {
+        this.eventDate = eventDate;
+        this.eventType = eventType;
+        this.description = description;
+    }
+
     @Id
     @GeneratedValue
     private Long id;
@@ -23,8 +32,8 @@ public class Notification {
     @Column(name = "EVENT_TYPE")
     private String eventType;
 
-    @Column(name = "EVENT_ID")
-    private Long eventId;
+    @Column(name = "DESCRIPTION")
+    private String description;
 
     public Long getId() {
         return id;
@@ -50,11 +59,12 @@ public class Notification {
         this.eventType = eventType;
     }
 
-    public Long getEventId() {
-        return eventId;
+    public String getDescription() {
+        return description;
     }
 
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
+    public void setDescription(String description) {
+        this.description = description;
     }
+
 }
