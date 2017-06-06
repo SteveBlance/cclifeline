@@ -3,10 +3,12 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Notification;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.AddressService;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.junit.Test;
@@ -49,10 +51,15 @@ public class MemberControllerTest extends BaseTest {
     @MockBean
     AddressService addressService;
 
+    @MockBean
+    NotificationService notificationService;
+
     @Test
     public void home() throws Exception {
+        List<Notification> notifications = new ArrayList<>();
         when(memberService.countAllMembers()).thenReturn(22L);
         when(lotteryDrawService.countAllWinners()).thenReturn(18L);
+        when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
 
         ModelAndView response = memberController.home();
 
@@ -60,6 +67,7 @@ public class MemberControllerTest extends BaseTest {
         verify(lotteryDrawService, times(1)).countAllWinners();
         assertEquals(22L, response.getModel().get("memberCount"));
         assertEquals(18L, response.getModel().get("totalNumberOfWinners"));
+        assertSame(notifications, response.getModel().get("notifications"));
         assertEquals("index", response.getViewName());
     }
 

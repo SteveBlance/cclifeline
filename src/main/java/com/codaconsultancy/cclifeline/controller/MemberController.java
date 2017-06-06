@@ -2,9 +2,11 @@ package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Notification;
 import com.codaconsultancy.cclifeline.service.AddressService;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.slf4j.Logger;
@@ -33,13 +35,17 @@ public class MemberController {
     @Autowired
     private LotteryDrawService lotteryDrawService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     private Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     @RequestMapping("/")
     public ModelAndView home() {
         long count = memberService.countAllMembers();
         Long totalNumberOfWinners = lotteryDrawService.countAllWinners();
-        return modelAndView("index").addObject("memberCount", count).addObject("totalNumberOfWinners", totalNumberOfWinners);
+        List<Notification> notifications = notificationService.fetchLatestNotifications();
+        return modelAndView("index").addObject("memberCount", count).addObject("totalNumberOfWinners", totalNumberOfWinners).addObject("notifications", notifications);
     }
 
     @RequestMapping("/members")
@@ -72,12 +78,13 @@ public class MemberController {
 
     @RequestMapping(value = "/member", method = RequestMethod.POST)
     public ModelAndView addMember(@Valid @ModelAttribute("member") MemberViewBean memberViewBean, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) {
-            logger.debug("Validation errors for member: ",memberViewBean);
-            return navigateToAddMember() ;
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for member: ", memberViewBean);
+            return navigateToAddMember();
         }
 
         Member newMember = memberService.saveMember(memberViewBean.toEntity());
+        notificationService.logNewMemberAdded();
 
         return navigateToAddAddress(newMember.getId());
     }

@@ -11,7 +11,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -36,6 +40,17 @@ public class NotificationServiceTest {
 
         verify(notificationRepository, times(1)).save(notification);
         assertEquals("New draw announced", savedNotification.getDescription());
+    }
+
+    @Test
+    public void fetchLatestNotifications() {
+        List<Notification> notifications = new ArrayList<>();
+        when(notificationRepository.findFirst10ByOrderByEventDateDesc()).thenReturn(notifications);
+
+        List<Notification> fetchedNotifications = notificationService.fetchLatestNotifications();
+
+        verify(notificationRepository, times(1)).findFirst10ByOrderByEventDateDesc();
+        assertSame(notifications, fetchedNotifications);
     }
 
 }

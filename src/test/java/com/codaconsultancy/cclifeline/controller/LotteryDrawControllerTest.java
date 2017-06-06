@@ -7,6 +7,7 @@ import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.junit.Test;
@@ -43,6 +44,9 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private NotificationService notificationService;
 
     @Test
     public void navigateToWinners() {
@@ -143,6 +147,7 @@ public class LotteryDrawControllerTest extends BaseTest {
 
         verify(memberService, times(1)).fetchMemberDrawEntries();
         verify(lotteryDrawService, times(1)).saveLotteryDraw(lotteryDrawArgumentCaptor.capture());
+        verify(notificationService, times(1)).logLotteryDraw(lotteryDrawViewBean.getName());
 
         assertEquals(3, lotteryDrawArgumentCaptor.getValue().getPrizes().size());
         assertEquals("draw-result", modelAndView.getViewName());
@@ -162,6 +167,8 @@ public class LotteryDrawControllerTest extends BaseTest {
 
         verify(memberService, never()).fetchMemberDrawEntries();
         verify(lotteryDrawService, never()).saveLotteryDraw(any(LotteryDraw.class));
+        verify(notificationService, never()).logLotteryDraw(lotteryDrawViewBean.getName());
+
 
         assertEquals("prepare-draw", modelAndView.getViewName());
     }

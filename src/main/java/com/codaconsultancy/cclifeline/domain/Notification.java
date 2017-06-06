@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.domain;
 
+import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -27,6 +28,7 @@ public class Notification {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     @Column(name = "EVENT_DATE")
     private Date eventDate;
+
 
     @NotNull
     @Column(name = "EVENT_TYPE")
@@ -65,6 +67,42 @@ public class Notification {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Transient
+    public String getPrettyTime() {
+        return new PrettyTime().format(eventDate);
+    }
+
+    @Transient
+    public String getFontAwesomeIcon() {
+        String iconText = "";
+        switch (eventType) {
+            case "Announcement":
+                iconText = "<i class=\"fa fa-bullhorn\" aria-hidden=\"true\"></i>";
+                break;
+            case "Draw":
+                iconText = "<i class=\"fa fa-ticket\" aria-hidden=\"true\"></i>";
+                break;
+            case "NewMember":
+                iconText = "<i class=\"fa fa-user\" aria-hidden=\"true\"></i>";
+                break;
+            case "Twitter":
+                iconText = "<i class=\"fa fa-twitter\" aria-hidden=\"true\"></i>";
+                break;
+            case "Facebook":
+                iconText = "<i class=\"fa fa-facebook-official\" aria-hidden=\"true\"></i>";
+                break;
+            case "Payment":
+                iconText = "<i class=\"fa fa-money\" aria-hidden=\"true\"></i>";
+                break;
+            case "Warning":
+                iconText = "<i class=\"fa fa-exclamation-triangle\" aria-hidden=\"true\"></i>";
+                break;
+            default:
+                iconText = "<i class=\"fa fa-comment fa-fw\"></i>";
+        }
+        return iconText;
     }
 
 }
