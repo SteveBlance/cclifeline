@@ -6,6 +6,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,8 +29,8 @@ public class NotificationService {
         saveNotification(lotteryDrawNotification);
     }
 
-    public void logNewMemberAdded() {
-        Notification lotteryDrawNotification = new Notification(DateTime.now().toDate(), "NewMember", "New Member Added");
+    public void logNewMemberAdded(Date joinDate) {
+        Notification lotteryDrawNotification = new Notification(joinDate, "NewMember", "New Member Added");
         saveNotification(lotteryDrawNotification);
     }
 }

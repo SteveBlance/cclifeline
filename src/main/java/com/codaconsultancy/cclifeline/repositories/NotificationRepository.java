@@ -10,3 +10,4 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     public List<Notification> findFirst10ByOrderByEventDateDesc();
 
 }
+

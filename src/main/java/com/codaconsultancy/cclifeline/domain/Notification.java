@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.domain;
 
+import org.joda.time.DateTime;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -71,12 +72,17 @@ public class Notification {
 
     @Transient
     public String getPrettyTime() {
-        return new PrettyTime().format(eventDate);
+        String prettyTime = new PrettyTime().format(eventDate);
+        DateTime time = new DateTime(eventDate);
+        if (time.dayOfYear().equals(DateTime.now().dayOfYear())) {
+            prettyTime = "Today";
+        }
+        return prettyTime;
     }
 
     @Transient
     public String getFontAwesomeIcon() {
-        String iconText = "";
+        String iconText;
         switch (eventType) {
             case "Announcement":
                 iconText = "<i class=\"fa fa-bullhorn\" aria-hidden=\"true\"></i>";

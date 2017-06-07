@@ -84,7 +84,7 @@ public class MemberController {
         }
 
         Member newMember = memberService.saveMember(memberViewBean.toEntity());
-        notificationService.logNewMemberAdded();
+        notificationService.logNewMemberAdded(memberViewBean.getJoinDate());
 
         return navigateToAddAddress(newMember.getId());
     }

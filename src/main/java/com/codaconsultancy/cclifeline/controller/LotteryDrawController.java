@@ -9,6 +9,7 @@ import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -53,6 +55,8 @@ public class LotteryDrawController {
     @RequestMapping(value = "/prepare-draw", method = RequestMethod.GET)
     public ModelAndView navigateToPrepareDraw() {
         LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
+        Date today = DateTime.now().toDate();
+        lotteryDrawViewBean.setDrawDate(today);
         List<SecuritySubject> securitySubjects = securityService.findAllSecuritySubjects();
         return modelAndView("prepare-draw").addObject("lotteryDraw", lotteryDrawViewBean).addObject("securitySubjects", securitySubjects);
     }
