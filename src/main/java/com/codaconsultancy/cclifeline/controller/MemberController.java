@@ -143,6 +143,16 @@ public class MemberController {
         return memberDetails(member.getMembershipNumber());
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public ModelAndView navigateToLogin() {
+        return modelAndView("login");
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public ModelAndView navigateToLogout() {
+        return modelAndView("logout");
+    }
+
     @RequestMapping(value = "/reports", method = RequestMethod.GET)
     public ModelAndView navigateToReports() {
         return modelAndView("reports");
