@@ -24,7 +24,7 @@ public class NotificationService {
     }
 
     public void logLotteryDraw(String name) {
-        String description = (name != null) ? "Lottery Draw Made - " + name : "New Lifeline Draw Made";
+        String description = (!name.isEmpty()) ? "Lottery Draw Made - " + name : "Lottery Draw Made";
         Notification lotteryDrawNotification = new Notification(DateTime.now().toDate(), "Draw", description);
         saveNotification(lotteryDrawNotification);
     }
