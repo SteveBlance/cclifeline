@@ -2,9 +2,11 @@ package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Notification;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.PaymentService;
 import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.junit.Test;
@@ -24,8 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -42,6 +43,9 @@ public class PaymentControllerTest extends BaseTest {
     @MockBean
     MemberService memberService;
 
+    @MockBean
+    NotificationService notificationService;
+
     @Test
     public void navigateToPayments() throws Exception {
         List<Payment> payments = new ArrayList<>();
@@ -54,6 +58,9 @@ public class PaymentControllerTest extends BaseTest {
         payments.add(payment2);
         payments.add(payment3);
         when(paymentService.findAllPayments()).thenReturn(payments);
+        List<Notification> notifications = new ArrayList<>();
+        when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
+
 
         ModelAndView modelAndView = paymentController.navigateToPayments();
 
@@ -66,6 +73,8 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals("FPS CREDIT 0998 JONES", payments.get(1).getCreditReference());
         assertEquals(20.00F, payments.get(2).getPaymentAmount(), 0.002F);
         assertEquals("FPS CREDIT 0101 THOMAS", payments.get(2).getCreditReference());
+        assertSame(notifications, modelAndView.getModel().get("notifications"));
+
     }
 
     @Test
