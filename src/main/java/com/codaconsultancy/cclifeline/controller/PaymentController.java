@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Controller
-public class PaymentController {
+public class PaymentController extends LifelineController {
 
     @Autowired
     private PaymentService paymentService;
@@ -115,8 +115,4 @@ public class PaymentController {
         return modelAndView("upload-payments").addObject("payments", payments).addObject("filename", filename);
     }
 
-
-    private ModelAndView modelAndView(String page) {
-        return new ModelAndView(page);
-    }
 }

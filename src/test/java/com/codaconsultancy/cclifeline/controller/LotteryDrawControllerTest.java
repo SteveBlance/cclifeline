@@ -10,6 +10,7 @@ import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -76,7 +77,10 @@ public class LotteryDrawControllerTest extends BaseTest {
 
         verify(securityService, times(1)).findAllSecuritySubjects();
         assertEquals("prepare-draw", modelAndView.getViewName());
-        assertTrue(modelAndView.getModel().get("lotteryDraw") instanceof LotteryDrawViewBean);
+        Object lotteryDraw = modelAndView.getModel().get("lotteryDraw");
+        assertTrue(lotteryDraw instanceof LotteryDrawViewBean);
+        assertEquals("Bob", ((LotteryDrawViewBean) lotteryDraw).getDrawMaster());
+        assertEquals(DateTime.now().getDayOfYear(), new DateTime(((LotteryDrawViewBean) lotteryDraw).getDrawDate()).getDayOfYear());
         List<SecuritySubject> retrievedSubjects = (List<SecuritySubject>) modelAndView.getModel().get("securitySubjects");
         assertEquals(2, retrievedSubjects.size());
     }

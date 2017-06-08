@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Controller
-public class LotteryDrawController {
+public class LotteryDrawController extends LifelineController {
 
     @Autowired
     private LotteryDrawService lotteryDrawService;
@@ -57,6 +57,7 @@ public class LotteryDrawController {
         LotteryDrawViewBean lotteryDrawViewBean = new LotteryDrawViewBean();
         Date today = DateTime.now().toDate();
         lotteryDrawViewBean.setDrawDate(today);
+        lotteryDrawViewBean.setDrawMaster(loggedInUser());
         List<SecuritySubject> securitySubjects = securityService.findAllSecuritySubjects();
         return modelAndView("prepare-draw").addObject("lotteryDraw", lotteryDrawViewBean).addObject("securitySubjects", securitySubjects);
     }
@@ -120,7 +121,4 @@ public class LotteryDrawController {
         return modelAndView("draw-result").addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
-    private ModelAndView modelAndView(String page) {
-        return new ModelAndView(page);
-    }
 }

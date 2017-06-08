@@ -24,7 +24,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-public class MemberController {
+public class MemberController extends LifelineController {
 
     @Autowired
     private MemberService memberService;
@@ -45,7 +45,10 @@ public class MemberController {
         long count = memberService.countAllMembers();
         Long totalNumberOfWinners = lotteryDrawService.countAllWinners();
         List<Notification> notifications = notificationService.fetchLatestNotifications();
-        return modelAndView("index").addObject("memberCount", count).addObject("totalNumberOfWinners", totalNumberOfWinners).addObject("notifications", notifications);
+        return modelAndView("index")
+                .addObject("memberCount", count)
+                .addObject("totalNumberOfWinners", totalNumberOfWinners)
+                .addObject("notifications", notifications);
     }
 
     @RequestMapping("/members")
@@ -162,9 +165,4 @@ public class MemberController {
     public ModelAndView navigateExportData() {
         return modelAndView("export-data");
     }
-
-    private ModelAndView modelAndView(String page) {
-        return new ModelAndView(page);
-    }
-
 }

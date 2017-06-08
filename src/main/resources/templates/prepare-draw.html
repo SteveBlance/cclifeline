@@ -94,14 +94,10 @@
             </div>
 
             <div class="form-group">
-                <label for="drawnBySubject" class="col-sm-3 control-label">Drawn By:</label>
+                <label class="col-sm-3 control-label">Drawn By:</label>
                 <div class="col-sm-7">
-                    <select id="drawnBySubject" class="form-control" name="drawnBySubjectId" th:field="*{drawMaster}">
-                        <option th:each="securitySubject : ${securitySubjects}"
-                                th:value="${securitySubject.forename + ' ' + securitySubject.surname}"
-                                th:text="${securitySubject.forename + ' ' + securitySubject.surname}">Drawn By
-                        </option>
-                    </select>
+                    <input id="drawnBySubject" class="form-control" readonly="readonly" th:field="*{drawMaster}"
+                           th:value="${loggedInUser}"/>
                 </div>
             </div>
 

@@ -67,6 +67,7 @@ public class MemberControllerTest extends BaseTest {
         verify(lotteryDrawService, times(1)).countAllWinners();
         assertEquals(22L, response.getModel().get("memberCount"));
         assertEquals(18L, response.getModel().get("totalNumberOfWinners"));
+        assertEquals("Bob", response.getModel().get("loggedInUser"));
         assertSame(notifications, response.getModel().get("notifications"));
         assertEquals("index", response.getViewName());
     }
