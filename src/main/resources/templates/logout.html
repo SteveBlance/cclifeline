@@ -1,46 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
-<head>
-
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content=""/>
-    <meta name="author" content=""/>
-    <link th:href="@{/css/main.css}" rel="stylesheet"/>
-    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/images/favicon-32x32.png}"/>
-    <link rel="icon" type="image/png" sizes="96x96" th:href="@{/images/favicon-96x96.png}"/>
-    <link rel="icon" type="image/png" sizes="16x16" th:href="@{/images/favicon-16x16.png}"/>
-    <link rel="manifest" th:href="@{/images/manifest.json}"/>
-    <meta name="msapplication-TileColor" content="#ffffff"/>
-    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png"/>
-    <meta name="theme-color" content="#ffffff"/>
-
-
-    <title>Centenary Club Lifeline - Logout</title>
-
-    <!-- Bootstrap Core CSS -->
-    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet"/>
-
-    <!-- MetisMenu CSS -->
-    <link th:href="@{/vendor/metisMenu/metisMenu.min.css}" rel="stylesheet"/>
-
-    <!-- Custom CSS -->
-    <link th:href="@{/dist/css/sb-admin-2.css}" rel="stylesheet"/>
-
-
-    <!-- Custom Fonts -->
-    <link th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet" type="text/css"/>
-
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script th:src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script th:src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
+<head th:replace="/fragments/common-header :: common-header"></head>
 
 <body>
 
@@ -54,27 +14,11 @@
             <form name="logoutForm" th:action="@{/logout}" method="post" th:hidden="true">
                 <input type="submit" value="Sign Out"/>
             </form>
-
-            <!-- /.col-lg-12 -->
         </div>
-        <!-- /.row -->
     </div>
-    <!-- /#page-wrapper -->
 
 </div>
-<!-- /#wrapper -->
 
-<!-- jQuery -->
-<script src="../vendor/jquery/jquery.min.js"></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-
-<!-- Metis Menu Plugin JavaScript -->
-<script src="../vendor/metisMenu/metisMenu.min.js"></script>
-
-<!-- Custom Theme JavaScript -->
-<script src="../dist/js/sb-admin-2.js"></script>
 <script type="text/javascript" language="javascript" class="init">
     document.logoutForm.submit();
 </script>
