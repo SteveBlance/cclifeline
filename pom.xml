@@ -19,7 +19,7 @@
     <properties>
         <java.version>1.8</java.version>
         <skip.pit.test>false</skip.pit.test>
-        <pit.mutation.threshold>93</pit.mutation.threshold>
+        <pit.mutation.threshold>95</pit.mutation.threshold>
         <start-class>com.codaconsultancy.cclifeline.app.SpringBootThymeleafApplication</start-class>
         <!--When packaging for aws-->
         <!--<start-class>com.codaconsultancy.cclifeline.app.SpringBootThymeleafApplicationWar</start-class>-->
@@ -164,6 +164,8 @@
                             <excludedClasses>
                                 <param>com.codaconsultancy.cclifeline.config.AppConfig</param>
                                 <param>com.codaconsultancy.cclifeline.config.RepositoryConfig</param>
+                                <param>com.codaconsultancy.cclifeline.config.SecurityConfig</param>
+                                <param>com.codaconsultancy.cclifeline.app.*</param>
                             </excludedClasses>
                             <mutationThreshold>${pit.mutation.threshold}</mutationThreshold>
                             <timestampedReports>false</timestampedReports>
