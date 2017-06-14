@@ -35,6 +35,7 @@ public class MemberService {
     public Member saveMember(Member member) {
         Long nextMembershipNumber = memberRepository.nextMembershipNumber();
         member.setMembershipNumber(nextMembershipNumber);
+
         return memberRepository.save(member);
     }
 

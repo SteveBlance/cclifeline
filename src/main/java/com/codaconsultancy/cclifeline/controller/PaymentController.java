@@ -20,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -100,19 +101,18 @@ public class PaymentController extends LifelineController {
 
     @RequestMapping(value = "/upload-payments", method = RequestMethod.POST)
     public ModelAndView handleFileUpload(@RequestParam("file") MultipartFile file) {
-
-//        storageService.store(file);
         String filename = file.getOriginalFilename();
-        String contents = "";
+        List<Payment> parsedPayments = new ArrayList<>();
+        String contents;
         try {
             ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
             contents = IOUtils.toString(stream, "UTF-8");
-        } catch (IOException e) {
+            parsedPayments = paymentService.parsePayments(contents);
+        } catch (IOException | NumberFormatException e) {
             //TODO: properly handle error
             e.printStackTrace();
         }
-        List<Payment> payments = paymentService.findAllPayments();
-        return modelAndView("upload-payments").addObject("payments", payments).addObject("filename", filename);
+        return modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename);
     }
 
 }
