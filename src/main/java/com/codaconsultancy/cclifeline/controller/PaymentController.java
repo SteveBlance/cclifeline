@@ -107,7 +107,7 @@ public class PaymentController extends LifelineController {
         try {
             ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
             contents = IOUtils.toString(stream, "UTF-8");
-            parsedPayments = paymentService.parsePayments(contents);
+            parsedPayments = paymentService.parsePayments(contents, filename);
         } catch (IOException | NumberFormatException e) {
             //TODO: properly handle error
             e.printStackTrace();

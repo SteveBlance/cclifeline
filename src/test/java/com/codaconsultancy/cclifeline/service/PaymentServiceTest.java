@@ -107,14 +107,14 @@ public class PaymentServiceTest {
 
     @Test
     public void parsePayments_success() throws Exception {
-        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT);
+        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
         assertEquals(9, payments.size());
     }
 
     @Test
     public void parsePayments_badCreditAmount() throws Exception {
         expectedException.expect(NumberFormatException.class);
-        List<Payment> payments = paymentService.parsePayments(BAD_STATEMENT);
+        List<Payment> payments = paymentService.parsePayments(BAD_STATEMENT, "test.csv");
         assertEquals(0, payments.size());
     }
 

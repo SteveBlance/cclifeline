@@ -56,12 +56,19 @@ public class PaymentService {
 
     }
 
-    public List<Payment> parsePayments(String contents) throws IOException, NumberFormatException {
+    public List<Payment> parsePayments(String contents, String filename) throws IOException, NumberFormatException {
+        List<Payment> payments = new ArrayList<>();
+        if (filename.endsWith(".csv") || filename.endsWith(".CSV")) {
+            payments = getPaymentsFromCsvFile(contents);
+        }
+        return payments;
+    }
+
+    private List<Payment> getPaymentsFromCsvFile(String contents) throws IOException {
         List<Payment> payments = new ArrayList<>();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/mm/yyyy");
-        String preppedContents = contents.replace("Balance,", "Balance");
         CSVFormat format = CSVFormat.DEFAULT.withHeader(TRANSACTION_DATE, TRANSACTION_TYPE, SORT_CODE, ACCOUNT_NUMBER, DESCRIPTION, DEBIT_AMOUNT, CREDIT_AMOUNT, BALANCE);
-        CSVParser parser = CSVParser.parse(preppedContents, format);
+        CSVParser parser = CSVParser.parse(contents, format);
 
         for (CSVRecord record : parser) {
             String paymentDateText = record.get(TRANSACTION_DATE);
