@@ -81,6 +81,25 @@ public class PaymentServiceTest {
     }
 
     @Test
+    public void findAllUnmatchedPayments() throws Exception {
+        List<Payment> payments = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ");
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ");
+        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ");
+        payments.add(payment1);
+        payments.add(payment2);
+        payments.add(payment3);
+        when(paymentRepository.findByMemberIsNull()).thenReturn(payments);
+
+        List<Payment> foundPayments = paymentService.findAllUnmatchedPayments();
+
+        assertEquals(3, foundPayments.size());
+        assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
+    }
+
+    @Test
     public void savePayment() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");

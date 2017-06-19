@@ -13,6 +13,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByMember(Member member);
 
+    List<Payment> findByMemberIsNull();
+
     @Query(value =
             "SELECT IFNULL(SUM(PAYMENT_AMOUNT), 0) " +
                     "FROM PAYMENTS WHERE MEMBER_ID = :member " +

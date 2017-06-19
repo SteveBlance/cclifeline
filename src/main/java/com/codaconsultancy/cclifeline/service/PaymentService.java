@@ -47,6 +47,10 @@ public class PaymentService {
         return paymentRepository.findAll();
     }
 
+    public List<Payment> findAllUnmatchedPayments() {
+        return paymentRepository.findByMemberIsNull();
+    }
+
     public Payment savePayment(Payment payment) {
         return paymentRepository.save(payment);
     }

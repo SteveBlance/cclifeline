@@ -41,10 +41,15 @@
                         <td class="col-sm-7"></td>
                     </tr>
                     <tr>
+                        <td class="col-sm-3">(.csv files accepted)</td>
+                        <td class="col-sm-7"></td>
+                    </tr>
+                    <tr>
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
-                        <td class="col-sm-4"><input type="file" class="btn btn-default btn-default active" name="file"/>
+                        <td class="col-sm-4"><input type="file" accept=".csv" class="btn btn-default btn-default active"
+                                                    name="file"/>
                         </td>
                         <td class="col-sm-8">
                             <button id="uploadBtn" type="submit" class="btn btn-default btn-success">Upload</button>
@@ -103,6 +108,7 @@
         <br/>
         <div class="row">
             <a th:href="@{/upload-payments}" class="btn btn-default active" role="button">Back</a>
+
         </div>
     </div>
 </div>

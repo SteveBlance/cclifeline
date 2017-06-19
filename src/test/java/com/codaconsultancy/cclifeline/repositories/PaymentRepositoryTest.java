@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @SpringBootTest(classes = Payment.class)
 public class PaymentRepositoryTest extends BaseTest {
@@ -66,7 +67,18 @@ public class PaymentRepositoryTest extends BaseTest {
         assertEquals("23/11/2014", simpleDateFormat.format(paymentsByMember.get(0).getPaymentDate()));
         assertEquals(20.00F, paymentsByMember.get(0).getPaymentAmount(), 0.001F);
         assertEquals("Lifeline Current Account", paymentsByMember.get(0).getCreditedAccount());
+    }
 
+    @Test
+    public void findByMemberIsNull() throws Exception {
+        List<Payment> unmatchedPayments = paymentRepository.findByMemberIsNull();
+
+        assertEquals(1, unmatchedPayments.size());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        assertEquals("30/11/2014", simpleDateFormat.format(unmatchedPayments.get(0).getPaymentDate()));
+        assertEquals(8.66F, unmatchedPayments.get(0).getPaymentAmount(), 0.001F);
+        assertEquals("Legacy Current Account", unmatchedPayments.get(0).getCreditedAccount());
+        assertNull(unmatchedPayments.get(0).getMember());
     }
 
     @Test
@@ -76,7 +88,6 @@ public class PaymentRepositoryTest extends BaseTest {
         assertEquals(40.00D, totalPayment, 0.001D);
         totalPayment = paymentRepository.getTotalPaymentSince(new DateTime().toDate(), member.getId());
         assertEquals(0.00D, totalPayment, 0.001D);
-
     }
 
 }
