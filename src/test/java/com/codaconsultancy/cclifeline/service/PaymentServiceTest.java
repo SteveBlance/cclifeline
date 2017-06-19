@@ -114,6 +114,19 @@ public class PaymentServiceTest {
     }
 
     @Test
+    public void savePayments() {
+        List<Payment> payments = new ArrayList<>();
+        payments.add(new Payment());
+        payments.add(new Payment());
+        when(paymentRepository.save(payments)).thenReturn(payments);
+
+        List<Payment> savedPayments = paymentService.savePayments(payments);
+
+        verify(paymentRepository, times(1)).save(payments);
+        assertSame(payments, savedPayments);
+    }
+
+    @Test
     public void savePaymentReference() {
         PaymentReference paymentReference = new PaymentReference("FPS CREDIT 1234 H PETRIE", "Hamish Petrie", true, null);
         when(paymentReferenceRepository.save(paymentReference)).thenReturn(paymentReference);

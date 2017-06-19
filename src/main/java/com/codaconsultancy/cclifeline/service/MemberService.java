@@ -24,6 +24,17 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
+    public List<Member> findCurrentMembers() {
+        return memberRepository.findAllByStatus("Open");
+    }
+
+    public List<Member> findFormerMembers() {
+        List<Member> formerMembers = new ArrayList<>();
+        formerMembers.addAll(memberRepository.findAllByStatus("Cancelled"));
+        formerMembers.addAll(memberRepository.findAllByStatus("Closed"));
+        return formerMembers;
+    }
+
     public Long countAllMembers() {
         return memberRepository.count();
     }
@@ -123,5 +134,4 @@ public class MemberService {
         }
         return lastExpectedPaymentDate;
     }
-
 }

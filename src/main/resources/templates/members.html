@@ -25,13 +25,19 @@
                             </div>
                             <div class="col-xs-9 text-right">
                                 <div class="huge"><span th:text="${memberCount}"></span></div>
-                                <div>Members</div>
+                                <div><span th:text="${title}"></span></div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <ul class="nav nav-tabs">
+            <li role="presentation" th:class="${currentTabStatus}"><a th:href="@{/members/current}">Current</a></li>
+            <li role="presentation" th:class="${formerTabStatus}"><a th:href="@{/members/former}">Former</a></li>
+            <li role="presentation" th:class="${allTabStatus}"><a th:href="@{/members/all}">All</a></li>
+        </ul>
+        <br/>
 
         <table id="members_tab" class="table-condensed table-striped table-bordered table-hover" cellspacing="0" width="100%">
             <thead>
@@ -66,7 +72,7 @@
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
                 <td th:style="${member.isEligibleForDraw()}? 'color: green' : 'color: red'"
-                    th:utext="${member.isEligibleForDraw()}? '&lt;i class=&quot;fa fa-check fa-lg&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;' : '&lt;i class=&quot;fa fa-times fa-lg&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;'">
+                    th:utext="${member.isEligibleForDraw()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">
                     Eligible For Draw
                 </td>
 

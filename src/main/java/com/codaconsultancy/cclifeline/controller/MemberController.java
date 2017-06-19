@@ -44,18 +44,40 @@ public class MemberController extends LifelineController {
                 .addObject("totalNumberOfWinners", totalNumberOfWinners);
     }
 
-    @RequestMapping("/members")
-    public ModelAndView members() {
-        List<Member> allMembers = memberService.findAllMembers();
-        for (Member member : allMembers) {
+    @RequestMapping("/members/{filter}")
+    public ModelAndView members(@PathVariable String filter) {
+        List<Member> members;
+        String title;
+        String currentTabStatus = "enabled";
+        String formerTabStatus = "enabled";
+        String allTabStatus = "enabled";
+        if (filter.equalsIgnoreCase("current")) {
+            members = memberService.findCurrentMembers();
+            title = "Current members";
+            currentTabStatus = "disabled";
+        } else if (filter.equalsIgnoreCase("former")) {
+            members = memberService.findFormerMembers();
+            title = "Former members";
+            formerTabStatus = "disabled";
+        } else {
+            members = memberService.findAllMembers();
+            title = "All members";
+            allTabStatus = "disabled";
+        }
+        for (Member member : members) {
             if (memberService.isEligibleForDraw(member)) {
                 member.setIsEligibleForDraw(true);
             } else {
                 member.setIsEligibleForDraw(false);
             }
         }
-        long count = memberService.countAllMembers();
-        return modelAndView("members").addObject("memberCount", count).addObject("members", allMembers);
+        long count = members.size();
+        return modelAndView("members").addObject("memberCount", count)
+                .addObject("members", members)
+                .addObject("title", title)
+                .addObject("currentTabStatus", currentTabStatus)
+                .addObject("formerTabStatus", formerTabStatus)
+                .addObject("allTabStatus", allTabStatus);
     }
 
     @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)

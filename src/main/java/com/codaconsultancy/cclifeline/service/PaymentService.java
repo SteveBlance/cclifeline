@@ -138,4 +138,9 @@ public class PaymentService {
         }
         return membershipNumberText.isEmpty() ? 0L : Long.parseLong(membershipNumberText);
     }
+
+    public List<Payment> savePayments(List<Payment> payments) {
+        paymentRepository.save(payments);
+        return payments;
+    }
 }

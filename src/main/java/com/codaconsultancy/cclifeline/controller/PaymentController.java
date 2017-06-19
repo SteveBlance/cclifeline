@@ -96,7 +96,7 @@ public class PaymentController extends LifelineController {
 
     @RequestMapping(value = "/upload-payments", method = RequestMethod.GET)
     public ModelAndView navigateToUploadPayments() {
-        return modelAndView("upload-payments");
+        return modelAndView("upload-payments").addObject("disabled", true);
     }
 
     @RequestMapping(value = "/upload-payments", method = RequestMethod.POST)
@@ -108,11 +108,12 @@ public class PaymentController extends LifelineController {
             ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
             contents = IOUtils.toString(stream, "UTF-8");
             parsedPayments = paymentService.parsePayments(contents, filename);
+            paymentService.savePayments(parsedPayments);
         } catch (IOException | NumberFormatException e) {
             //TODO: properly handle error
             e.printStackTrace();
         }
-        return modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename);
+        return modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", false);
     }
 
 }
