@@ -3,7 +3,6 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
-import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.SecurityService;
@@ -54,8 +53,7 @@ public class LotteryDrawController extends LifelineController {
         Date today = DateTime.now().toDate();
         lotteryDrawViewBean.setDrawDate(today);
         lotteryDrawViewBean.setDrawMaster(loggedInUser());
-        List<SecuritySubject> securitySubjects = securityService.findAllSecuritySubjects();
-        return modelAndView("prepare-draw").addObject("lotteryDraw", lotteryDrawViewBean).addObject("securitySubjects", securitySubjects);
+        return modelAndView("prepare-draw").addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
     @RequestMapping(value = "/prepare-draw", method = RequestMethod.POST)

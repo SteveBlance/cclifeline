@@ -51,6 +51,10 @@ public class PaymentService {
         return paymentRepository.findByMemberIsNull();
     }
 
+    public List<Payment> findAllMatchedPayments() {
+        return paymentRepository.findByMemberIsNotNull();
+    }
+
     public Payment savePayment(Payment payment) {
         return paymentRepository.save(payment);
     }
@@ -70,7 +74,7 @@ public class PaymentService {
 
     private List<Payment> getPaymentsFromCsvFile(String contents) throws IOException {
         List<Payment> payments = new ArrayList<>();
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/mm/yyyy");
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
         CSVFormat format = CSVFormat.DEFAULT.withHeader(TRANSACTION_DATE, TRANSACTION_TYPE, SORT_CODE, ACCOUNT_NUMBER, DESCRIPTION, DEBIT_AMOUNT, CREDIT_AMOUNT, BALANCE);
         CSVParser parser = CSVParser.parse(contents, format);
 

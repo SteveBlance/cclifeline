@@ -3,7 +3,6 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
-import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
@@ -66,23 +65,13 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @Test
     public void navigateToPrepareDraw() {
-        List<SecuritySubject> securitySubjects = new ArrayList<>();
-        SecuritySubject securitySubject1 = new SecuritySubject();
-        SecuritySubject securitySubject2 = new SecuritySubject();
-        securitySubjects.add(securitySubject1);
-        securitySubjects.add(securitySubject2);
-        when(securityService.findAllSecuritySubjects()).thenReturn(securitySubjects);
-
         ModelAndView modelAndView = lotteryDrawController.navigateToPrepareDraw();
 
-        verify(securityService, times(1)).findAllSecuritySubjects();
         assertEquals("prepare-draw", modelAndView.getViewName());
         Object lotteryDraw = modelAndView.getModel().get("lotteryDraw");
         assertTrue(lotteryDraw instanceof LotteryDrawViewBean);
         assertEquals("Bob", ((LotteryDrawViewBean) lotteryDraw).getDrawMaster());
         assertEquals(DateTime.now().getDayOfYear(), new DateTime(((LotteryDrawViewBean) lotteryDraw).getDrawDate()).getDayOfYear());
-        List<SecuritySubject> retrievedSubjects = (List<SecuritySubject>) modelAndView.getModel().get("securitySubjects");
-        assertEquals(2, retrievedSubjects.size());
     }
 
     @Test

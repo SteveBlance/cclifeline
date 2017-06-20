@@ -34,10 +34,31 @@ public class PaymentController extends LifelineController {
 
     private Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
-    @RequestMapping(value = "/payments", method = RequestMethod.GET)
-    public ModelAndView navigateToPayments() {
-        List<Payment> payments = paymentService.findAllPayments();
-        return modelAndView("payments").addObject("payments", payments);
+    @RequestMapping(value = "/payments/{filter}", method = RequestMethod.GET)
+    public ModelAndView navigateToPayments(@PathVariable String filter) {
+        List<Payment> payments;
+        String title;
+        String allTabStatus = "enabled";
+        String matchedTabStatus = "enabled";
+        String unmatchedTabStatus = "enabled";
+        if (filter.equalsIgnoreCase("matched")) {
+            payments = paymentService.findAllMatchedPayments();
+            title = "Matched payments";
+            matchedTabStatus = "disabled";
+        } else if (filter.equalsIgnoreCase("unmatched")) {
+            payments = paymentService.findAllUnmatchedPayments();
+            title = "Unmatched payments";
+            unmatchedTabStatus = "disabled";
+        } else {
+            payments = paymentService.findAllPayments();
+            title = "All payments";
+            allTabStatus = "disabled";
+        }
+        return modelAndView("payments").addObject("payments", payments)
+                .addObject("title", title)
+                .addObject("allTabStatus", allTabStatus)
+                .addObject("matchedTabStatus", matchedTabStatus)
+                .addObject("unmatchedTabStatus", unmatchedTabStatus);
     }
 
     @RequestMapping(value = "/add-payment", method = RequestMethod.GET)
@@ -59,7 +80,7 @@ public class PaymentController extends LifelineController {
         payment.setMember(member);
         paymentService.savePayment(payment);
 
-        return navigateToPayments();
+        return navigateToPayments("all");
     }
 
     @RequestMapping(value = "/payment-references/member/{number}", method = RequestMethod.GET)

@@ -56,6 +56,41 @@ public class MemberServiceTest {
     }
 
     @Test
+    public void findCurrentMembers() {
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        members.add(member1);
+        members.add(member2);
+        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
+
+        List<Member> allMembers = memberService.findCurrentMembers();
+        verify(memberRepository, times(1)).findAllByStatus("Open");
+        assertEquals(2, allMembers.size());
+    }
+
+    @Test
+    public void findFormerMembers() {
+        List<Member> cancelledMembers = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(1237L, "Bob", "Zippo", "bz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        cancelledMembers.add(member1);
+        cancelledMembers.add(member2);
+        List<Member> closedMembers = new ArrayList<>();
+        Member member3 = TestHelper.newMember(1235L, "Dave", "Zippo", "dz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        closedMembers.add(member3);
+        when(memberRepository.findAllByStatus("Cancelled")).thenReturn(cancelledMembers);
+        when(memberRepository.findAllByStatus("Closed")).thenReturn(closedMembers);
+
+        List<Member> formerMembers = memberService.findFormerMembers();
+
+        verify(memberRepository, times(1)).findAllByStatus("Cancelled");
+        verify(memberRepository, times(1)).findAllByStatus("Closed");
+        assertEquals(3, formerMembers.size());
+    }
+
+
+    @Test
     public void countMembers() {
         when(memberRepository.count()).thenReturn(87L);
 
@@ -140,6 +175,7 @@ public class MemberServiceTest {
         allMembers.add(closedLifelineMember);
         allMembers.add(cancelledLifelineMember);
         when(memberRepository.findAll()).thenReturn(allMembers);
+        when(memberRepository.findAllByStatus("Open")).thenReturn(allMembers);
         ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
@@ -163,6 +199,9 @@ public class MemberServiceTest {
         assertTrue(memberDrawEntries.contains(lifelineMember2));
         assertFalse(memberDrawEntries.contains(closedLifelineMember));
         assertFalse(memberDrawEntries.contains(cancelledLifelineMember));
+
+        assertEquals(2, memberService.findEligibleMembers().size());
+        assertEquals(3, memberService.findIneligibleMembers().size());
     }
 
     @Test

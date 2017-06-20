@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.service;
 
+import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
@@ -64,8 +65,8 @@ public class PaymentServiceTest {
     @Test
     public void findAllPayments() throws Exception {
         List<Payment> payments = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date paymentDate = sdf.parse("20170103 ");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        Date paymentDate = sdf.parse("2017/01/03 ");
         Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ");
         Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ");
         Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ");
@@ -82,21 +83,43 @@ public class PaymentServiceTest {
 
     @Test
     public void findAllUnmatchedPayments() throws Exception {
-        List<Payment> payments = new ArrayList<>();
+        List<Payment> unmatchedPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
         Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ");
         Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ");
         Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ");
-        payments.add(payment1);
-        payments.add(payment2);
-        payments.add(payment3);
-        when(paymentRepository.findByMemberIsNull()).thenReturn(payments);
+        unmatchedPayments.add(payment1);
+        unmatchedPayments.add(payment2);
+        unmatchedPayments.add(payment3);
+        when(paymentRepository.findByMemberIsNull()).thenReturn(unmatchedPayments);
 
         List<Payment> foundPayments = paymentService.findAllUnmatchedPayments();
 
         assertEquals(3, foundPayments.size());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
+    }
+
+    @Test
+    public void findAllMatchedPayments() throws Exception {
+        List<Payment> matchedPayments = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Member member = new Member();
+        member.setMembershipNumber(1234L);
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ");
+        payment1.setMember(member);
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ");
+        payment2.setMember(member);
+        matchedPayments.add(payment1);
+        matchedPayments.add(payment2);
+        when(paymentRepository.findByMemberIsNotNull()).thenReturn(matchedPayments);
+
+        List<Payment> foundPayments = paymentService.findAllMatchedPayments();
+
+        assertEquals(2, foundPayments.size());
+        assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
+        assertEquals(1234L, foundPayments.get(0).getMember().getMembershipNumber().longValue());
     }
 
     @Test

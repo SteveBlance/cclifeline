@@ -62,7 +62,7 @@ public class PaymentControllerTest extends BaseTest {
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
 
 
-        ModelAndView modelAndView = paymentController.navigateToPayments();
+        ModelAndView modelAndView = paymentController.navigateToPayments("all");
 
         assertEquals("payments", modelAndView.getViewName());
         List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
@@ -74,6 +74,8 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals(20.00F, payments.get(2).getPaymentAmount(), 0.002F);
         assertEquals("FPS CREDIT 0101 THOMAS", payments.get(2).getCreditReference());
         assertSame(notifications, modelAndView.getModel().get("notifications"));
+        assertEquals("All payments", modelAndView.getModel().get("title"));
+        assertEquals("disabled", modelAndView.getModel().get("allTabStatus"));
 
     }
 
