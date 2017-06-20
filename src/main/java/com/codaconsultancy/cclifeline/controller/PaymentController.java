@@ -79,6 +79,7 @@ public class PaymentController extends LifelineController {
         Member member = memberService.findMemberById(paymentViewBean.getMemberId());
         payment.setMember(member);
         paymentService.savePayment(payment);
+        notificationService.logPayment(1);
 
         return navigateToPayments("all");
     }
@@ -134,6 +135,7 @@ public class PaymentController extends LifelineController {
             //TODO: properly handle error
             e.printStackTrace();
         }
+        notificationService.logPayment(parsedPayments.size());
         return modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", false);
     }
 
