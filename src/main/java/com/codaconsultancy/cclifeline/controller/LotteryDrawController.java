@@ -5,7 +5,6 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
-import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -30,9 +29,6 @@ public class LotteryDrawController extends LifelineController {
 
     @Autowired
     private LotteryDrawService lotteryDrawService;
-
-    @Autowired
-    private SecurityService securityService;
 
     @Autowired
     private MemberService memberService;

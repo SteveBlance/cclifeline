@@ -33,4 +33,10 @@ public class NotificationService {
         Notification lotteryDrawNotification = new Notification(joinDate, "NewMember", "New Member Added");
         saveNotification(lotteryDrawNotification);
     }
+
+    public void logPayment(int numberOfPayments) {
+        String message = (numberOfPayments == 1) ? "Payment Entered Manually" : numberOfPayments + " Payments Imported";
+        Notification paymentNotification = new Notification(DateTime.now().toDate(), "Payment", message);
+        saveNotification(paymentNotification);
+    }
 }

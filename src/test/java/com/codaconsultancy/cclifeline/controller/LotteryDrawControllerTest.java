@@ -7,7 +7,6 @@ import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
-import com.codaconsultancy.cclifeline.service.SecurityService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -38,9 +37,6 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @MockBean
     private LotteryDrawService lotteryDrawService;
-
-    @MockBean
-    private SecurityService securityService;
 
     @MockBean
     private MemberService memberService;

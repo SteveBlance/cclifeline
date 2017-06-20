@@ -94,4 +94,27 @@ public class NotificationServiceTest {
         assertEquals("New Member Added", notificationArgumentCaptor.getValue().getDescription());
     }
 
+    @Test
+    public void logManualPayment() {
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.logPayment(1);
+
+        verify(notificationRepository, times(1)).save(notificationArgumentCaptor.capture());
+        assertEquals("Payment", notificationArgumentCaptor.getValue().getEventType());
+        assertEquals("Payment Entered Manually", notificationArgumentCaptor.getValue().getDescription());
+        assertEquals(DateTime.now().getDayOfYear(), new DateTime(notificationArgumentCaptor.getValue().getEventDate()).getDayOfYear());
+    }
+
+    @Test
+    public void logImportedPayments() {
+        ArgumentCaptor<Notification> notificationArgumentCaptor = ArgumentCaptor.forClass(Notification.class);
+
+        notificationService.logPayment(2478);
+
+        verify(notificationRepository, times(1)).save(notificationArgumentCaptor.capture());
+        assertEquals(DateTime.now().getDayOfYear(), new DateTime(notificationArgumentCaptor.getValue().getEventDate()).getDayOfYear());
+        assertEquals("Payment", notificationArgumentCaptor.getValue().getEventType());
+        assertEquals("2478 Payments Imported", notificationArgumentCaptor.getValue().getDescription());
+    }
 }

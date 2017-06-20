@@ -122,6 +122,7 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals(367L, savedPayment.getId().longValue());
         assertEquals(12.23F, savedPayment.getPaymentAmount(), 0.002F);
         assertEquals("f@mail.com", savedPayment.getMember().getEmail());
+        verify(notificationService, times(1)).logPayment(1);
     }
 
     @Test
@@ -141,6 +142,7 @@ public class PaymentControllerTest extends BaseTest {
 
         verify(memberService, never()).findMemberById(555L);
         verify(paymentService, never()).savePayment(any(Payment.class));
+        verify(notificationService, never()).logPayment(1);
     }
 
     @Test
