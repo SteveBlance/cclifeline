@@ -28,6 +28,28 @@ public class MemberService {
         return memberRepository.findAllByStatus("Open");
     }
 
+    public List<Member> findEligibleMembers() {
+        List<Member> currentMembers = findCurrentMembers();
+        List<Member> eligibleMembers = new ArrayList<>();
+        for (Member member : currentMembers) {
+            if (isEligibleForDraw(member)) {
+                eligibleMembers.add(member);
+            }
+        }
+        return eligibleMembers;
+    }
+
+    public List<Member> findIneligibleMembers() {
+        List<Member> currentMembers = findCurrentMembers();
+        List<Member> ineligibleMembers = new ArrayList<>();
+        for (Member member : currentMembers) {
+            if (!isEligibleForDraw(member)) {
+                ineligibleMembers.add(member);
+            }
+        }
+        return ineligibleMembers;
+    }
+
     public List<Member> findFormerMembers() {
         List<Member> formerMembers = new ArrayList<>();
         formerMembers.addAll(memberRepository.findAllByStatus("Cancelled"));

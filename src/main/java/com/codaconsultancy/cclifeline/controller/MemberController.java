@@ -51,6 +51,8 @@ public class MemberController extends LifelineController {
         String currentTabStatus = "enabled";
         String formerTabStatus = "enabled";
         String allTabStatus = "enabled";
+        String eligibleTabStatus = "enabled";
+        String ineligibleTabStatus = "enabled";
         if (filter.equalsIgnoreCase("current")) {
             members = memberService.findCurrentMembers();
             title = "Current members";
@@ -59,6 +61,14 @@ public class MemberController extends LifelineController {
             members = memberService.findFormerMembers();
             title = "Former members";
             formerTabStatus = "disabled";
+        } else if (filter.equalsIgnoreCase("eligible")) {
+            members = memberService.findEligibleMembers();
+            title = "Eligible for draw";
+            eligibleTabStatus = "disabled";
+        } else if (filter.equalsIgnoreCase("ineligible")) {
+            members = memberService.findIneligibleMembers();
+            title = "Ineligible for draw";
+            ineligibleTabStatus = "disabled";
         } else {
             members = memberService.findAllMembers();
             title = "All members";
@@ -77,6 +87,8 @@ public class MemberController extends LifelineController {
                 .addObject("title", title)
                 .addObject("currentTabStatus", currentTabStatus)
                 .addObject("formerTabStatus", formerTabStatus)
+                .addObject("eligibleTabStatus", eligibleTabStatus)
+                .addObject("ineligibleTabStatus", ineligibleTabStatus)
                 .addObject("allTabStatus", allTabStatus);
     }
 

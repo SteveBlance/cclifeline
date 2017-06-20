@@ -34,6 +34,9 @@
         </div>
         <ul class="nav nav-tabs">
             <li role="presentation" th:class="${currentTabStatus}"><a th:href="@{/members/current}">Current</a></li>
+            <li role="presentation" th:class="${eligibleTabStatus}"><a th:href="@{/members/eligible}">Eligible</a></li>
+            <li role="presentation" th:class="${ineligibleTabStatus}"><a th:href="@{/members/ineligible}">Ineligible</a>
+            </li>
             <li role="presentation" th:class="${formerTabStatus}"><a th:href="@{/members/former}">Former</a></li>
             <li role="presentation" th:class="${allTabStatus}"><a th:href="@{/members/all}">All</a></li>
         </ul>
