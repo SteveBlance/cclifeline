@@ -61,6 +61,12 @@ public class PaymentController extends LifelineController {
                 .addObject("unmatchedTabStatus", unmatchedTabStatus);
     }
 
+    @RequestMapping(value = "/payment/{id}", method = RequestMethod.GET)
+    public ModelAndView paymentDetails(@PathVariable Long id) {
+        Payment payment = paymentService.findById(id);
+        return modelAndView("payment").addObject("payment", payment);
+    }
+
     @RequestMapping(value = "/add-payment", method = RequestMethod.GET)
     public ModelAndView navigateToAddPayment() {
         List<Member> members = memberService.findAllMembers();

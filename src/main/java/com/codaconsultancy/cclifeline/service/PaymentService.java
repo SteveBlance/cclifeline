@@ -147,4 +147,8 @@ public class PaymentService {
         paymentRepository.save(payments);
         return payments;
     }
+
+    public Payment findById(Long id) {
+        return paymentRepository.findOne(id);
+    }
 }

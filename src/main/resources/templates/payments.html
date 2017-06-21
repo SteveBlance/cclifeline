@@ -52,7 +52,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="payment: ${payments}">
+            <tr th:each="payment: ${payments}"
+                style="cursor: pointer"
+                th:onclick="'javascript:rowClicked(\'' + ${payment.id} + '\');'">
                 <td th:text="${#dates.format(payment.paymentDate, 'yyyy/MM/dd')}">Payment Date</td>
                 <td th:text="${#numbers.formatDecimal(payment.paymentAmount, 0, 'COMMA', 2, 'POINT')}">Payment Amount
                 </td>
@@ -66,6 +68,11 @@
         </table>
 
         <script type="text/javascript" src="/js/jquery.dataTables.js"></script>
+        <script>
+            function rowClicked(value) {
+                location.href = "/payment/" + value;
+            }
+        </script>
         <script type="text/javascript" language="javascript" class="init">
             $(document).ready(function () {
                 $('#payments_tab').DataTable({

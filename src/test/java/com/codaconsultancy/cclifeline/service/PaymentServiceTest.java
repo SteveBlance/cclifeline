@@ -173,4 +173,18 @@ public class PaymentServiceTest {
         assertEquals(0, payments.size());
     }
 
+    @Test
+    public void findById() {
+        Payment payment = new Payment();
+        payment.setId(2865L);
+        when(paymentRepository.findOne(payment.getId())).thenReturn(payment);
+
+        Payment foundPayment = paymentService.findById(payment.getId());
+
+        verify(paymentRepository, times(1)).findOne(payment.getId());
+        assertEquals(payment.getId(), foundPayment.getId());
+    }
+
+
+
 }
