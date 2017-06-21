@@ -69,10 +69,17 @@ public class PaymentController extends LifelineController {
 
     @RequestMapping(value = "/add-payment", method = RequestMethod.GET)
     public ModelAndView navigateToAddPayment() {
-        List<Member> members = memberService.findAllMembers();
+        List<Member> members = memberService.findCurrentMembers();
         PaymentViewBean payment = new PaymentViewBean();
         payment.setCreditedAccount("82621900174982CA");
         return modelAndView("add-payment").addObject("payment", payment).addObject("members", members);
+    }
+
+    @RequestMapping(value = "/edit-payment/{id}", method = RequestMethod.GET)
+    public ModelAndView navigateToEditPayment(@PathVariable Long id) {
+        List<Member> members = memberService.findCurrentMembers();
+        Payment payment = paymentService.findById(id);
+        return modelAndView("edit-payment").addObject("payment", payment).addObject("members", members);
     }
 
     @RequestMapping(value = "/payment", method = RequestMethod.POST)

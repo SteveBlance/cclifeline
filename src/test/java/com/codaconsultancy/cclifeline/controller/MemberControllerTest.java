@@ -202,7 +202,6 @@ public class MemberControllerTest extends BaseTest {
 
     @Test
     public void navigateToEditMember() {
-        long memberNumber = 1234L;
         Member member1234 = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
 

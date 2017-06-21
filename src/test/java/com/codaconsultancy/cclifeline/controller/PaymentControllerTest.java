@@ -134,17 +134,31 @@ public class PaymentControllerTest extends BaseTest {
         members.add(member1);
         members.add(member2);
         members.add(member3);
-        when(memberService.findAllMembers()).thenReturn(members);
+        when(memberService.findCurrentMembers()).thenReturn(members);
 
         ModelAndView modelAndView = paymentController.navigateToAddPayment();
 
-        verify(memberService, times(1)).findAllMembers();
+        verify(memberService, times(1)).findCurrentMembers();
         assertEquals("add-payment", modelAndView.getViewName());
         assertEquals(3, ((List) modelAndView.getModel().get("members")).size());
         Object payment = modelAndView.getModel().get("payment");
         assertTrue(payment instanceof PaymentViewBean);
         String defaultAccount = "82621900174982CA";
         assertEquals(defaultAccount, ((PaymentViewBean) payment).getCreditedAccount());
+    }
+
+    @Test
+    public void navigateToEditPayment() {
+        List<Member> members = new ArrayList<>();
+        when(memberService.findCurrentMembers()).thenReturn(members);
+        when(paymentService.findById(1234L)).thenReturn(new Payment());
+
+        ModelAndView response = paymentController.navigateToEditPayment(1234L);
+
+        verify(memberService, times(1)).findCurrentMembers();
+        assertEquals("edit-payment", response.getViewName());
+        assertTrue(response.getModel().get("payment") instanceof Payment);
+        assertSame(members, response.getModel().get("members"));
     }
 
     @Test
