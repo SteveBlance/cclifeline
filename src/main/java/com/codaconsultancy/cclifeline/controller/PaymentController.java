@@ -62,7 +62,7 @@ public class PaymentController extends LifelineController {
     }
 
     @RequestMapping(value = "/payment/{id}", method = RequestMethod.GET)
-    public ModelAndView paymentDetails(@PathVariable Long id) {
+    public ModelAndView navigateToPaymentDetails(@PathVariable Long id) {
         Payment payment = paymentService.findById(id);
         return modelAndView("payment").addObject("payment", payment);
     }
@@ -79,7 +79,23 @@ public class PaymentController extends LifelineController {
     public ModelAndView navigateToEditPayment(@PathVariable Long id) {
         List<Member> members = memberService.findCurrentMembers();
         Payment payment = paymentService.findById(id);
-        return modelAndView("edit-payment").addObject("payment", payment).addObject("members", members);
+        PaymentViewBean paymentViewBean = payment.toViewBean();
+        return modelAndView("edit-payment").addObject("payment", paymentViewBean).addObject("members", members);
+    }
+
+    @RequestMapping(value = "/edit-payment", method = RequestMethod.POST)
+    public ModelAndView editPayment(@Valid @ModelAttribute("payment") PaymentViewBean paymentViewBean, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for payment: ", paymentViewBean);
+            return navigateToEditPayment(paymentViewBean.getId());
+        }
+        Payment payment = paymentViewBean.toEntity();
+        Member member = memberService.findMemberById(paymentViewBean.getMemberId());
+        payment.setMember(member);
+
+        Payment updatedPayment = paymentService.updatePayment(payment);
+
+        return navigateToPaymentDetails(updatedPayment.getId());
     }
 
     @RequestMapping(value = "/payment", method = RequestMethod.POST)

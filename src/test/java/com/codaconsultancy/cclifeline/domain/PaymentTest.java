@@ -25,6 +25,7 @@ public class PaymentTest {
         Date paymentDate = dateFormat.parse(dateInString);
         payment.setPaymentDate(paymentDate);
         Member member = new Member();
+        member.setId(9944L);
         member.setForename("Hamish");
         member.setSurname("Petrie");
         payment.setMember(member);
@@ -64,6 +65,8 @@ public class PaymentTest {
     public void getMember() {
         assertEquals("Hamish", payment.getMember().getForename());
         assertEquals("Petrie", payment.getMember().getSurname());
+        assertEquals(9944L, payment.getMember().getId().longValue());
+        assertEquals(9944L, payment.toViewBean().getMemberId().longValue());
     }
 
     @Test

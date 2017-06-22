@@ -97,6 +97,9 @@ public class Payment {
 
     public PaymentViewBean toViewBean() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.registerClassMap(mapperFactory.classMap(Payment.class, PaymentViewBean.class)
+                .field("member.id", "memberId")
+                .byDefault().toClassMap());
         MapperFacade mapper = mapperFactory.getMapperFacade();
         return mapper.map(this, PaymentViewBean.class);
     }

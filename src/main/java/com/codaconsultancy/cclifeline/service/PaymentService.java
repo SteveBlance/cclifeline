@@ -151,4 +151,8 @@ public class PaymentService {
     public Payment findById(Long id) {
         return paymentRepository.findOne(id);
     }
+
+    public Payment updatePayment(Payment payment) {
+        return paymentRepository.save(payment);
+    }
 }
