@@ -74,24 +74,21 @@ public class PaymentService {
 
     private List<Payment> getPaymentsFromCsvFile(String contents) throws IOException {
         List<Payment> payments = new ArrayList<>();
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd/MM/yyyy");
-        CSVFormat format = CSVFormat.DEFAULT.withHeader(TRANSACTION_DATE, TRANSACTION_TYPE, SORT_CODE, ACCOUNT_NUMBER, DESCRIPTION, DEBIT_AMOUNT, CREDIT_AMOUNT, BALANCE);
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd");
+        CSVFormat format = CSVFormat.DEFAULT;
         CSVParser parser = CSVParser.parse(contents, format);
 
         for (CSVRecord record : parser) {
-            String paymentDateText = record.get(TRANSACTION_DATE);
-            if (paymentDateText.equals(TRANSACTION_DATE)) {
-                continue;
-            }
+            String paymentDateText = record.get(0);
             Date date = DateTime.parse(paymentDateText, fmt).toDate();
-            String transactionType = record.get(TRANSACTION_TYPE);
-            String sortCode = record.get(SORT_CODE);
-            String accountNumber = record.get(ACCOUNT_NUMBER);
-            String description = record.get(DESCRIPTION);
-            String creditAmountText = record.get(CREDIT_AMOUNT);
-            if (transactionType.equalsIgnoreCase("FPI") && (!creditAmountText.isEmpty())) {
+            String transactionType = record.get(4);
+            String accountNumber = record.get(2);
+            String description = record.get(8);
+            String creditAmountText = record.get(7);
+            String name = record.get(9);
+            if (transactionType.equalsIgnoreCase("CR") && (!creditAmountText.isEmpty())) {
                 Float creditAmount = Float.parseFloat(creditAmountText);
-                Payment payment = new Payment(date, creditAmount, description, sortCode + " " + accountNumber);
+                Payment payment = new Payment(date, creditAmount, description, accountNumber, name);
                 matchWithMember(payment);
                 payments.add(payment);
             }

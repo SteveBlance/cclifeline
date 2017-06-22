@@ -34,10 +34,10 @@ public class PaymentRepositoryTest extends BaseTest {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date1 = simpleDateFormat.parse("23/11/2014");
         Date date2 = simpleDateFormat.parse("30/11/2014");
-        payment1 = new Payment(date1, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account");
+        payment1 = new Payment(date1, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH");
         payment1.setMember(member);
-        payment2 = new Payment(date2, 8.66F, "FPS CREDIT 0222 LINDSAY", "Legacy Current Account");
-        payment3 = new Payment(date2, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account");
+        payment2 = new Payment(date2, 8.66F, "FPS CREDIT 0222 LINDSAY", "Legacy Current Account", "BOB SMITH");
+        payment3 = new Payment(date2, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH");
         payment3.setMember(member);
         entityManager.persist(payment1);
         entityManager.persist(payment2);

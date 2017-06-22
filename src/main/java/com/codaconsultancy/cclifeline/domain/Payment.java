@@ -17,11 +17,12 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount) {
+    public Payment(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name) {
         this.paymentDate = paymentDate;
         this.paymentAmount = paymentAmount;
         this.creditReference = creditReference;
         this.creditedAccount = creditedAccount;
+        this.name = name;
     }
 
     @Id
@@ -43,6 +44,9 @@ public class Payment {
 
     @Column(name = "CREDITED_ACCOUNT")
     private String creditedAccount;
+
+    @Column(name = "NAME")
+    private String name;
 
     @ManyToOne
     private Member member;
@@ -85,6 +89,14 @@ public class Payment {
 
     public void setCreditReference(String creditReference) {
         this.creditReference = creditReference;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Member getMember() {

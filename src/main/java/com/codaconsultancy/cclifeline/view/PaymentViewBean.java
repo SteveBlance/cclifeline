@@ -14,11 +14,12 @@ public class PaymentViewBean {
     public PaymentViewBean() {
     }
 
-    public PaymentViewBean(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount) {
+    public PaymentViewBean(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name) {
         this.paymentDate = paymentDate;
         this.paymentAmount = paymentAmount;
         this.creditReference = creditReference;
         this.creditedAccount = creditedAccount;
+        this.name = name;
     }
 
     private Long id;
@@ -34,6 +35,8 @@ public class PaymentViewBean {
     private String creditReference;
 
     private String creditedAccount;
+
+    private String name;
 
     private Long memberId;
 
@@ -75,6 +78,14 @@ public class PaymentViewBean {
 
     public void setCreditReference(String creditReference) {
         this.creditReference = creditReference;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getMemberId() {

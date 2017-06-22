@@ -73,7 +73,7 @@ public class PaymentTest {
     public void testConstructor() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse("26/03/2016");
-        Payment payment = new Payment(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account");
+        Payment payment = new Payment(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account", "BOB SMITH");
         assertEquals("26/03/2016", simpleDateFormat.format(payment.getPaymentDate()));
         assertEquals(20.00F, payment.getPaymentAmount(), 0.001);
         assertEquals("FPS CREDIT 9888 MONK", payment.getCreditReference());
