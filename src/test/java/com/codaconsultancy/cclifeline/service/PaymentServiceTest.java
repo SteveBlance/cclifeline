@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = PaymentService.class)
 public class PaymentServiceTest {
 
-    private static final String EXAMPLE_STATEMENT_CONFIMED =
+    private static final String EXAMPLE_STATEMENT =
             "20170428,,82621900174982CA,,DR,CHQ,Cheque,200,CHEQUE 003033,,,GBP\n" +
                     "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3830,MRS MARGARET ANN R,8.26219E+13,GBP\n" +
                     "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3791,MR ANDREW LENNIE,8.26518E+13,GBP\n" +
@@ -57,19 +57,6 @@ public class PaymentServiceTest {
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,2,FPS CREDIT 338,HALLYBURTON ESQ,8.00676E+13,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,800,CREDIT 000988,,,GBP";
 
-    private static final String EXAMPLE_STATEMENT =
-            "Transaction Date,Transaction Type,Sort Code,Account Number,Transaction Description,Debit Amount,Credit Amount,Balance\r\n" +
-                    "30/05/2017,FPI,'82-62-19,00175999CA,MR JAMIE SMITH 1234 25142449225024000R ,,20,2283.61\n" +
-                    "30/05/2017,FPI,'82-62-19,00175999CA,MARSHALL 1578 51194945265316000R            28MAY17 ,,20,1943.61\n" +
-                    "28/04/2017,FPI,'82-62-19,00175999CA,WILSON 3344 26115814798763000R ,,20,2577.95\n" +
-                    "27/04/2017,FPI,'82-62-19,00175999CA,MR S BLANCE 1244 2908082010027288CN ,,120,3683.52\n" +
-                    "24/04/2017,FPI,'82-62-19,00175999CA,MR S PETRIE 1245 5230447564213244CN            23APR17 ,,20,2799.23\n" +
-                    "06/04/2017,FPI,'82-62-19,00175999CA,BOB MARSHALL 1570 48222518364181000R ,,20,11345.37\n" +
-                    "28/03/2017,FPI,'82-62-19,00175999CA,MIKE REID 1568 17202458533839000R ,,20,2964.67\n" +
-                    "17/03/2017,FPI,'82-62-19,00175999CA,SANDY JAMIESON 1566 6131765340517141CN ,,20,6340.3\n" +
-                    "17/03/2017,DBT,'82-62-19,00175999CA,SANDY JAMIESON 1566 6131765340517141CN ,2888,,6340.3\n" +
-                    "17/03/2017,DBT,'82-62-19,00175999CA,SANDY JAMIESON 1566 6131765340517141CN ,2888,,6340.3\n" +
-                    "17/03/2017,FPI,'82-62-19,00175999CA,DAVE SPENCE 6769810200517177CN ,,120,3840.3\n";
     private static final String BAD_STATEMENT =
             "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,BAD,FPS CREDIT 4061,MR MATTHEW LAFFERT,4.0642E+13,GBP\n";
 
@@ -186,11 +173,9 @@ public class PaymentServiceTest {
         assertSame(saveReference, paymentReference);
     }
 
-    //"20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3830,MRS MARGARET ANN R,8.26219E+13,GBP\n" +
-
     @Test
     public void parsePayments_success() throws Exception {
-        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT_CONFIMED, "test.csv");
+        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
