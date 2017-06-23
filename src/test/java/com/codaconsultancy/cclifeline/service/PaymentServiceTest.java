@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.service;
 
+import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.domain.PaymentReference;
@@ -21,8 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -32,7 +32,7 @@ public class PaymentServiceTest {
 
     private static final String EXAMPLE_STATEMENT =
             "20170428,,82621900174982CA,,DR,CHQ,Cheque,200,CHEQUE 003033,,,GBP\n" +
-                    "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3830,MRS MARGARET ANN R,8.26219E+13,GBP\n" +
+                    "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3830,MRS MARGARET ANDERSON R,8.26219E+13,GBP\n" +
                     "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3791,MR ANDREW LENNIE,8.26518E+13,GBP\n" +
                     "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT POTY  SYME MURDOCH,I Syme,8.77054E+13,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT MEM NO 3959,PETER KELVIN SMITH,8.26725E+13,GBP\n" +
@@ -57,8 +57,11 @@ public class PaymentServiceTest {
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,2,FPS CREDIT 338,HALLYBURTON ESQ,8.00676E+13,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,800,CREDIT 000988,,,GBP";
 
-    private static final String BAD_STATEMENT =
+    private static final String BAD_STATEMENT__INVALID_AMOUNT =
             "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,BAD,FPS CREDIT 4061,MR MATTHEW LAFFERT,4.0642E+13,GBP\n";
+
+    private static final String MATCH__3_DIGIT_MEMBERSHIP_NUMBER =
+            "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 379,R F MCKINLAY,8.26725E+13,GBP\n";
 
     @Autowired
     private PaymentService paymentService;
@@ -175,6 +178,12 @@ public class PaymentServiceTest {
 
     @Test
     public void parsePayments_success() throws Exception {
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
+        members.add(member1);
+        members.add(member2);
+        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -183,13 +192,54 @@ public class PaymentServiceTest {
         assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
         assertEquals("BANK GIRO CREDIT 3830", payments.get(0).getCreditReference());
-        assertEquals("MRS MARGARET ANN R", payments.get(0).getName());
+        assertEquals("MRS MARGARET ANDERSON R", payments.get(0).getName());
+        assertEquals(member2.getId(), payments.get(0).getMember().getId());
+    }
+
+    @Test
+    public void parsePayments_successWIth3DigitMembershipNumber() throws Exception {
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(379L, "Ross", "McKinlay", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
+        members.add(member1);
+        members.add(member2);
+        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
+        List<Payment> payments = paymentService.parsePayments(MATCH__3_DIGIT_MEMBERSHIP_NUMBER, "test.csv");
+        assertEquals(1, payments.size());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        assertEquals("20170403", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
+        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
+        assertEquals("BANK GIRO CREDIT 379", payments.get(0).getCreditReference());
+        assertEquals("R F MCKINLAY", payments.get(0).getName());
+        assertEquals(member2.getId(), payments.get(0).getMember().getId());
+    }
+
+    @Test
+    public void parsePayments_noMatchingName() throws Exception {
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(3830L, "Margaret", "Smith", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
+        members.add(member1);
+        members.add(member2);
+        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
+        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
+        assertEquals(24, payments.size());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        assertEquals("20170428", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
+        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
+        assertEquals("BANK GIRO CREDIT 3830", payments.get(0).getCreditReference());
+        assertEquals("MRS MARGARET ANDERSON R", payments.get(0).getName());
+        assertNull(payments.get(0).getMember());
     }
 
     @Test
     public void parsePayments_badCreditAmount() throws Exception {
         expectedException.expect(NumberFormatException.class);
-        List<Payment> payments = paymentService.parsePayments(BAD_STATEMENT, "test.csv");
+        List<Payment> payments = paymentService.parsePayments(BAD_STATEMENT__INVALID_AMOUNT, "test.csv");
         assertEquals(0, payments.size());
     }
 

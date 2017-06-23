@@ -181,7 +181,36 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.addPayment(paymentViewBean, bindingResult);
 
         verify(memberService, times(1)).findMemberById(555L);
+        verify(paymentService, never()).savePaymentReference(any(PaymentReference.class));
         verify(paymentService, times(1)).savePayment(paymentArgumentCaptor.capture());
+        Payment savedPayment = paymentArgumentCaptor.getValue();
+        assertEquals(367L, savedPayment.getId().longValue());
+        assertEquals(12.23F, savedPayment.getPaymentAmount(), 0.002F);
+        assertEquals("f@mail.com", savedPayment.getMember().getEmail());
+        verify(notificationService, times(1)).logPayment(1);
+        assertEquals("payments", modelAndView.getViewName());
+    }
+
+    public void addPaymentAndStoreReference_success() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT JACK", "83776900435093BZ", "BOB SMITH");
+        paymentViewBean.setId(367L);
+        paymentViewBean.setMemberId(555L);
+        paymentViewBean.setStoreReferenceForMatching(true);
+        BindingResult bindingResult = getBindingResult("payment");
+        ArgumentCaptor<Payment> paymentArgumentCaptor = ArgumentCaptor.forClass(Payment.class);
+        Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
+        member.setId(555L);
+        when(memberService.findMemberById(member.getId())).thenReturn(member);
+
+        ModelAndView modelAndView = paymentController.addPayment(paymentViewBean, bindingResult);
+
+        verify(memberService, times(1)).findMemberById(555L);
+        verify(paymentService, times(1)).savePayment(paymentArgumentCaptor.capture());
+        ArgumentCaptor<PaymentReference> paymentReferenceArgumentCaptor = ArgumentCaptor.forClass(PaymentReference.class);
+        verify(paymentService, times(1)).savePaymentReference(paymentReferenceArgumentCaptor.capture());
+        assertEquals("FPS CREDIT JACK", paymentReferenceArgumentCaptor.getValue().getReference());
         Payment savedPayment = paymentArgumentCaptor.getValue();
         assertEquals(367L, savedPayment.getId().longValue());
         assertEquals(12.23F, savedPayment.getPaymentAmount(), 0.002F);

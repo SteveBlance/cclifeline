@@ -97,7 +97,7 @@ public class PaymentService {
     }
 
     private void matchWithMember(Payment payment) {
-        boolean paymentMatched = tryMatchByMembershipNumber(payment);
+        boolean paymentMatched = tryMatchByMembershipNumberAndName(payment);
         if (!paymentMatched) {
             tryMatchByFullPaymentReference(payment);
         }
@@ -115,13 +115,14 @@ public class PaymentService {
         }
     }
 
-    private boolean tryMatchByMembershipNumber(Payment payment) {
+    private boolean tryMatchByMembershipNumberAndName(Payment payment) {
         boolean isMatched = false;
         String reference = payment.getCreditReference();
-        //TODO: change to findAll Open Members
-        List<Member> allMembers = memberRepository.findAll();
+        String name = payment.getName();
+        String fullDescription = (reference + name).toUpperCase();
+        List<Member> allMembers = memberRepository.findAllByStatus("Open");
         for (Member member : allMembers) {
-            if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference))) {
+            if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) && (fullDescription.contains(member.getSurname().toUpperCase()))) {
                 payment.setMember(member);
                 isMatched = true;
                 break;
@@ -131,7 +132,7 @@ public class PaymentService {
     }
 
     private Long findMembershipNumberInReference(String paymentReference) {
-        Pattern pattern = Pattern.compile("(\\s\\d{4}\\s)");
+        Pattern pattern = Pattern.compile("(\\s\\d{3,4})");
         Matcher matcher = pattern.matcher(paymentReference);
         String membershipNumberText = "";
         if (matcher.find()) {

@@ -18,8 +18,9 @@ public class PaymentTest {
         payment = new Payment();
         payment.setId(44L);
         payment.setPaymentAmount(23.89F);
-        payment.setCreditReference("FPS CREDIT 0299 SMITH");
+        payment.setCreditReference("FPS CREDIT 0299");
         payment.setCreditedAccount("800599 0011223344");
+        payment.setName("SMITH");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dateInString = "30/09/2017";
         Date paymentDate = dateFormat.parse(dateInString);
@@ -53,7 +54,12 @@ public class PaymentTest {
 
     @Test
     public void getCreditReference() {
-        assertEquals("FPS CREDIT 0299 SMITH", payment.getCreditReference());
+        assertEquals("FPS CREDIT 0299", payment.getCreditReference());
+    }
+
+    @Test
+    public void getName() {
+        assertEquals("SMITH", payment.getName());
     }
 
     @Test

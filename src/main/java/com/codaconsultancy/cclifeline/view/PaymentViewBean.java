@@ -40,6 +40,8 @@ public class PaymentViewBean {
 
     private Long memberId;
 
+    private boolean storeReferenceForMatching;
+
     public Long getId() {
         return id;
     }
@@ -86,6 +88,14 @@ public class PaymentViewBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isStoreReferenceForMatching() {
+        return storeReferenceForMatching;
+    }
+
+    public void setStoreReferenceForMatching(boolean storeReferenceForMatching) {
+        this.storeReferenceForMatching = storeReferenceForMatching;
     }
 
     public Long getMemberId() {

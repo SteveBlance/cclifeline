@@ -18,7 +18,8 @@ public class PaymentViewBeanTest {
         paymentViewBean = new PaymentViewBean();
         paymentViewBean.setId(44L);
         paymentViewBean.setPaymentAmount(23.89F);
-        paymentViewBean.setCreditReference("FPS CREDIT 0299 SMITH");
+        paymentViewBean.setCreditReference("FPS CREDIT 0299");
+        paymentViewBean.setName("SMITH");
         paymentViewBean.setCreditedAccount("800599 0011223344");
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dateInString = "30/09/2017";
@@ -52,7 +53,12 @@ public class PaymentViewBeanTest {
 
     @Test
     public void getCreditReference() {
-        assertEquals("FPS CREDIT 0299 SMITH", paymentViewBean.getCreditReference());
+        assertEquals("FPS CREDIT 0299", paymentViewBean.getCreditReference());
+    }
+
+    @Test
+    public void getName() {
+        assertEquals("SMITH", paymentViewBean.getName());
     }
 
     @Test

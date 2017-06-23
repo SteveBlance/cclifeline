@@ -89,8 +89,12 @@ public class PaymentController extends LifelineController {
             logger.debug("Validation errors for payment: ", paymentViewBean);
             return navigateToEditPayment(paymentViewBean.getId());
         }
-        Payment payment = paymentViewBean.toEntity();
         Member member = memberService.findMemberById(paymentViewBean.getMemberId());
+        if (paymentViewBean.isStoreReferenceForMatching() && null != member) {
+            PaymentReference paymentReference = new PaymentReference(paymentViewBean.getCreditReference(), null, true, member);
+            paymentService.savePaymentReference(paymentReference);
+        }
+        Payment payment = paymentViewBean.toEntity();
         payment.setMember(member);
 
         Payment updatedPayment = paymentService.updatePayment(payment);
