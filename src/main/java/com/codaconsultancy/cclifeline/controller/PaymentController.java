@@ -91,7 +91,7 @@ public class PaymentController extends LifelineController {
         }
         Member member = memberService.findMemberById(paymentViewBean.getMemberId());
         if (paymentViewBean.isStoreReferenceForMatching() && null != member) {
-            PaymentReference paymentReference = new PaymentReference(paymentViewBean.getCreditReference(), null, true, member);
+            PaymentReference paymentReference = new PaymentReference(paymentViewBean.getCreditReference(), paymentViewBean.getName(), true, member);
             paymentService.savePaymentReference(paymentReference);
         }
         Payment payment = paymentViewBean.toEntity();

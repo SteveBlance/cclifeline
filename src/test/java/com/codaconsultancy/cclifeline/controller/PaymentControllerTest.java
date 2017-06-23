@@ -210,7 +210,9 @@ public class PaymentControllerTest extends BaseTest {
         verify(paymentService, times(1)).savePayment(paymentArgumentCaptor.capture());
         ArgumentCaptor<PaymentReference> paymentReferenceArgumentCaptor = ArgumentCaptor.forClass(PaymentReference.class);
         verify(paymentService, times(1)).savePaymentReference(paymentReferenceArgumentCaptor.capture());
-        assertEquals("FPS CREDIT JACK", paymentReferenceArgumentCaptor.getValue().getReference());
+        PaymentReference savePaymentReference = paymentReferenceArgumentCaptor.getValue();
+        assertEquals("FPS CREDIT JACK", savePaymentReference.getReference());
+        assertEquals("BOB SMITH", savePaymentReference.getName());
         Payment savedPayment = paymentArgumentCaptor.getValue();
         assertEquals(367L, savedPayment.getId().longValue());
         assertEquals(12.23F, savedPayment.getPaymentAmount(), 0.002F);
