@@ -71,7 +71,36 @@
                 <a th:href="@{/payments/all}" class="btn btn-default active" role="button">Back</a>
                 <a th:href="@{/edit-payment/} + ${payment.id}" class="btn btn-primary"
                    role="button">Edit</a>
+                <button id="deleteConfirmation" class="btn btn-default btn-danger">Delete</button>
             </div>
+
+            <script>
+                $(function () {
+                    $("#dialog-confirm").dialog({
+                        autoOpen: false,
+                        modal: true,
+                    });
+
+                    $("#deleteConfirmation").on("click", function () {
+                        $("#dialog-confirm").dialog("open");
+                    });
+                    $("#closeModal").on("click", function () {
+                        $("#dialog-confirm").dialog("close");
+                    });
+                });
+
+            </script>
+
+            <div id="dialog-confirm" title="Confirm Delete Payment">
+                <p>Delete this payment?</p>
+                <form action="#" th:action="@{'/payment/{id}'(id=*{id})}" th:method="delete">
+                    <input type="hidden" name="_method" value="delete"/>
+                    <button type="submit" id="confirmDelete" class="btn btn-default btn-success">Yes</button>
+                    <button type="button" class="btn btn-default btn-danger" id="closeModal">No</button>
+
+                </form>
+            </div>
+
         </div>
         <br/>
 
