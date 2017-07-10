@@ -117,6 +117,8 @@ public class PaymentController extends LifelineController {
         return navigateToPayments("all");
     }
 
+    //TODO: implement delete payment functionality
+
     @RequestMapping(value = "/payment-references/member/{number}", method = RequestMethod.GET)
     public ModelAndView navigateToPaymentReferencesForMember(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
