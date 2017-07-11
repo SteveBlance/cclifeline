@@ -47,6 +47,7 @@
                 <th>Payment Date</th>
                 <th>Payment Amount (£)</th>
                 <th>Credit Reference</th>
+                <th>Name</th>
                 <th>Credited Account</th>
                 <th>Member</th>
             </tr>
@@ -59,6 +60,7 @@
                 <td th:text="${#numbers.formatDecimal(payment.paymentAmount, 0, 'COMMA', 2, 'POINT')}">Payment Amount
                 </td>
                 <td th:text="${payment.creditReference}">Credit Reference</td>
+                <td th:text="${payment.name}">Name</td>
                 <td th:text="${payment.creditedAccount}">Credited Account</td>
                 <td th:text="${payment.member}? ${payment.member.membershipNumber + ': ' + payment.member.forename + ' '
                 + payment.member.surname}">Member

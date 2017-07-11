@@ -25,15 +25,6 @@ import java.util.regex.Pattern;
 @Service
 public class PaymentService {
 
-    private static final String TRANSACTION_DATE = "Transaction Date";
-    private static final String TRANSACTION_TYPE = "Transaction Type";
-    private static final String SORT_CODE = "Sort Code";
-    private static final String ACCOUNT_NUMBER = "Account Number";
-    private static final String DESCRIPTION = "Transaction Description";
-    private static final String CREDIT_AMOUNT = "Credit Amount";
-    private static final String DEBIT_AMOUNT = "Debit Amount";
-    private static final String BALANCE = "Balance";
-
     @Autowired
     private PaymentRepository paymentRepository;
 
@@ -122,7 +113,7 @@ public class PaymentService {
         String fullDescription = (reference + name).toUpperCase();
         List<Member> allMembers = memberRepository.findAllByStatus("Open");
         for (Member member : allMembers) {
-            if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) && (fullDescription.contains(member.getSurname().toUpperCase()))) {
+            if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) && (fullDescription.contains(member.getSurname().toUpperCase()) || fullDescription.contains(member.getForename().toUpperCase()))) {
                 payment.setMember(member);
                 isMatched = true;
                 break;
@@ -132,12 +123,13 @@ public class PaymentService {
     }
 
     private Long findMembershipNumberInReference(String paymentReference) {
-        Pattern pattern = Pattern.compile("(\\s\\d{3,4})");
+        Pattern pattern = Pattern.compile("(\\s\\d{2,5}($|\\s|-|\\/))");
         Matcher matcher = pattern.matcher(paymentReference);
         String membershipNumberText = "";
         if (matcher.find()) {
             membershipNumberText = matcher.group(1).trim();
         }
+        membershipNumberText = membershipNumberText.replace("/", "").replace("-", "");
         return membershipNumberText.isEmpty() ? 0L : Long.parseLong(membershipNumberText);
     }
 

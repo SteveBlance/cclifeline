@@ -44,7 +44,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><strong>Payment Amount</strong></td>
+                        <td><strong>Payment Amount (£)</strong></td>
                         <td th:text="${#numbers.formatDecimal(payment.paymentAmount, 0, 'COMMA', 2, 'POINT')}">Payment
                             Amount
                         </td>
@@ -52,6 +52,10 @@
                     <tr>
                         <td><strong>Credit Reference</strong></td>
                         <td th:text="${payment.creditReference}">Credit Reference</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Name</strong></td>
+                        <td th:text="${payment.name}">Name</td>
                     </tr>
                     <tr>
                         <td><strong>Credited Account</strong></td>
@@ -78,7 +82,7 @@
                 $(function () {
                     $("#dialog-confirm").dialog({
                         autoOpen: false,
-                        modal: true,
+                        modal: true
                     });
 
                     $("#deleteConfirmation").on("click", function () {
@@ -91,7 +95,7 @@
 
             </script>
 
-            <div id="dialog-confirm" title="Confirm Delete Payment">
+            <div id="dialog-confirm" title="Confirm Delete Payment" style="display:none;">
                 <p>Delete this payment?</p>
                 <form action="#" th:action="@{'/payment/{id}'(id=*{id})}" th:method="delete">
                     <input type="hidden" name="_method" value="delete"/>

@@ -53,7 +53,7 @@ public class PaymentServiceTest {
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT ID4340,C ADDISON,8.04567E+13,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,8.66,FPS CREDIT 00192,JOHN SYME,9.01287E+12,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,8.66,FPS CREDIT 600,DAVID PHILLIPS,9.01284E+12,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,8.66,FPS CREDIT 379,BRUCE DRUMMOND,9.01278E+12,GBP\n" +
+                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,8.66,FPS CREDIT 0379,BRUCE DRUMMOND,9.01278E+12,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,2,FPS CREDIT 338,HALLYBURTON ESQ,8.00676E+13,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,800,CREDIT 000988,,,GBP";
 
@@ -220,7 +220,7 @@ public class PaymentServiceTest {
     public void parsePayments_noMatchingName() throws Exception {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        Member member2 = TestHelper.newMember(3830L, "Margaret", "Smith", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
+        Member member2 = TestHelper.newMember(3830L, "Ann", "Smith", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
         members.add(member2);
         when(memberRepository.findAllByStatus("Open")).thenReturn(members);
