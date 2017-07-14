@@ -69,6 +69,23 @@ public class PaymentRepositoryTest extends BaseTest {
     }
 
     @Test
+    public void findLatestPaymentForMember_success() {
+        Payment latestPayment = paymentRepository.findTopByMemberOrderByPaymentDateDesc(member);
+        assertEquals(20.00F, latestPayment.getPaymentAmount(), 0.002F);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        assertEquals("30/11/2014", simpleDateFormat.format(latestPayment.getPaymentDate()));
+    }
+
+    @Test
+    public void findLatestPaymentForMember_noPayments() {
+        Member newMember = TestHelper.newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
+        entityManager.persist(newMember);
+
+        Payment latestPayment = paymentRepository.findTopByMemberOrderByPaymentDateDesc(newMember);
+        assertNull(latestPayment);
+    }
+
+    @Test
     public void findByMemberIsNull() throws Exception {
         List<Payment> unmatchedPayments = paymentRepository.findByMemberIsNull();
 

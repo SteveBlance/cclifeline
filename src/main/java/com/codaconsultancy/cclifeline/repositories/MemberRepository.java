@@ -13,5 +13,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select max(m.membershipNumber)+1 from Member m")
     Long nextMembershipNumber();
 
-    List<Member> findAllByStatus(String status);
+    List<Member> findAllByStatusOrderBySurnameAscForenameAsc(String status);
+
+    List<Member> findAllBySurnameIgnoreCaseAndStatusOrderByForename(String surname, String status);
 }

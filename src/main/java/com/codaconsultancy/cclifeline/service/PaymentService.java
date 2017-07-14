@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -111,7 +112,7 @@ public class PaymentService {
         String reference = payment.getCreditReference();
         String name = payment.getName();
         String fullDescription = (reference + name).toUpperCase();
-        List<Member> allMembers = memberRepository.findAllByStatus("Open");
+        List<Member> allMembers = memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open");
         for (Member member : allMembers) {
             if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) && (fullDescription.contains(member.getSurname().toUpperCase()) || fullDescription.contains(member.getForename().toUpperCase()))) {
                 payment.setMember(member);
@@ -144,5 +145,32 @@ public class PaymentService {
 
     public Payment updatePayment(Payment payment) {
         return paymentRepository.save(payment);
+    }
+
+    public List<Payment> findPaymentsForMember(Member member) {
+        return paymentRepository.findByMember(member);
+    }
+
+    public Payment findLatestPayment(Member member) {
+        return paymentRepository.findTopByMemberOrderByPaymentDateDesc(member);
+    }
+
+    public List<Member> findPossiblePayers(Payment payment) {
+        List<Member> possiblePayers = new ArrayList<>();
+        String creditReference = payment.getCreditReference();
+        String name = payment.getName().toUpperCase().replace("MR ", " ").replace("MRS ", " ").replace("DR ", " ");
+        Long membershipNumber = findMembershipNumberInReference(creditReference);
+        Member membershipNumberMatch = memberRepository.findByMembershipNumber(membershipNumber);
+        if (null != membershipNumberMatch) {
+            possiblePayers.add(membershipNumberMatch);
+        }
+        StringTokenizer tokenizer = new StringTokenizer(name, " ");
+        while (tokenizer.hasMoreElements()) {
+            String word = tokenizer.nextElement().toString();
+            List<Member> surnameMatch = memberRepository.findAllBySurnameIgnoreCaseAndStatusOrderByForename(word, "Open");
+            possiblePayers.addAll(surnameMatch);
+        }
+
+        return possiblePayers;
     }
 }

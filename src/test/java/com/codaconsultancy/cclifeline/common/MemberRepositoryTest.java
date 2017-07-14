@@ -9,6 +9,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -26,7 +28,7 @@ public class MemberRepositoryTest extends BaseTest {
     @Before
     public void setUp() throws Exception {
         member1 = TestHelper.newMember(1818L, "Frank", "Jones", "frank@email.com", "013177766655", "07712312312", "Monthly", "Lifeline", "New member", "Open");
-        member2 = TestHelper.newMember(1819L, "Jane", "Smith", "jsmith@email.com", "01383772233", "07777777766", "Monthly", "Lifeline", "Was a legacy member", "Open");
+        member2 = TestHelper.newMember(1819L, "Jane", "Jones", "jsmith@email.com", "01383772233", "07777777766", "Monthly", "Lifeline", "Was a legacy member", "Open");
         member3 = TestHelper.newMember(1820L, "Bill", "Wilson", "billy@email.com", "01383999999", null, "Annual", "Legacy", "Old member", "Open");
         member4 = TestHelper.newMember(1821L, "Jimmy", "Jimmieson", "jj@email.com", "01383000111", null, "Monthly", "Legacy", "Old member", "Closed");
         entityManager.persist(member1);
@@ -59,7 +61,7 @@ public class MemberRepositoryTest extends BaseTest {
 
         foundMember = memberRepository.findByMembershipNumber(1819L);
         assertEquals("Jane", foundMember.getForename());
-        assertEquals("Smith", foundMember.getSurname());
+        assertEquals("Jones", foundMember.getSurname());
         assertEquals("jsmith@email.com", foundMember.getEmail());
 
         foundMember = memberRepository.findByMembershipNumber(9900L);
@@ -72,6 +74,12 @@ public class MemberRepositoryTest extends BaseTest {
         Long expectedNextNumber = member4.getMembershipNumber() + 1L;
         assertEquals(expectedNextNumber, nextMemberShipNumber);
 
+    }
+
+    @Test
+    public void findAllBySurname() {
+        List<Member> foundMembers = memberRepository.findAllBySurnameIgnoreCaseAndStatusOrderByForename("JONES", "Open");
+        assertEquals(2, foundMembers.size());
     }
 
 }

@@ -25,7 +25,7 @@ public class MemberService {
     }
 
     public List<Member> findCurrentMembers() {
-        return memberRepository.findAllByStatus("Open");
+        return memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open");
     }
 
     public List<Member> findEligibleMembers() {
@@ -52,8 +52,8 @@ public class MemberService {
 
     public List<Member> findFormerMembers() {
         List<Member> formerMembers = new ArrayList<>();
-        formerMembers.addAll(memberRepository.findAllByStatus("Cancelled"));
-        formerMembers.addAll(memberRepository.findAllByStatus("Closed"));
+        formerMembers.addAll(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Cancelled"));
+        formerMembers.addAll(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Closed"));
         return formerMembers;
     }
 

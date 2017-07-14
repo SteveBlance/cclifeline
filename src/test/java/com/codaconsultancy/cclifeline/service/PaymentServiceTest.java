@@ -183,7 +183,7 @@ public class PaymentServiceTest {
         Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
+        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -203,7 +203,7 @@ public class PaymentServiceTest {
         Member member2 = TestHelper.newMember(379L, "Ross", "McKinlay", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
+        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
         List<Payment> payments = paymentService.parsePayments(MATCH__3_DIGIT_MEMBERSHIP_NUMBER, "test.csv");
         assertEquals(1, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -223,7 +223,7 @@ public class PaymentServiceTest {
         Member member2 = TestHelper.newMember(3830L, "Ann", "Smith", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
+        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -255,6 +255,63 @@ public class PaymentServiceTest {
         assertEquals(payment.getId(), foundPayment.getId());
     }
 
+    @Test
+    public void findPaymentsForMember() {
+        Member member = new Member();
+        member.setId(34L);
+        List<Payment> payments = new ArrayList<>();
+        payments.add(new Payment());
+        payments.add(new Payment());
+        payments.add(new Payment());
+        when(paymentRepository.findByMember(member)).thenReturn(payments);
+
+        List<Payment> foundPayments = paymentService.findPaymentsForMember(member);
+
+        verify(paymentRepository, times(1)).findByMember(member);
+        assertEquals(3, foundPayments.size());
+        assertSame(payments, foundPayments);
+    }
+
+    @Test
+    public void findLatestPaymentForMember() {
+        Payment payment = new Payment();
+        payment.setId(2865L);
+        Member member = new Member();
+        member.setId(34L);
+        when(paymentRepository.findTopByMemberOrderByPaymentDateDesc(member)).thenReturn(payment);
+
+        Payment foundPayment = paymentService.findLatestPayment(member);
+
+        verify(paymentRepository, times(1)).findTopByMemberOrderByPaymentDateDesc(member);
+        assertEquals(2865L, foundPayment.getId().longValue());
+    }
+
+    @Test
+    public void findPossiblePayersForPayment() {
+        Payment payment = new Payment();
+        payment.setCreditReference("FPS CREDIT FOR MEMBID 4445");
+        payment.setName("MR DAVE WILSON");
+        Member member4445 = new Member();
+        member4445.setMembershipNumber(4445L);
+        when(memberRepository.findByMembershipNumber(4445L)).thenReturn(member4445);
+        List<Member> daveMembers = new ArrayList<>();
+        daveMembers.add(new Member());
+        daveMembers.add(new Member());
+        daveMembers.add(new Member());
+        List<Member> wilsonMembers = new ArrayList<>();
+        wilsonMembers.add(new Member());
+        wilsonMembers.add(new Member());
+        when(memberRepository.findAllBySurnameIgnoreCaseAndStatusOrderByForename("DAVE", "Open")).thenReturn(daveMembers);
+        when(memberRepository.findAllBySurnameIgnoreCaseAndStatusOrderByForename("WILSON", "Open")).thenReturn(wilsonMembers);
+
+        List<Member> possiblePayers = paymentService.findPossiblePayers(payment);
+
+        verify(memberRepository, times(1)).findByMembershipNumber(4445L);
+        verify(memberRepository, times(1)).findAllBySurnameIgnoreCaseAndStatusOrderByForename("DAVE", "Open");
+        verify(memberRepository, times(1)).findAllBySurnameIgnoreCaseAndStatusOrderByForename("WILSON", "Open");
+        assertEquals(6, possiblePayers.size());
+        assertEquals(4445L, possiblePayers.get(0).getMembershipNumber().longValue());
+    }
 
 
 }

@@ -62,10 +62,10 @@ public class MemberServiceTest {
         Member member2 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByStatus("Open")).thenReturn(members);
+        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
 
         List<Member> allMembers = memberService.findCurrentMembers();
-        verify(memberRepository, times(1)).findAllByStatus("Open");
+        verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Open");
         assertEquals(2, allMembers.size());
     }
 
@@ -79,13 +79,13 @@ public class MemberServiceTest {
         List<Member> closedMembers = new ArrayList<>();
         Member member3 = TestHelper.newMember(1235L, "Dave", "Zippo", "dz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         closedMembers.add(member3);
-        when(memberRepository.findAllByStatus("Cancelled")).thenReturn(cancelledMembers);
-        when(memberRepository.findAllByStatus("Closed")).thenReturn(closedMembers);
+        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Cancelled")).thenReturn(cancelledMembers);
+        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Closed")).thenReturn(closedMembers);
 
         List<Member> formerMembers = memberService.findFormerMembers();
 
-        verify(memberRepository, times(1)).findAllByStatus("Cancelled");
-        verify(memberRepository, times(1)).findAllByStatus("Closed");
+        verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Cancelled");
+        verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Closed");
         assertEquals(3, formerMembers.size());
     }
 
@@ -175,7 +175,7 @@ public class MemberServiceTest {
         allMembers.add(closedLifelineMember);
         allMembers.add(cancelledLifelineMember);
         when(memberRepository.findAll()).thenReturn(allMembers);
-        when(memberRepository.findAllByStatus("Open")).thenReturn(allMembers);
+        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(allMembers);
         ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);

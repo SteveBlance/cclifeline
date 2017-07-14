@@ -83,6 +83,17 @@
             <div class="col-sm-7">
                 <select class="form-control" th:field="*{memberId}">
                     <option value="0" selected="selected"></option>
+                    <option value="0">-----------------------------------------</option>
+                    <option value="0">Possible matches</option>
+                    <option value="0">-----------------------------------------</option>
+                    <option th:each="member : ${possiblePayers}" th:value="${member.id}"
+                            th:text="${member.membershipNumber} + ': ' + ${member.forename}  + ' ' + ${member.surname}">
+                        Membership Number
+                    </option>
+                    <option value="0"></option>
+                    <option value="0">-----------------------------------------</option>
+                    <option value="0">All members</option>
+                    <option value="0">-----------------------------------------</option>
                     <option th:each="member : ${members}" th:value="${member.id}"
                             th:text="${member.membershipNumber} + ': ' + ${member.forename}  + ' ' + ${member.surname}">
                         Membership Number

@@ -17,10 +17,13 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByMemberIsNotNull();
 
+    Payment findTopByMemberOrderByPaymentDateDesc(Member member);
+
     @Query(value =
             "SELECT IFNULL(SUM(PAYMENT_AMOUNT), 0) " +
                     "FROM PAYMENTS WHERE MEMBER_ID = :member " +
                     "AND PAYMENT_DATE >= :lastExpectedPaymentDate",
             nativeQuery = true)
     Double getTotalPaymentSince(@Param("lastExpectedPaymentDate") Date lastExpectedPaymentDate, @Param("member") Long memberId);
+
 }

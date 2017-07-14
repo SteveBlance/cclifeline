@@ -61,6 +61,13 @@ public class PaymentController extends LifelineController {
                 .addObject("unmatchedTabStatus", unmatchedTabStatus);
     }
 
+    @RequestMapping(value = "payments/member/{membershipNumber}", method = RequestMethod.GET)
+    public ModelAndView navigateToPaymentsForMember(@PathVariable Long membershipNumber) {
+        Member member = memberService.findMemberByMembershipNumber(membershipNumber);
+        List<Payment> payments = paymentService.findPaymentsForMember(member);
+        return modelAndView("member-payments").addObject("payments", payments).addObject("member", member);
+    }
+
     @RequestMapping(value = "/payment/{id}", method = RequestMethod.GET)
     public ModelAndView navigateToPaymentDetails(@PathVariable Long id) {
         Payment payment = paymentService.findById(id);
@@ -77,10 +84,11 @@ public class PaymentController extends LifelineController {
 
     @RequestMapping(value = "/edit-payment/{id}", method = RequestMethod.GET)
     public ModelAndView navigateToEditPayment(@PathVariable Long id) {
-        List<Member> members = memberService.findCurrentMembers();
         Payment payment = paymentService.findById(id);
+        List<Member> possiblePayers = paymentService.findPossiblePayers(payment);
+        List<Member> members = memberService.findCurrentMembers();
         PaymentViewBean paymentViewBean = payment.toViewBean();
-        return modelAndView("edit-payment").addObject("payment", paymentViewBean).addObject("members", members);
+        return modelAndView("edit-payment").addObject("payment", paymentViewBean).addObject("members", members).addObject("possiblePayers", possiblePayers);
     }
 
     @RequestMapping(value = "/edit-payment", method = RequestMethod.POST)

@@ -75,6 +75,21 @@ public class PaymentControllerTest extends BaseTest {
     }
 
     @Test
+    public void navigateToPaymentsForMember() throws Exception {
+        Member member = new Member();
+        member.setMembershipNumber(1212L);
+        when(memberService.findMemberByMembershipNumber(member.getMembershipNumber())).thenReturn(member);
+        List<Payment> payments = getPayments();
+        when(paymentService.findPaymentsForMember(member)).thenReturn(payments);
+
+        ModelAndView modelAndView = paymentController.navigateToPaymentsForMember(member.getMembershipNumber());
+
+        assertEquals("member-payments", modelAndView.getViewName());
+        assertEquals(1212L, ((Member) modelAndView.getModel().get("member")).getMembershipNumber().longValue());
+        assertEquals(3, ((List) modelAndView.getModel().get("payments")).size());
+    }
+
+    @Test
     public void navigateToPaymentsWithMatchedFilter() throws Exception {
         List<Payment> payments = getPayments();
         when(paymentService.findAllMatchedPayments()).thenReturn(payments);
@@ -154,6 +169,12 @@ public class PaymentControllerTest extends BaseTest {
         Payment payment = new Payment();
         payment.setCreditReference("GH 1234");
         when(paymentService.findById(1234L)).thenReturn(payment);
+        List<Member> possiblePayers = new ArrayList<>();
+        Member possiblePayer1 = new Member();
+        Member possiblePayer2 = new Member();
+        possiblePayers.add(possiblePayer1);
+        possiblePayers.add(possiblePayer2);
+        when(paymentService.findPossiblePayers(payment)).thenReturn(possiblePayers);
 
         ModelAndView response = paymentController.navigateToEditPayment(1234L);
 
@@ -163,6 +184,7 @@ public class PaymentControllerTest extends BaseTest {
         assertTrue(paymentViewBean instanceof PaymentViewBean);
         assertEquals("GH 1234", ((PaymentViewBean) paymentViewBean).getCreditReference());
         assertSame(members, response.getModel().get("members"));
+        assertSame(possiblePayers, response.getModel().get("possiblePayers"));
     }
 
     @Test
