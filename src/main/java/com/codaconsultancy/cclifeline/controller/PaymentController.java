@@ -128,7 +128,8 @@ public class PaymentController extends LifelineController {
     @RequestMapping(value = "/delete-payment/{id}", method = RequestMethod.POST)
     public ModelAndView deletePayment(@PathVariable Long id) {
         paymentService.deletePayment(id);
-        return navigateToPayments("unmatched");
+        ModelAndView modelAndView = navigateToPayments("unmatched");
+        return addAlertMessage(modelAndView, "success", "Payment deleted");
     }
 
     @RequestMapping(value = "/payment-references/member/{number}", method = RequestMethod.GET)

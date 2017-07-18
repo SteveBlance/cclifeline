@@ -31,6 +31,11 @@ class LifelineController {
         List<Notification> notifications = notificationService.fetchLatestNotifications();
 
         return new ModelAndView(page).addObject("loggedInUser", loggedInUser())
-                .addObject("notifications", notifications);
+                .addObject("notifications", notifications).addObject("alertMessage", "");
+    }
+
+
+    ModelAndView addAlertMessage(ModelAndView modelAndView, String alertType, String messageText) {
+        return modelAndView.addObject("alertClass", "alert alert-" + alertType).addObject("alertMessage", messageText);
     }
 }
