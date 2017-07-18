@@ -56,7 +56,7 @@ public class PaymentService {
 
     }
 
-    public List<Payment> parsePayments(String contents, String filename) throws IOException, NumberFormatException {
+    public List<Payment> parsePayments(String contents, String filename) throws IOException, NumberFormatException, ArrayIndexOutOfBoundsException {
         List<Payment> payments = new ArrayList<>();
         if (filename.endsWith(".csv") || filename.endsWith(".CSV")) {
             payments = getPaymentsFromCsvFile(contents);
@@ -64,7 +64,7 @@ public class PaymentService {
         return payments;
     }
 
-    private List<Payment> getPaymentsFromCsvFile(String contents) throws IOException {
+    private List<Payment> getPaymentsFromCsvFile(String contents) throws IOException, ArrayIndexOutOfBoundsException {
         List<Payment> payments = new ArrayList<>();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd");
         CSVFormat format = CSVFormat.DEFAULT;

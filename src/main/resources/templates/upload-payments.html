@@ -31,6 +31,8 @@
                         </div>
                     </div>
                 </div>
+                <div th:if="${alertMessage != ''}" th:class="${alertClass}" role="alert"
+                     th:text="${alertMessage}"></div>
             </div>
         </div>
         <div class="row">

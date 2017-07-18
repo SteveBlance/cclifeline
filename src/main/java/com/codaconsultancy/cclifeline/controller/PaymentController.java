@@ -179,9 +179,10 @@ public class PaymentController extends LifelineController {
             contents = IOUtils.toString(stream, "UTF-8");
             parsedPayments = paymentService.parsePayments(contents, filename);
             paymentService.savePayments(parsedPayments);
-        } catch (IOException | NumberFormatException e) {
-            //TODO: properly handle error
-            e.printStackTrace();
+        } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            logger.error(e.getMessage());
+            ModelAndView modelAndView = modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", true);
+            return addAlertMessage(modelAndView, "danger", "Upload of payment failed. Please check bank statement file.");
         }
         notificationService.logPayment(parsedPayments.size());
         return modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", false);
