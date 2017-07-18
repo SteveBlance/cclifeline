@@ -97,9 +97,9 @@
 
             <div id="dialog-confirm" title="Confirm Delete Payment" style="display:none;">
                 <p>Delete this payment?</p>
-                <form action="#" th:action="@{'/payment/{id}'(id=*{id})}" th:method="delete">
-                    <input type="hidden" name="_method" value="delete"/>
-                    <button type="submit" disabled="disabled" id="confirmDelete" class="btn btn-default btn-success">
+                <form action="#" th:action="@{'/delete-payment/{id}'(id=*{id})}" th:method="POST">
+                    <input type="hidden" name="_method" value="post"/>
+                    <button type="submit" id="confirmDelete" class="btn btn-default btn-success">
                         Yes
                     </button>
                     <button type="button" class="btn btn-default btn-danger" id="closeModal">No</button>

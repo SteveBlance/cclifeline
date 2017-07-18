@@ -125,7 +125,11 @@ public class PaymentController extends LifelineController {
         return navigateToPayments("all");
     }
 
-    //TODO: implement delete payment functionality
+    @RequestMapping(value = "/delete-payment/{id}", method = RequestMethod.POST)
+    public ModelAndView deletePayment(@PathVariable Long id) {
+        paymentService.deletePayment(id);
+        return navigateToPayments("unmatched");
+    }
 
     @RequestMapping(value = "/payment-references/member/{number}", method = RequestMethod.GET)
     public ModelAndView navigateToPaymentReferencesForMember(@PathVariable Long number) {

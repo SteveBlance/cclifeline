@@ -341,4 +341,12 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals("upload-payments", modelAndView.getViewName());
     }
 
+    @Test
+    public void deletePayment() {
+        ModelAndView modelAndView = paymentController.deletePayment(78L);
+        verify(paymentService, times(1)).deletePayment(78L);
+        assertEquals("payments", modelAndView.getViewName());
+        assertEquals("Unmatched payments", modelAndView.getModel().get("title"));
+    }
+
 }

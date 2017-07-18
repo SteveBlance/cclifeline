@@ -313,5 +313,11 @@ public class PaymentServiceTest {
         assertEquals(4445L, possiblePayers.get(0).getMembershipNumber().longValue());
     }
 
+    @Test
+    public void deletePayment() {
+        paymentService.deletePayment(69L);
+        verify(paymentRepository, times(1)).delete(69L);
+    }
+
 
 }

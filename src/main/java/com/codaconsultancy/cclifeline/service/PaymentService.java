@@ -173,4 +173,8 @@ public class PaymentService {
 
         return possiblePayers;
     }
+
+    public void deletePayment(Long id) {
+        paymentRepository.delete(id);
+    }
 }
