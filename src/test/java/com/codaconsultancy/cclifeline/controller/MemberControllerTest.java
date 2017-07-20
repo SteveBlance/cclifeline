@@ -57,13 +57,13 @@ public class MemberControllerTest extends BaseTest {
     @Test
     public void home() throws Exception {
         List<Notification> notifications = new ArrayList<>();
-        when(memberService.countAllMembers()).thenReturn(22L);
+        when(memberService.countAllCurrentMembers()).thenReturn(22L);
         when(lotteryDrawService.countAllWinners()).thenReturn(18L);
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
 
         ModelAndView response = memberController.home();
 
-        verify(memberService, times(1)).countAllMembers();
+        verify(memberService, times(1)).countAllCurrentMembers();
         verify(lotteryDrawService, times(1)).countAllWinners();
         assertEquals(22L, response.getModel().get("memberCount"));
         assertEquals(18L, response.getModel().get("totalNumberOfWinners"));
@@ -79,7 +79,7 @@ public class MemberControllerTest extends BaseTest {
         Member member2 = TestHelper.newMember(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
         members.add(member1);
         members.add(member2);
-        when(memberService.countAllMembers()).thenReturn(22L);
+        when(memberService.countAllCurrentMembers()).thenReturn(22L);
         when(memberService.findAllMembers()).thenReturn(members);
         when(memberService.isEligibleForDraw(member1)).thenReturn(true);
         when(memberService.isEligibleForDraw(member2)).thenReturn(false);

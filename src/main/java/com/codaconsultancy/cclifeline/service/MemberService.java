@@ -57,8 +57,8 @@ public class MemberService {
         return formerMembers;
     }
 
-    public Long countAllMembers() {
-        return memberRepository.count();
+    public Long countAllCurrentMembers() {
+        return memberRepository.countByStatus("Open");
     }
 
     public Member findMemberByMembershipNumber(Long memberNumber) {

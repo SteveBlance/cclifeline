@@ -37,7 +37,7 @@ public class MemberController extends LifelineController {
 
     @RequestMapping("/")
     public ModelAndView home() {
-        long count = memberService.countAllMembers();
+        long count = memberService.countAllCurrentMembers();
         Long totalNumberOfWinners = lotteryDrawService.countAllWinners();
         return modelAndView("index")
                 .addObject("memberCount", count)

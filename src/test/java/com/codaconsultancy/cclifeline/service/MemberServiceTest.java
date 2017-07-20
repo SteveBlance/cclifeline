@@ -89,14 +89,13 @@ public class MemberServiceTest {
         assertEquals(3, formerMembers.size());
     }
 
-
     @Test
-    public void countMembers() {
-        when(memberRepository.count()).thenReturn(87L);
+    public void countCurrentMembers() {
+        when(memberRepository.countByStatus("Open")).thenReturn(87L);
 
-        Long memberCount = memberService.countAllMembers();
+        Long memberCount = memberService.countAllCurrentMembers();
 
-        verify(memberRepository, times(1)).count();
+        verify(memberRepository, times(1)).countByStatus("Open");
         assertEquals(87L, memberCount.longValue());
     }
 

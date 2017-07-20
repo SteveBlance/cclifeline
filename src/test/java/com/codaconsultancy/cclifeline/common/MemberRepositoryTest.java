@@ -53,6 +53,12 @@ public class MemberRepositoryTest extends BaseTest {
     }
 
     @Test
+    public void countByStatusOpen() throws Exception {
+        long membersInDatabase = memberRepository.countByStatus("Open");
+        assertEquals(3L, membersInDatabase);
+    }
+
+    @Test
     public void findByMembershipNumber() {
         Member foundMember = memberRepository.findByMembershipNumber(1818L);
         assertEquals("Frank", foundMember.getForename());

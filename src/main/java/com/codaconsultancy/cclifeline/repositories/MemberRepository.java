@@ -16,4 +16,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findAllByStatusOrderBySurnameAscForenameAsc(String status);
 
     List<Member> findAllBySurnameIgnoreCaseAndStatusOrderByForename(String surname, String status);
+
+    Long countByStatus(String status);
 }

@@ -97,11 +97,12 @@ public class PaymentService {
     }
 
     private void tryMatchByFullPaymentReference(Payment payment) {
-        String reference = payment.getCreditReference();
+        String reference = (payment.getCreditReference() != null) ? payment.getCreditReference() : "";
+        String name = (payment.getName() != null) ? payment.getName() : "";
 
         List<PaymentReference> allReferences = paymentReferenceRepository.findAll();
         for (PaymentReference paymentReference : allReferences) {
-            if (reference.equalsIgnoreCase(paymentReference.getReference())) {
+            if (reference.equalsIgnoreCase(paymentReference.getReference()) && name.equalsIgnoreCase(paymentReference.getName())) {
                 payment.setMember(paymentReference.getMember());
             }
         }
@@ -158,13 +159,14 @@ public class PaymentService {
     public List<Member> findPossiblePayers(Payment payment) {
         List<Member> possiblePayers = new ArrayList<>();
         String creditReference = payment.getCreditReference();
-        String name = payment.getName().toUpperCase().replace("MR ", " ").replace("MRS ", " ").replace("DR ", " ");
+        String name = payment.getName().toUpperCase().replace("MR ", " ").replace("MRS ", " ").replace("MISS ", " ").replace("DR ", " ");
         Long membershipNumber = findMembershipNumberInReference(creditReference);
         Member membershipNumberMatch = memberRepository.findByMembershipNumber(membershipNumber);
         if (null != membershipNumberMatch) {
             possiblePayers.add(membershipNumberMatch);
         }
-        StringTokenizer tokenizer = new StringTokenizer(name, " ");
+        String fullDescription = (creditReference + " " + name).toUpperCase().replace("FPS ", " ").replace("CREDIT ", " ").replace("BANK GIRO ", " ");
+        StringTokenizer tokenizer = new StringTokenizer(fullDescription, " ");
         while (tokenizer.hasMoreElements()) {
             String word = tokenizer.nextElement().toString();
             List<Member> surnameMatch = memberRepository.findAllBySurnameIgnoreCaseAndStatusOrderByForename(word, "Open");
