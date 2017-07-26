@@ -21,7 +21,6 @@ public class MemberViewBean {
     @NotNull
     private String membershipType;
 
-    @NotNull
     private String status;
 
     @NotNull
@@ -33,7 +32,6 @@ public class MemberViewBean {
     @NotNull
     private String payerType;
 
-    @NotNull
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date joinDate;
 

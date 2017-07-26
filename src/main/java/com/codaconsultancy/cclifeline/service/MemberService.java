@@ -68,6 +68,8 @@ public class MemberService {
     public Member saveMember(Member member) {
         Long nextMembershipNumber = memberRepository.nextMembershipNumber();
         member.setMembershipNumber(nextMembershipNumber);
+        member.setStatus("Open");
+        member.setJoinDate(DateTime.now().toDate());
 
         return memberRepository.save(member);
     }

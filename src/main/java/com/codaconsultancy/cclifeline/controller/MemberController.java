@@ -24,6 +24,9 @@ import java.util.List;
 @Controller
 public class MemberController extends LifelineController {
 
+    private static final String ENABLED = "enabled";
+    private static final String DISABLED = "disabled";
+
     @Autowired
     private MemberService memberService;
 
@@ -48,31 +51,31 @@ public class MemberController extends LifelineController {
     public ModelAndView members(@PathVariable String filter) {
         List<Member> members;
         String title;
-        String currentTabStatus = "enabled";
-        String formerTabStatus = "enabled";
-        String allTabStatus = "enabled";
-        String eligibleTabStatus = "enabled";
-        String ineligibleTabStatus = "enabled";
+        String currentTabStatus = ENABLED;
+        String formerTabStatus = ENABLED;
+        String allTabStatus = ENABLED;
+        String eligibleTabStatus = ENABLED;
+        String ineligibleTabStatus = ENABLED;
         if (filter.equalsIgnoreCase("current")) {
             members = memberService.findCurrentMembers();
             title = "Current members";
-            currentTabStatus = "disabled";
+            currentTabStatus = DISABLED;
         } else if (filter.equalsIgnoreCase("former")) {
             members = memberService.findFormerMembers();
             title = "Former members";
-            formerTabStatus = "disabled";
+            formerTabStatus = DISABLED;
         } else if (filter.equalsIgnoreCase("eligible")) {
             members = memberService.findEligibleMembers();
             title = "Eligible for draw";
-            eligibleTabStatus = "disabled";
+            eligibleTabStatus = DISABLED;
         } else if (filter.equalsIgnoreCase("ineligible")) {
             members = memberService.findIneligibleMembers();
             title = "Ineligible for draw";
-            ineligibleTabStatus = "disabled";
+            ineligibleTabStatus = DISABLED;
         } else {
             members = memberService.findAllMembers();
             title = "All members";
-            allTabStatus = "disabled";
+            allTabStatus = DISABLED;
         }
         for (Member member : members) {
             if (memberService.isEligibleForDraw(member)) {
@@ -114,7 +117,7 @@ public class MemberController extends LifelineController {
         }
 
         Member newMember = memberService.saveMember(memberViewBean.toEntity());
-        notificationService.logNewMemberAdded(memberViewBean.getJoinDate());
+        notificationService.logNewMemberAdded();
 
         return navigateToAddAddress(newMember.getId());
     }

@@ -125,7 +125,7 @@ public class MemberServiceTest {
 
     @Test
     public void saveMember() {
-        Member member = TestHelper.newMember(0L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
+        Member member = TestHelper.newMember(0L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", null);
 
         when(memberRepository.nextMembershipNumber()).thenReturn(2566L);
         when(memberRepository.save(member)).thenReturn(member);
@@ -137,6 +137,8 @@ public class MemberServiceTest {
         assertEquals(2566L, newMember.getMembershipNumber().longValue());
         assertEquals("Billy", newMember.getForename());
         assertEquals("Whiz", newMember.getSurname());
+        assertEquals("Open", newMember.getStatus());
+        assertEquals(DateTime.now().getDayOfYear(), new DateTime(newMember.getJoinDate()).getDayOfYear());
 
     }
 
