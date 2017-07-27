@@ -1,6 +1,8 @@
 package com.codaconsultancy.cclifeline.view;
 
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Payment;
+import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
@@ -57,6 +59,9 @@ public class MemberViewBean {
 
     private List<AddressViewBean> addresses = new ArrayList<>();
     private List<Prize> prizeWins;
+    private Payment lastPayment;
+    private boolean isEligibleForDraw;
+    private List<PaymentReference> paymentReferences;
 
     public Long getId() {
         return id;
@@ -200,6 +205,34 @@ public class MemberViewBean {
 
     public List<Prize> getPrizeWins() {
         return prizeWins;
+    }
+
+    public void setIsEligibleForDraw(boolean isEligibleForDraw) {
+        this.isEligibleForDraw = isEligibleForDraw;
+    }
+
+    public boolean isEligibleForDraw() {
+        return isEligibleForDraw;
+    }
+
+    public void setEligibleForDraw(boolean isEligibleForDraw) {
+        this.isEligibleForDraw = isEligibleForDraw;
+    }
+
+    public List<PaymentReference> getPaymentReferences() {
+        return paymentReferences;
+    }
+
+    public void setPaymentReferences(List<PaymentReference> paymentReferences) {
+        this.paymentReferences = paymentReferences;
+    }
+
+    public void setLastPayment(Payment lastPayment) {
+        this.lastPayment = lastPayment;
+    }
+
+    public Payment getLastPayment() {
+        return lastPayment;
     }
 
     public Member toEntity() {

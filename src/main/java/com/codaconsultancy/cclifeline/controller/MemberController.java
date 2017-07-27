@@ -5,6 +5,7 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.service.AddressService;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.service.PaymentService;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.slf4j.Logger;
@@ -29,6 +30,9 @@ public class MemberController extends LifelineController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Autowired
     private AddressService addressService;
@@ -100,7 +104,9 @@ public class MemberController extends LifelineController {
         Member member = memberService.findMemberByMembershipNumber(number);
         boolean isEligible = memberService.isEligibleForDraw(member);
         member.setIsEligibleForDraw(isEligible);
-        return modelAndView("member").addObject("member", member);
+        MemberViewBean memberViewBean = member.toViewBean();
+        memberViewBean.setLastPayment(paymentService.findLatestPayment(member));
+        return modelAndView("member").addObject("member", memberViewBean);
     }
 
     @RequestMapping(value = "/add-member", method = RequestMethod.GET)

@@ -43,6 +43,18 @@
                         <td class="col-sm-8" th:text="${member.isEligibleForDraw()}? Yes : No">Eligible For Draw</td>
                     </tr>
                     <tr>
+                        <td><strong>Last Payment Date</strong></td>
+                        <td th:text="${member.lastPayment} ? ${#dates.format(member.lastPayment.paymentDate, 'yyyy/MM/dd')}">
+                            Last Payment
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Last Payment Amount (£)</strong></td>
+                        <td th:text="${member.lastPayment} ? ${#numbers.formatDecimal(member.lastPayment.paymentAmount, 0, 'COMMA', 2, 'POINT')}">
+                            Last Payment
+                        </td>
+                    </tr>
+                    <tr>
                         <td><strong>Membership No</strong></td>
                         <td th:text="${member.membershipNumber}">Membership No</td>
                     </tr>

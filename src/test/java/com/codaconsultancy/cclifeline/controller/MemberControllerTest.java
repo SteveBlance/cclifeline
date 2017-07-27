@@ -5,10 +5,7 @@ import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Notification;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
-import com.codaconsultancy.cclifeline.service.AddressService;
-import com.codaconsultancy.cclifeline.service.LotteryDrawService;
-import com.codaconsultancy.cclifeline.service.MemberService;
-import com.codaconsultancy.cclifeline.service.NotificationService;
+import com.codaconsultancy.cclifeline.service.*;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.junit.Test;
@@ -47,6 +44,9 @@ public class MemberControllerTest extends BaseTest {
 
     @MockBean
     MemberService memberService;
+
+    @MockBean
+    PaymentService paymentService;
 
     @MockBean
     AddressService addressService;
@@ -109,8 +109,8 @@ public class MemberControllerTest extends BaseTest {
 
         verify(memberService, times(1)).isEligibleForDraw(member1234);
         verify(memberService, times(1)).findMemberByMembershipNumber(1234L);
-        assertEquals("Bobby", ((Member) response.getModel().get("member")).getForename());
-        assertTrue(((Member) response.getModel().get("member")).isEligibleForDraw());
+        assertEquals("Bobby", ((MemberViewBean) response.getModel().get("member")).getForename());
+        assertTrue(((MemberViewBean) response.getModel().get("member")).isEligibleForDraw());
         assertEquals("member", response.getViewName());
 
     }
