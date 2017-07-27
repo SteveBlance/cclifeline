@@ -154,7 +154,7 @@ public class MemberServiceTest {
         assertEquals(2566L, newMember.getMembershipNumber().longValue());
         assertEquals("Billy", newMember.getForename());
         assertEquals("Whiz", newMember.getSurname());
-        assertEquals("Open", newMember.getStatus());
+        assertEquals("TBC", newMember.getStatus());
         assertEquals(DateTime.now().getDayOfYear(), new DateTime(newMember.getJoinDate()).getDayOfYear());
 
     }
