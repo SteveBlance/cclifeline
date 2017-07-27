@@ -139,7 +139,7 @@ public class PaymentServiceTest {
     }
 
     @Test
-    public void savePayment() throws Exception {
+    public void savePayment_unallocated() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
         Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
@@ -148,6 +148,84 @@ public class PaymentServiceTest {
         Payment savedPayment = paymentService.savePayment(payment);
 
         verify(paymentRepository, times(1)).save(payment);
+        verify(memberRepository, never()).save(any(Member.class));
+
+
+        assertSame(payment, savedPayment);
+    }
+
+    @Test
+    public void savePayment_currentMember() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Member member = new Member();
+        payment.setMember(member);
+        member.setStatus("Open");
+        when(paymentRepository.save(payment)).thenReturn(payment);
+
+        Payment savedPayment = paymentService.savePayment(payment);
+
+        verify(paymentRepository, times(1)).save(payment);
+        verify(memberRepository, never()).save(member);
+        assertEquals("Open", member.getStatus());
+
+        assertSame(payment, savedPayment);
+    }
+
+    @Test
+    public void savePayment_tbcMember() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Member member = new Member();
+        payment.setMember(member);
+        member.setStatus("TBC");
+        when(paymentRepository.save(payment)).thenReturn(payment);
+
+        Payment savedPayment = paymentService.savePayment(payment);
+
+        verify(paymentRepository, times(1)).save(payment);
+        verify(memberRepository, times(1)).save(member);
+        assertEquals("Open", member.getStatus());
+
+        assertSame(payment, savedPayment);
+    }
+
+    @Test
+    public void updatePayment_currentMember() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Member member = new Member();
+        payment.setMember(member);
+        member.setStatus("Open");
+        when(paymentRepository.save(payment)).thenReturn(payment);
+
+        Payment savedPayment = paymentService.updatePayment(payment);
+
+        verify(paymentRepository, times(1)).save(payment);
+        verify(memberRepository, never()).save(member);
+        assertEquals("Open", member.getStatus());
+
+        assertSame(payment, savedPayment);
+    }
+
+    @Test
+    public void updatePayment_tbcMember() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Member member = new Member();
+        payment.setMember(member);
+        member.setStatus("TBC");
+        when(paymentRepository.save(payment)).thenReturn(payment);
+
+        Payment savedPayment = paymentService.updatePayment(payment);
+
+        verify(paymentRepository, times(1)).save(payment);
+        verify(memberRepository, times(1)).save(member);
+        assertEquals("Open", member.getStatus());
 
         assertSame(payment, savedPayment);
     }
@@ -155,14 +233,29 @@ public class PaymentServiceTest {
     @Test
     public void savePayments() {
         List<Payment> payments = new ArrayList<>();
-        payments.add(new Payment());
-        payments.add(new Payment());
+        Payment paymentWithCurrentMember = new Payment();
+        Member currentMember = new Member();
+        currentMember.setId(999L);
+        currentMember.setStatus("Open");
+        paymentWithCurrentMember.setMember(currentMember);
+        payments.add(paymentWithCurrentMember);
+
+        Payment paymentWithLapsedMember = new Payment();
+        Member lapsedMember = new Member();
+        lapsedMember.setId(111L);
+        lapsedMember.setStatus("Closed");
+        paymentWithLapsedMember.setMember(lapsedMember);
+        payments.add(paymentWithLapsedMember);
+
         when(paymentRepository.save(payments)).thenReturn(payments);
 
         List<Payment> savedPayments = paymentService.savePayments(payments);
 
         verify(paymentRepository, times(1)).save(payments);
+        verify(memberRepository, times(1)).save(lapsedMember);
+        verify(memberRepository, never()).save(currentMember);
         assertSame(payments, savedPayments);
+        assertEquals("Open", lapsedMember.getStatus());
     }
 
     @Test
@@ -180,11 +273,13 @@ public class PaymentServiceTest {
     public void parsePayments_success() throws Exception {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
+        Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
+        when(memberRepository.findAllByOrderBySurnameAscForenameAsc()).thenReturn(members);
+
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
+
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -203,7 +298,7 @@ public class PaymentServiceTest {
         Member member2 = TestHelper.newMember(379L, "Ross", "McKinlay", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
+        when(memberRepository.findAllByOrderBySurnameAscForenameAsc()).thenReturn(members);
         List<Payment> payments = paymentService.parsePayments(MATCH__3_DIGIT_MEMBERSHIP_NUMBER, "test.csv");
         assertEquals(1, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

@@ -83,9 +83,15 @@ public class MemberRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void findAllBySurname() {
+    public void findAllWithStatusOpenBySurname() {
         List<Member> foundMembers = memberRepository.findAllBySurnameIgnoreCaseAndStatusOrderByForename("JONES", "Open");
         assertEquals(2, foundMembers.size());
     }
 
+    @Test
+    public void findAllOrderBySurname() {
+        List<Member> foundMembers = memberRepository.findAllByOrderBySurnameAscForenameAsc();
+        assertEquals(4, foundMembers.size());
+        assertEquals("Jimmieson", foundMembers.get(0).getSurname());
+    }
 }

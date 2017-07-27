@@ -165,7 +165,7 @@ public class PaymentControllerTest extends BaseTest {
     @Test
     public void navigateToEditPayment() {
         List<Member> members = new ArrayList<>();
-        when(memberService.findCurrentMembers()).thenReturn(members);
+        when(memberService.findAllMembersOrderedBySurname()).thenReturn(members);
         Payment payment = new Payment();
         payment.setCreditReference("GH 1234");
         when(paymentService.findById(1234L)).thenReturn(payment);
@@ -178,7 +178,7 @@ public class PaymentControllerTest extends BaseTest {
 
         ModelAndView response = paymentController.navigateToEditPayment(1234L);
 
-        verify(memberService, times(1)).findCurrentMembers();
+        verify(memberService, times(1)).findAllMembersOrderedBySurname();
         assertEquals("edit-payment", response.getViewName());
         Object paymentViewBean = response.getModel().get("payment");
         assertTrue(paymentViewBean instanceof PaymentViewBean);

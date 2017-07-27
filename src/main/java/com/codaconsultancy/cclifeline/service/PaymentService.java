@@ -48,6 +48,7 @@ public class PaymentService {
     }
 
     public Payment savePayment(Payment payment) {
+        reactivatePayerMembership(payment);
         return paymentRepository.save(payment);
     }
 
@@ -113,7 +114,7 @@ public class PaymentService {
         String reference = payment.getCreditReference();
         String name = payment.getName();
         String fullDescription = (reference + name).toUpperCase();
-        List<Member> allMembers = memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open");
+        List<Member> allMembers = memberRepository.findAllByOrderBySurnameAscForenameAsc();
         for (Member member : allMembers) {
             if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) && (fullDescription.contains(member.getSurname().toUpperCase()) || fullDescription.contains(member.getForename().toUpperCase()))) {
                 payment.setMember(member);
@@ -136,6 +137,9 @@ public class PaymentService {
     }
 
     public List<Payment> savePayments(List<Payment> payments) {
+        for (Payment payment : payments) {
+            reactivatePayerMembership(payment);
+        }
         paymentRepository.save(payments);
         return payments;
     }
@@ -145,6 +149,7 @@ public class PaymentService {
     }
 
     public Payment updatePayment(Payment payment) {
+        reactivatePayerMembership(payment);
         return paymentRepository.save(payment);
     }
 
@@ -178,5 +183,14 @@ public class PaymentService {
 
     public void deletePayment(Long id) {
         paymentRepository.delete(id);
+    }
+
+
+    private void reactivatePayerMembership(Payment payment) {
+        Member member = payment.getMember();
+        if (null != member && !member.getStatus().equalsIgnoreCase("Open")) {
+            member.setStatus("Open");
+            memberRepository.save(member);
+        }
     }
 }

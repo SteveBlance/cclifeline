@@ -56,6 +56,23 @@ public class MemberServiceTest {
     }
 
     @Test
+    public void findAllMembersOrderedBySurname() {
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Alpha", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(1234L, "Frank", "Beta", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member3 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        members.add(member1);
+        members.add(member2);
+        members.add(member3);
+        when(memberRepository.findAllByOrderBySurnameAscForenameAsc()).thenReturn(members);
+
+        List<Member> allMembers = memberService.findAllMembersOrderedBySurname();
+
+        verify(memberRepository, times(1)).findAllByOrderBySurnameAscForenameAsc();
+        assertEquals(3, allMembers.size());
+    }
+
+    @Test
     public void findCurrentMembers() {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");

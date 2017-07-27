@@ -24,6 +24,10 @@ public class MemberService {
         return memberRepository.findAll();
     }
 
+    public List<Member> findAllMembersOrderedBySurname() {
+        return memberRepository.findAllByOrderBySurnameAscForenameAsc();
+    }
+
     public List<Member> findCurrentMembers() {
         return memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open");
     }

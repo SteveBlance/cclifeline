@@ -86,7 +86,7 @@ public class PaymentController extends LifelineController {
     public ModelAndView navigateToEditPayment(@PathVariable Long id) {
         Payment payment = paymentService.findById(id);
         List<Member> possiblePayers = paymentService.findPossiblePayers(payment);
-        List<Member> members = memberService.findCurrentMembers();
+        List<Member> members = memberService.findAllMembersOrderedBySurname();
         PaymentViewBean paymentViewBean = payment.toViewBean();
         return modelAndView("edit-payment").addObject("payment", paymentViewBean).addObject("members", members).addObject("possiblePayers", possiblePayers);
     }
