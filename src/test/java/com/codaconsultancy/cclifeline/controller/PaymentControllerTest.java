@@ -149,11 +149,11 @@ public class PaymentControllerTest extends BaseTest {
         members.add(member1);
         members.add(member2);
         members.add(member3);
-        when(memberService.findAllMembers()).thenReturn(members);
+        when(memberService.findAllMembersOrderedBySurname()).thenReturn(members);
 
         ModelAndView modelAndView = paymentController.navigateToAddPayment();
 
-        verify(memberService, times(1)).findAllMembers();
+        verify(memberService, times(1)).findAllMembersOrderedBySurname();
         assertEquals("add-payment", modelAndView.getViewName());
         assertEquals(3, ((List) modelAndView.getModel().get("members")).size());
         Object payment = modelAndView.getModel().get("payment");

@@ -88,7 +88,7 @@
                         <select class="form-control" th:field="*{memberId}">
                             <option value="0" selected="selected"></option>
                             <option th:each="member : ${members}" th:value="${member.id}"
-                                    th:text="${member.membershipNumber} + ': ' + ${member.forename}  + ' ' + ${member.surname}">
+                                    th:text="${member.membershipNumber} + ': ' + ${member.forename}  + ' ' + ${member.surname} + ': ' + ${member.status}">
                                 Membership Number
                             </option>
                         </select>
