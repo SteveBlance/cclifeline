@@ -18,7 +18,7 @@ public class LotteryDrawViewBean {
     private Long id;
 
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date drawDate;
 
     private String name;

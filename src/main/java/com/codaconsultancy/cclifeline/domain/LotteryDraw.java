@@ -18,7 +18,7 @@ public class LotteryDraw {
 
     @Column(name = "DRAW_DATE")
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date drawDate;
 
     @Column(name = "NAME")
