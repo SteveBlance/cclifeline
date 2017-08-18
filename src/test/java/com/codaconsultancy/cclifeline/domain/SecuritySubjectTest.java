@@ -15,6 +15,8 @@ public class SecuritySubjectTest {
         securitySubject.setId(93L);
         securitySubject.setForename("Ross");
         securitySubject.setSurname("Lindsay");
+        securitySubject.setUsername("ross");
+        securitySubject.setPassword("passw0rD");
     }
 
     @Test
@@ -30,6 +32,16 @@ public class SecuritySubjectTest {
     @Test
     public void getSurname() {
         assertEquals("Lindsay", securitySubject.getSurname());
+    }
+
+    @Test
+    public void getUsername() {
+        assertEquals("ross", securitySubject.getUsername());
+    }
+
+    @Test
+    public void getPassword() {
+        assertEquals("passw0rD", securitySubject.getPassword());
     }
 
 }
