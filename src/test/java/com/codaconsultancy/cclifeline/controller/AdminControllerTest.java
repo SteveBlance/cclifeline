@@ -2,7 +2,9 @@ package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.NotificationService;
+import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import com.codaconsultancy.cclifeline.view.AdministratorViewBean;
+import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,10 @@ public class AdminControllerTest extends BaseTest {
     @MockBean
     NotificationService notificationService;
 
+    @MockBean
+    private SecuritySubjectService securitySubjectService;
+
+
     @Test
     public void navigateToAdministrators() throws Exception {
         ModelAndView modelAndView = adminController.navigateToAdministrators();
@@ -40,10 +46,17 @@ public class AdminControllerTest extends BaseTest {
     public void navigateToAddAdministrator() throws Exception {
 
         ModelAndView modelAndView = adminController.navigateToAddAdministrator();
-        assertTrue(modelAndView.getModel().get("administrator") instanceof AdministratorViewBean);
+        assertTrue(modelAndView.getModel().get("administrator") instanceof SecuritySubjectViewBean);
         assertEquals("add-administrator", modelAndView.getViewName());
 
 
     }
+//
+//    @Test
+//    public void encryptPassword() {
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        String encodedPassword = encoder.encode("password");
+//        assertEquals("", encodedPassword);
+//    }
 
 }

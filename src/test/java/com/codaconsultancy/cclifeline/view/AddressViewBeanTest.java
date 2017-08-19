@@ -76,4 +76,12 @@ public class AddressViewBeanTest {
         assertEquals(23L, memberId.longValue());
     }
 
+    @Test
+    public void getFormattedAddress() {
+        assertEquals("Line1<br/>Line2<br/>Line3<br/>Dunfermline<br/>Fife<br/>KY12 9AB", addressViewBean.getFormattedAddress());
+        addressViewBean.setAddressLine3("");
+        assertEquals("Line1<br/>Line2<br/>Dunfermline<br/>Fife<br/>KY12 9AB", addressViewBean.getFormattedAddress());
+
+    }
+
 }

@@ -1,8 +1,12 @@
 package com.codaconsultancy.cclifeline.service;
 
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
+import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
 import com.codaconsultancy.cclifeline.repositories.SecuritySubjectRepository;
+import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,9 @@ public class SecuritySubjectServiceTest {
     @MockBean
     private SecuritySubjectRepository securitySubjectRepository;
 
+    @Rule
+    public final ExpectedException expectedException = ExpectedException.none();
+
     @Test
     public void findAllSecuritySubjects() throws Exception {
 
@@ -58,15 +65,16 @@ public class SecuritySubjectServiceTest {
 
     @Test
     public void registerNewSecuritySubject_success() throws Exception {
-        SecuritySubject securitySubject = new SecuritySubject();
-        securitySubject.setForename("Bobby");
-        securitySubject.setSurname("Smith");
-        securitySubject.setUsername("bobby");
-        securitySubject.setPassword("pa55w0rd");
-        when(securitySubjectRepository.save(any(SecuritySubject.class))).thenReturn(securitySubject);
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+        securitySubjectViewBean.setForename("Bobby");
+        securitySubjectViewBean.setSurname("Smith");
+        securitySubjectViewBean.setUsername("bobby");
+        securitySubjectViewBean.setPassword("pa55w0rd");
+        when(securitySubjectRepository.save(any(SecuritySubject.class))).thenReturn(securitySubjectViewBean.toEntity());
+        when(securitySubjectRepository.countByUsername("bobby")).thenReturn(0);
         when(passwordEncoder.encode("pa55w0rd")).thenReturn("EncodedPassword");
 
-        SecuritySubject savedSubject = securityService.registerNewSecuritySubject(securitySubject);
+        SecuritySubject savedSubject = securityService.registerNewSecuritySubject(securitySubjectViewBean);
 
         ArgumentCaptor<SecuritySubject> securitySubjectArgumentCaptor = ArgumentCaptor.forClass(SecuritySubject.class);
         verify(securitySubjectRepository, times(1)).save(securitySubjectArgumentCaptor.capture());
@@ -78,6 +86,26 @@ public class SecuritySubjectServiceTest {
         assertEquals("bobby", securitySubjectArgumentCaptor.getValue().getUsername());
         assertEquals("EncodedPassword", securitySubjectArgumentCaptor.getValue().getPassword());
 
+    }
+
+    @Test
+    public void registerNewSecuritySubject_failUsernameExists() throws Exception {
+
+        expectedException.expect(SubjectUsernameExistsException.class);
+
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+        securitySubjectViewBean.setForename("Bobby");
+        securitySubjectViewBean.setSurname("Smith");
+        securitySubjectViewBean.setUsername("bobby");
+        securitySubjectViewBean.setPassword("pa55w0rd");
+        when(securitySubjectRepository.save(any(SecuritySubject.class))).thenReturn(securitySubjectViewBean.toEntity());
+        when(securitySubjectRepository.countByUsername("bobby")).thenReturn(1);
+        when(passwordEncoder.encode("pa55w0rd")).thenReturn("EncodedPassword");
+
+        securityService.registerNewSecuritySubject(securitySubjectViewBean);
+
+        ArgumentCaptor<SecuritySubject> securitySubjectArgumentCaptor = ArgumentCaptor.forClass(SecuritySubject.class);
+        verify(securitySubjectRepository, never()).save(securitySubjectArgumentCaptor.capture());
 
     }
 

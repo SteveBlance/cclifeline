@@ -3,6 +3,7 @@ package com.codaconsultancy.cclifeline.service;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
 import com.codaconsultancy.cclifeline.repositories.SecuritySubjectRepository;
+import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,19 +30,19 @@ public class SecuritySubjectService implements UserDetailsService {
         return securitySubjectRepository.findAll();
     }
 
-    public SecuritySubject registerNewSecuritySubject(SecuritySubject securitySubject) throws SubjectUsernameExistsException {
-        if (usernameExists(securitySubject.getUsername())) {
+    public SecuritySubject registerNewSecuritySubject(SecuritySubjectViewBean securitySubjectViewBean) throws SubjectUsernameExistsException {
+        if (usernameExists(securitySubjectViewBean.getUsername())) {
             throw new SubjectUsernameExistsException(
-                    "There is an account with that username:" + securitySubject.getUsername());
+                    "There is an account with that username:" + securitySubjectViewBean.getUsername());
         }
-        SecuritySubject user = new SecuritySubject();
-        user.setForename(securitySubject.getForename());
-        user.setSurname(securitySubject.getSurname());
-        user.setUsername(securitySubject.getUsername());
+        SecuritySubject securitySubject = new SecuritySubject();
+        securitySubject.setForename(securitySubjectViewBean.getForename());
+        securitySubject.setSurname(securitySubjectViewBean.getSurname());
+        securitySubject.setUsername(securitySubjectViewBean.getUsername());
 
-        user.setPassword(passwordEncoder.encode(securitySubject.getPassword()));
+        securitySubject.setPassword(passwordEncoder.encode(securitySubjectViewBean.getPassword()));
 
-        return securitySubjectRepository.save(user);
+        return securitySubjectRepository.save(securitySubject);
     }
 
     private boolean usernameExists(String username) {

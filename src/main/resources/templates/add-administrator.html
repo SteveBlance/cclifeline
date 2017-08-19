@@ -57,27 +57,33 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Username:</label>
             <div class="col-sm-7">
-                <input type="email" class="form-control" th:field="*{username}"/>
+                <input type="text" class="form-control" th:field="*{username}"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-sm-3 control-label">Temporary Password:</label>
             <div class="col-sm-7">
-                <input type="email" class="form-control" th:field="*{password}"/>
+                <input type="password" class="form-control" th:field="*{password}"/>
             </div>
         </div>
         <div class="form-group">
-            <label class="col-sm-3 control-label">Email:</label>
+            <label class="col-sm-3 control-label">Confirm Password:</label>
             <div class="col-sm-7">
-                <input type="email" class="form-control" th:field="*{email}" placeholder="(Optional)"/>
+                <input type="password" class="form-control" th:field="*{confirmPassword}"/>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Phone Number:</label>
-            <div class="col-sm-7">
-                <input type="text" class="form-control" th:field="*{landlineNumber}" placeholder="(Optional)"/>
-            </div>
-        </div>
+        <!--<div class="form-group">-->
+        <!--<label class="col-sm-3 control-label">Email:</label>-->
+        <!--<div class="col-sm-7">-->
+        <!--<input type="email" class="form-control" th:field="*{email}" placeholder="(Optional)"/>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--<div class="form-group">-->
+        <!--<label class="col-sm-3 control-label">Phone Number:</label>-->
+        <!--<div class="col-sm-7">-->
+        <!--<input type="text" class="form-control" th:field="*{landlineNumber}" placeholder="(Optional)"/>-->
+        <!--</div>-->
+        <!--</div>-->
 
         <div class="row">
             <a th:href="@{/}" class="btn btn-default " role="button">Back</a>
