@@ -39,6 +39,9 @@
             </div>
         </div>
     </div>
+    <div th:if="${alertMessage != ''}" th:class="${alertClass}" role="alert"
+         th:text="${alertMessage}">
+    </div>
 
     <form id="createAdminForm" class="form-horizontal" role="form" action="#" th:action="@{/administrator}"
           th:object="${administrator}" method="post">

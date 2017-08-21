@@ -64,7 +64,7 @@ public class AdminController extends LifelineController {
             return navigateToAddAdministrator();
         }
         if (!securitySubjectViewBean.getPassword().equals(securitySubjectViewBean.getConfirmPassword())) {
-            return addAlertMessage(navigateToAddAdministrator(), "danger", "Confirm Password and Password don not match");
+            return addAlertMessage(navigateToAddAdministrator(), "danger", "Password and Confirmation don't match");
         }
         try {
             securitySubjectService.registerNewSecuritySubject(securitySubjectViewBean);
