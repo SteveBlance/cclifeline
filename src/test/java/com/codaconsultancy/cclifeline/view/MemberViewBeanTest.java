@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.view;
 
+import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MemberViewBeanTest {
     private MemberViewBean memberViewBean;
@@ -31,8 +33,11 @@ public class MemberViewBeanTest {
         Date cardRequestDate = sdf.parse("13-08-2014");
         Date cardIssuedDate = sdf.parse("30-08-2014");
         Date welcomeLetterIssuedDate = sdf.parse("31-08-2014");
+        Date lastPaymentDate = sdf.parse("31-05-2015");
         memberViewBean.setJoinDate(joinDate);
         memberViewBean.setLeaveDate(leaveDate);
+        Payment lastPayment = new Payment(lastPaymentDate, 20.00F, "BL123", "12354678", "PETRIE");
+        memberViewBean.setLastPayment(lastPayment);
         memberViewBean.setCardRequestDate(cardRequestDate);
         memberViewBean.setCardIssuedDate(cardIssuedDate);
         memberViewBean.setWelcomeLetterIssuedDate(welcomeLetterIssuedDate);
@@ -40,6 +45,7 @@ public class MemberViewBeanTest {
         memberViewBean.setMobileNumber("07766554433");
         memberViewBean.setPayerType("Monthly");
         memberViewBean.setStatus("Closed");
+        memberViewBean.setIsEligibleForDraw(true);
         List<AddressViewBean> addresses = new ArrayList<>();
         AddressViewBean address1 = new AddressViewBean();
         address1.setId(23L);
@@ -161,6 +167,19 @@ public class MemberViewBeanTest {
         wins.add(new Prize());
         memberViewBean.setPrizeWins(wins);
         assertEquals(3, memberViewBean.getPrizeWins().size());
+    }
+
+    @Test
+    public void isEligibleForDraw() {
+        assertTrue(memberViewBean.isEligibleForDraw());
+    }
+
+    @Test
+    public void getLastPayment() {
+        Payment lastPayment = memberViewBean.getLastPayment();
+        assertEquals(20.00F, lastPayment.getPaymentAmount(), 0.00F);
+        assertEquals("PETRIE", lastPayment.getName());
+        assertEquals("BL123", lastPayment.getCreditReference());
     }
 
 }

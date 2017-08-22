@@ -17,6 +17,8 @@ public class SecuritySubjectViewBean {
     private String password;
 
     private String confirmPassword;
+    private int failedLoginAttempts;
+    private boolean accountLocked;
 
     public String getForename() {
         return forename;
@@ -64,4 +66,19 @@ public class SecuritySubjectViewBean {
         return mapper.map(this, SecuritySubject.class);
     }
 
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
+    }
+
+    public boolean isAccountLocked() {
+        return accountLocked;
+    }
 }

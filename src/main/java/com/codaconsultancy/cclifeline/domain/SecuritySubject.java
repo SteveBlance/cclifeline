@@ -28,6 +28,14 @@ public class SecuritySubject {
     @Column(name = "PASSWORD")
     private String password;
 
+    @NotNull
+    @Column(name = "FAILED_LOGIN_ATTEMPTS")
+    public int failedLoginAttempts;
+
+    @NotNull
+    @Column(name = "ACCOUNT_LOCKED")
+    private boolean accountLocked;
+
     public Long getId() {
         return id;
     }
@@ -68,4 +76,19 @@ public class SecuritySubject {
         this.password = password;
     }
 
+    public void setFailedLoginAttempts(int failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
+    }
+
+    public int getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setAccountLocked(boolean accountLocked) {
+        this.accountLocked = accountLocked;
+    }
+
+    public boolean isAccountLocked() {
+        return accountLocked;
+    }
 }

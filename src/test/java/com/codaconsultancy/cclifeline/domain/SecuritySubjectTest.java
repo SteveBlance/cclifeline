@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class SecuritySubjectTest {
 
@@ -17,6 +18,8 @@ public class SecuritySubjectTest {
         securitySubject.setSurname("Lindsay");
         securitySubject.setUsername("ross");
         securitySubject.setPassword("passw0rD");
+        securitySubject.setFailedLoginAttempts(3);
+        securitySubject.setAccountLocked(true);
     }
 
     @Test
@@ -42,6 +45,16 @@ public class SecuritySubjectTest {
     @Test
     public void getPassword() {
         assertEquals("passw0rD", securitySubject.getPassword());
+    }
+
+    @Test
+    public void getFailedLoginAttempts() {
+        assertEquals(3, securitySubject.getFailedLoginAttempts());
+    }
+
+    @Test
+    public void isAccountLocked() {
+        assertTrue(securitySubject.isAccountLocked());
     }
 
 }

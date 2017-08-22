@@ -42,14 +42,18 @@
                 <th>Username</th>
                 <th>Forename</th>
                 <th>Surname</th>
+                <th>Status</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="administrator: ${administrators}" style="cursor: pointer"
-                th:onclick="'javascript:rowClicked(\'' + ${administrator.id} + '\');'">
+            <tr th:each="administrator: ${administrators}" style="cursor: pointer">
+                <!--th:onclick="'javascript:rowClicked(\'' + ${administrator.id} + '\');'">-->
                 <td th:text="${administrator.username}">Username</td>
                 <td th:text="${administrator.forename}">Forename</td>
                 <td th:text="${administrator.surname}">Surname</td>
+                <td th:text="${administrator.accountLocked} ? 'Account Locked'+ ' (' + ${administrator.failedLoginAttempts} + ' failed login attempts)' : 'OK'">
+                    Status
+                </td>
             </tr>
             </tbody>
         </table>

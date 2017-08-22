@@ -59,8 +59,30 @@ public class SecuritySubjectService implements UserDetailsService {
         List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_USER");
 
         String password = securitySubject.getPassword();
+        boolean accountNonLocked = !securitySubject.isAccountLocked();
         UserDetails user = new User(
-                username, password, true, true, true, true, auth);
+                username, password, true, true, true, accountNonLocked, auth);
         return user;
+    }
+
+    public void registerFailedLoginAttempt(String username) {
+        System.out.println("Failed login attempt");
+        SecuritySubject securitySubject = securitySubjectRepository.findByUsername(username);
+        int failedLoginAttempts = securitySubject.getFailedLoginAttempts() + 1;
+        securitySubject.setFailedLoginAttempts(failedLoginAttempts);
+        if (failedLoginAttempts == 4) {
+            securitySubject.setAccountLocked(true);
+        }
+        securitySubjectRepository.save(securitySubject);
+    }
+
+    public void registerSuccessfulLogin(String username) {
+        System.out.println("Successful login attempt");
+        SecuritySubject securitySubject = securitySubjectRepository.findByUsername(username);
+        int failedLoginAttempts = securitySubject.getFailedLoginAttempts();
+        if (failedLoginAttempts > 0) {
+            securitySubject.setFailedLoginAttempts(0);
+            securitySubjectRepository.save(securitySubject);
+        }
     }
 }

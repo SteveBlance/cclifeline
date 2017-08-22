@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class PaymentViewBeanTest {
     private PaymentViewBean paymentViewBean;
@@ -25,6 +26,7 @@ public class PaymentViewBeanTest {
         String dateInString = "30/09/2017";
         Date paymentDate = dateFormat.parse(dateInString);
         paymentViewBean.setPaymentDate(paymentDate);
+        paymentViewBean.setStoreReferenceForMatching(true);
         Member member = new Member();
         member.setId(67L);
         paymentViewBean.setMemberId(member.getId());
@@ -69,6 +71,11 @@ public class PaymentViewBeanTest {
     @Test
     public void getMemberId() {
         assertEquals(67L, paymentViewBean.getMemberId().longValue());
+    }
+
+    @Test
+    public void isStoreReferenceForMatching() {
+        assertTrue(paymentViewBean.isStoreReferenceForMatching());
     }
 
     @Test
