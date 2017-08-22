@@ -1,7 +1,9 @@
 package com.codaconsultancy.cclifeline.service;
 
+import com.codaconsultancy.cclifeline.domain.EventLog;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
+import com.codaconsultancy.cclifeline.repositories.EventLogRepository;
 import com.codaconsultancy.cclifeline.repositories.SecuritySubjectRepository;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.junit.Rule;
@@ -37,6 +39,9 @@ public class SecuritySubjectServiceTest {
 
     @MockBean
     private SecuritySubjectRepository securitySubjectRepository;
+
+    @MockBean
+    private EventLogRepository eventLogRepository;
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();
@@ -142,18 +147,6 @@ public class SecuritySubjectServiceTest {
 
     }
 
-    /*
-    public void registerFailedLoginAttempt(String username) {
-        System.out.println("Failed login attempt");
-        SecuritySubject securitySubject = securitySubjectRepository.findByUsername(username);
-        int failedLoginAttempts = securitySubject.getFailedLoginAttempts() + 1;
-        securitySubject.setFailedLoginAttempts(failedLoginAttempts);
-        if (failedLoginAttempts > 3) {
-            securitySubject.setAccountLocked(true);
-        }
-        securitySubjectRepository.save(securitySubject);
-    }
-    */
     @Test
     public void registerFailedLoginAttempt() {
         SecuritySubject bobby = new SecuritySubject();
@@ -165,9 +158,11 @@ public class SecuritySubjectServiceTest {
 
         verify(securitySubjectRepository, times(1)).findByUsername("bobby");
         verify(securitySubjectRepository, times(1)).save(bobby);
+        ArgumentCaptor<EventLog> eventLogArgumentCaptor = ArgumentCaptor.forClass(EventLog.class);
+        verify(eventLogRepository, times(1)).save(eventLogArgumentCaptor.capture());
+        assertEquals("Failed login attempt (1) by user 'bobby'", eventLogArgumentCaptor.getValue().getMessage());
         assertEquals(1, bobby.getFailedLoginAttempts());
         assertFalse(bobby.isAccountLocked());
-
     }
 
     @Test
@@ -181,6 +176,9 @@ public class SecuritySubjectServiceTest {
 
         verify(securitySubjectRepository, times(1)).findByUsername("bobby");
         verify(securitySubjectRepository, times(1)).save(bobby);
+        ArgumentCaptor<EventLog> eventLogArgumentCaptor = ArgumentCaptor.forClass(EventLog.class);
+        verify(eventLogRepository, times(1)).save(eventLogArgumentCaptor.capture());
+        assertEquals("Failed login attempt (4) by user 'bobby'", eventLogArgumentCaptor.getValue().getMessage());
         assertEquals(4, bobby.getFailedLoginAttempts());
         assertTrue(bobby.isAccountLocked());
     }
@@ -196,6 +194,9 @@ public class SecuritySubjectServiceTest {
 
         verify(securitySubjectRepository, times(1)).findByUsername("fred");
         verify(securitySubjectRepository, times(1)).save(bobby);
+        ArgumentCaptor<EventLog> eventLogArgumentCaptor = ArgumentCaptor.forClass(EventLog.class);
+        verify(eventLogRepository, times(1)).save(eventLogArgumentCaptor.capture());
+        assertEquals("User 'fred' logged in successfully", eventLogArgumentCaptor.getValue().getMessage());
         assertEquals(0, bobby.getFailedLoginAttempts());
         assertFalse(bobby.isAccountLocked());
     }

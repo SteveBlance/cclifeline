@@ -1,7 +1,9 @@
 package com.codaconsultancy.cclifeline.service;
 
+import com.codaconsultancy.cclifeline.domain.EventLog;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
+import com.codaconsultancy.cclifeline.repositories.EventLogRepository;
 import com.codaconsultancy.cclifeline.repositories.SecuritySubjectRepository;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class SecuritySubjectService implements UserDetailsService {
 
     @Autowired
     private SecuritySubjectRepository securitySubjectRepository;
+
+    @Autowired
+    private EventLogRepository eventLogRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -66,9 +71,9 @@ public class SecuritySubjectService implements UserDetailsService {
     }
 
     public void registerFailedLoginAttempt(String username) {
-        System.out.println("Failed login attempt");
         SecuritySubject securitySubject = securitySubjectRepository.findByUsername(username);
         int failedLoginAttempts = securitySubject.getFailedLoginAttempts() + 1;
+        logMessage("Failed login attempt (" + failedLoginAttempts + ") by user '" + username + "'");
         securitySubject.setFailedLoginAttempts(failedLoginAttempts);
         if (failedLoginAttempts == 4) {
             securitySubject.setAccountLocked(true);
@@ -77,12 +82,16 @@ public class SecuritySubjectService implements UserDetailsService {
     }
 
     public void registerSuccessfulLogin(String username) {
-        System.out.println("Successful login attempt");
+        logMessage("User '" + username + "' logged in successfully");
         SecuritySubject securitySubject = securitySubjectRepository.findByUsername(username);
         int failedLoginAttempts = securitySubject.getFailedLoginAttempts();
         if (failedLoginAttempts > 0) {
             securitySubject.setFailedLoginAttempts(0);
             securitySubjectRepository.save(securitySubject);
         }
+    }
+
+    private void logMessage(String message) {
+        eventLogRepository.save(new EventLog(message));
     }
 }
