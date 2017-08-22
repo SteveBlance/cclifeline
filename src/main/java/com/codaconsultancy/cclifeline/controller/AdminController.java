@@ -1,8 +1,8 @@
 package com.codaconsultancy.cclifeline.controller;
 
+import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
-import com.codaconsultancy.cclifeline.view.AdministratorViewBean;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -29,24 +28,7 @@ public class AdminController extends LifelineController {
 
     @RequestMapping(value = "/administrators", method = RequestMethod.GET)
     public ModelAndView navigateToAdministrators() {
-        List<AdministratorViewBean> administrators = new ArrayList<>();
-        //TODO: remove stubbed data and implement properly
-        AdministratorViewBean steve = new AdministratorViewBean();
-        steve.setForename("Steve");
-        steve.setSurname("Jone");
-        steve.setUsername("stevej");
-        steve.setEmail("stevej@email.com");
-        steve.setLandlineNumber("01383 766533");
-        steve.setLandlineNumber("07766 766512");
-        AdministratorViewBean ross = new AdministratorViewBean();
-        ross.setForename("Ross");
-        ross.setSurname("Wilson");
-        ross.setUsername("rossW");
-        ross.setEmail("rossw@email.co.uk");
-        ross.setLandlineNumber("01383 644339");
-        ross.setLandlineNumber("07754 456098");
-        administrators.add(steve);
-        administrators.add(ross);
+        List<SecuritySubject> administrators = securitySubjectService.findAllSecuritySubjects();
 
         return modelAndView("administrators").addObject("administrators", administrators);
     }

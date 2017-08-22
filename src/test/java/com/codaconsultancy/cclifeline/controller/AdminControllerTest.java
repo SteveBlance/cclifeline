@@ -1,9 +1,9 @@
 package com.codaconsultancy.cclifeline.controller;
 
+import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
-import com.codaconsultancy.cclifeline.view.AdministratorViewBean;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,13 +13,14 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
-//@EnableJpaRepositories(basePackages = {"com.codaconsultancy.cclifeline.repositories"})
 @SpringBootTest(classes = AdminController.class)
 public class AdminControllerTest extends BaseTest {
 
@@ -35,11 +36,20 @@ public class AdminControllerTest extends BaseTest {
 
     @Test
     public void navigateToAdministrators() throws Exception {
+        List<SecuritySubject> administrators = new ArrayList<>();
+        SecuritySubject ross = new SecuritySubject();
+        ross.setUsername("ross");
+        SecuritySubject steve = new SecuritySubject();
+        administrators.add(ross);
+        administrators.add(steve);
+        when(securitySubjectService.findAllSecuritySubjects()).thenReturn(administrators);
+
         ModelAndView modelAndView = adminController.navigateToAdministrators();
+
         assertEquals("administrators", modelAndView.getViewName());
-        List administrators = (List) modelAndView.getModel().get("administrators");
-        assertEquals(2, administrators.size());
-        assertEquals("stevej", ((AdministratorViewBean) administrators.get(0)).getUsername());
+        List foundAdministrators = (List) modelAndView.getModel().get("administrators");
+        assertEquals(2, foundAdministrators.size());
+        assertEquals("ross", ((SecuritySubject) foundAdministrators.get(0)).getUsername());
     }
 
     @Test
