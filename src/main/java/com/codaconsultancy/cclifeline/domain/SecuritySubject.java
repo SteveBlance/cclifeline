@@ -2,6 +2,7 @@ package com.codaconsultancy.cclifeline.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -25,6 +26,7 @@ public class SecuritySubject {
     private String username;
 
     @NotNull
+    @Size(min = 8, max = 100)
     @Column(name = "PASSWORD")
     private String password;
 

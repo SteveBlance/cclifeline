@@ -20,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class AdminController extends LifelineController {
@@ -47,18 +49,38 @@ public class AdminController extends LifelineController {
     public ModelAndView addNewAdministrator(@Valid @ModelAttribute("subject") SecuritySubjectViewBean securitySubjectViewBean, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             logger.debug("Validation errors for securitySubject: ", securitySubjectViewBean);
-            return navigateToAddAdministrator();
+            return modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
         }
         if (!securitySubjectViewBean.getPassword().equals(securitySubjectViewBean.getConfirmPassword())) {
-            return addAlertMessage(navigateToAddAdministrator(), "danger", "Password and Confirmation don't match");
+            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
+            return addAlertMessage(modelAndView, "danger", "Password and Confirmation don't match");
+        }
+        if (!passwordRulesMet(securitySubjectViewBean.getPassword())) {
+            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
+            return addAlertMessage(modelAndView, "danger", "Password must be between 8 and 100 characters and a mixture of uppercase characters, lowercase characters and numbers.");
         }
         try {
             securitySubjectService.registerNewSecuritySubject(securitySubjectViewBean);
         } catch (SubjectUsernameExistsException e) {
-            return addAlertMessage(navigateToAddAdministrator(), "danger", "Username already exists");
+            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
+            return addAlertMessage(modelAndView, "danger", "Username already exists");
         }
 
         return navigateToAdministrators();
+    }
+
+    private boolean passwordRulesMet(String password) {
+        //Between 8 and 100 characters. Must be a mixture of uppercase characters, lowercase characters and numbers.
+        StringBuilder patternBuilder = new StringBuilder();
+        patternBuilder.append("((?=.*[a-z])");
+        patternBuilder.append("(?=.*[A-Z])");
+        patternBuilder.append("(?=.*[0-9])");
+        patternBuilder.append(".{8,100})");
+        String pattern = patternBuilder.toString();
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(password);
+        boolean passwordMatches = m.matches();
+        return passwordMatches;
     }
 
     @EventListener
