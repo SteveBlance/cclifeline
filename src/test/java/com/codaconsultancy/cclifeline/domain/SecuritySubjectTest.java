@@ -20,6 +20,7 @@ public class SecuritySubjectTest {
         securitySubject.setPassword("passw0rD");
         securitySubject.setFailedLoginAttempts(3);
         securitySubject.setAccountLocked(true);
+        securitySubject.setPasswordToBeChanged(true);
     }
 
     @Test
@@ -55,6 +56,11 @@ public class SecuritySubjectTest {
     @Test
     public void isAccountLocked() {
         assertTrue(securitySubject.isAccountLocked());
+    }
+
+    @Test
+    public void isPasswordToBeChanged() {
+        assertTrue(securitySubject.isPasswordToBeChanged());
     }
 
 }

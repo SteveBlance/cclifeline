@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -68,6 +69,31 @@ public class AdminController extends LifelineController {
 
         return navigateToAdministrators();
     }
+
+    @RequestMapping(value = "/change-password/{username}", method = RequestMethod.GET)
+    private ModelAndView navigateToChangePassword(@PathVariable String username) {
+        SecuritySubject securitySubject = securitySubjectService.findByUsername(username);
+        return modelAndView("change-password").addObject("user", securitySubject.toViewBean());
+    }
+
+    @RequestMapping(value = "/change-password", method = RequestMethod.POST)
+    public ModelAndView changePassword(@Valid @ModelAttribute("user") SecuritySubjectViewBean securitySubjectViewBean, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for securitySubject: ", securitySubjectViewBean);
+            return navigateToChangePassword(securitySubjectViewBean.getUsername());
+        }
+        if (!securitySubjectViewBean.getPassword().equals(securitySubjectViewBean.getConfirmPassword())) {
+            return addAlertMessage(navigateToChangePassword(securitySubjectViewBean.getUsername()), "danger", "Password and Confirmation don't match");
+        }
+        if (!passwordRulesMet(securitySubjectViewBean.getPassword())) {
+            return addAlertMessage(navigateToChangePassword(securitySubjectViewBean.getUsername()), "danger", "Password must be between 8 and 100 characters and a mixture of uppercase characters, lowercase characters and numbers.");
+        }
+        securitySubjectService.updatePassword(securitySubjectViewBean);
+
+        return modelAndView("/");
+    }
+
+
 
     private boolean passwordRulesMet(String password) {
         //Between 8 and 100 characters. Must be a mixture of uppercase characters, lowercase characters and numbers.

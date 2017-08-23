@@ -94,4 +94,14 @@ public class SecuritySubjectService implements UserDetailsService {
     private void logMessage(String message) {
         eventLogRepository.save(new EventLog(message));
     }
+
+    public void updatePassword(SecuritySubjectViewBean securitySubjectViewBean) {
+        SecuritySubject securitySubject = securitySubjectRepository.getOne(securitySubjectViewBean.getId());
+        securitySubject.setPassword(passwordEncoder.encode(securitySubjectViewBean.getPassword()));
+        securitySubjectRepository.save(securitySubject);
+    }
+
+    public SecuritySubject findByUsername(String username) {
+        return securitySubjectRepository.findByUsername(username);
+    }
 }
