@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ReportsService {
+public class ReportsService extends LifelineService {
 
     public List<MemberTypeTotal> getMemberTypeTotals() {
         return new ArrayList<>();

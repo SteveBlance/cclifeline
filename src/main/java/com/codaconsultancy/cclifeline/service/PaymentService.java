@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class PaymentService {
+public class PaymentService extends LifelineService {
 
     @Autowired
     private PaymentRepository paymentRepository;

@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,9 +25,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@EntityScan("com.codaconsultancy.cclifeline.domain")
 @SpringBootTest(classes = PaymentService.class)
-public class PaymentServiceTest {
+public class PaymentServiceTest extends LifelineServiceTest {
 
     private static final String EXAMPLE_STATEMENT =
             "20170428,,82621900174982CA,,DR,CHQ,Cheque,200,CHEQUE 003033,,,GBP\n" +

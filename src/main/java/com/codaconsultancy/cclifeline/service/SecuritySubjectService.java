@@ -1,9 +1,7 @@
 package com.codaconsultancy.cclifeline.service;
 
-import com.codaconsultancy.cclifeline.domain.EventLog;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
-import com.codaconsultancy.cclifeline.repositories.EventLogRepository;
 import com.codaconsultancy.cclifeline.repositories.SecuritySubjectRepository;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +18,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class SecuritySubjectService implements UserDetailsService {
+public class SecuritySubjectService extends LifelineService implements UserDetailsService {
 
     @Autowired
     private SecuritySubjectRepository securitySubjectRepository;
-
-    @Autowired
-    private EventLogRepository eventLogRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -89,9 +84,5 @@ public class SecuritySubjectService implements UserDetailsService {
             securitySubject.setFailedLoginAttempts(0);
             securitySubjectRepository.save(securitySubject);
         }
-    }
-
-    private void logMessage(String message) {
-        eventLogRepository.save(new EventLog(message));
     }
 }

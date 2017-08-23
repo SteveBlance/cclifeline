@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AddressService {
+public class AddressService extends LifelineService {
 
     @Autowired
     private AddressRepository addressRepository;

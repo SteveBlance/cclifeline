@@ -3,7 +3,6 @@ package com.codaconsultancy.cclifeline.service;
 import com.codaconsultancy.cclifeline.domain.EventLog;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
-import com.codaconsultancy.cclifeline.repositories.EventLogRepository;
 import com.codaconsultancy.cclifeline.repositories.SecuritySubjectRepository;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.junit.Rule;
@@ -12,7 +11,6 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,9 +25,8 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@EntityScan("com.codaconsultancy.cclifeline.domain")
 @SpringBootTest(classes = SecuritySubjectService.class)
-public class SecuritySubjectServiceTest {
+public class SecuritySubjectServiceTest extends LifelineServiceTest {
 
     @Autowired
     private SecuritySubjectService securityService;
@@ -39,9 +36,6 @@ public class SecuritySubjectServiceTest {
 
     @MockBean
     private SecuritySubjectRepository securitySubjectRepository;
-
-    @MockBean
-    private EventLogRepository eventLogRepository;
 
     @Rule
     public final ExpectedException expectedException = ExpectedException.none();

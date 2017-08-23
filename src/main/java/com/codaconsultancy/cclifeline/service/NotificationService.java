@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class NotificationService {
+public class NotificationService extends LifelineService {
 
     @Autowired
     private NotificationRepository notificationRepository;

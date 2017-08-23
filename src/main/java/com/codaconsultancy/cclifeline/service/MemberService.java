@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class MemberService {
+public class MemberService extends LifelineService {
 
     @Autowired
     private MemberRepository memberRepository;

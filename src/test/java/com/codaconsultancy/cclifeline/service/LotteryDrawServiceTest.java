@@ -7,7 +7,6 @@ import com.codaconsultancy.cclifeline.repositories.PrizeRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -19,9 +18,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@EntityScan("com.codaconsultancy.cclifeline.domain")
 @SpringBootTest(classes = LotteryDrawService.class)
-public class LotteryDrawServiceTest {
+public class LotteryDrawServiceTest extends LifelineServiceTest {
 
     @Autowired
     private LotteryDrawService lotteryDrawService;
