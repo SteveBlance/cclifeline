@@ -90,7 +90,7 @@ public class AdminController extends LifelineController {
         }
         securitySubjectService.updatePassword(securitySubjectViewBean);
 
-        return modelAndView("/");
+        return modelAndView("index");
     }
 
 
