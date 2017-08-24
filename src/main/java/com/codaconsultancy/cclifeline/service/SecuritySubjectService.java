@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class SecuritySubjectService extends LifelineService implements UserDetailsService {
 
     public static final String PASSWORD_RULES_MESSAGE = "Password must be between 8 and 100 characters and must contain uppercase characters, lowercase characters and numbers";
-    private static final String BLACKLISTED_WORD_MESSAGES = "Password contains a disallowed word or number. Examples include easily inferred words like Password, Pars, Lifeline, DAFC, 1885 etc.";
+    private static final String BLACKLISTED_WORD_MESSAGES = "Password contains a disallowed word or number. e.g. Easily guessed words like your name, username or Pars related words etc.";
     private static final String PASSWORD_AND_CONFIRMATION_MISMATCH_MESSAGE = "Password and Confirmation don't match";
     private static final String PASSWORD_MUST_CHANGE_MESSAGE = "The New Password must not be the same as the Current Password";
 

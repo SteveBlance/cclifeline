@@ -81,20 +81,6 @@ public class AdminController extends LifelineController {
         return modelAndView("index");
     }
 
-//    private boolean passwordRulesMet(String password) {
-//        //Between 8 and 100 characters. Must be a mixture of uppercase characters, lowercase characters and numbers.
-//        StringBuilder patternBuilder = new StringBuilder();
-//        patternBuilder.append("((?=.*[a-z])");
-//        patternBuilder.append("(?=.*[A-Z])");
-//        patternBuilder.append("(?=.*[0-9])");
-//        patternBuilder.append(".{8,100})");
-//        String pattern = patternBuilder.toString();
-//        Pattern p = Pattern.compile(pattern);
-//        Matcher m = p.matcher(password);
-//        boolean passwordMatches = m.matches();
-//        return passwordMatches;
-//    }
-
     @EventListener
     public void authenticationSuccess(AuthenticationSuccessEvent event) {
         User user = (User) event.getAuthentication().getPrincipal();
