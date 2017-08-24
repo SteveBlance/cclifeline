@@ -85,4 +85,18 @@ public class SecuritySubjectService extends LifelineService implements UserDetai
             securitySubjectRepository.save(securitySubject);
         }
     }
+
+    private void logMessage(String message) {
+        eventLogRepository.save(new EventLog(message));
+    }
+
+    public void updatePassword(SecuritySubjectViewBean securitySubjectViewBean) {
+        SecuritySubject securitySubject = securitySubjectRepository.getOne(securitySubjectViewBean.getId());
+        securitySubject.setPassword(passwordEncoder.encode(securitySubjectViewBean.getPassword()));
+        securitySubjectRepository.save(securitySubject);
+    }
+
+    public SecuritySubject findByUsername(String username) {
+        return securitySubjectRepository.findByUsername(username);
+    }
 }

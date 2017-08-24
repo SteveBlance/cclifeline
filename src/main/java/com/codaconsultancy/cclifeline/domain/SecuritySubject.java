@@ -1,5 +1,10 @@
 package com.codaconsultancy.cclifeline.domain;
 
+import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,6 +42,10 @@ public class SecuritySubject {
     @NotNull
     @Column(name = "ACCOUNT_LOCKED")
     private boolean accountLocked;
+
+    @NotNull
+    @Column(name = "PASSWORD_TO_BE_CHANGED")
+    private boolean passwordToBeChanged;
 
     public Long getId() {
         return id;
@@ -92,5 +101,19 @@ public class SecuritySubject {
 
     public boolean isAccountLocked() {
         return accountLocked;
+    }
+
+    public boolean isPasswordToBeChanged() {
+        return passwordToBeChanged;
+    }
+
+    public void setPasswordToBeChanged(boolean passwordToBeChanged) {
+        this.passwordToBeChanged = passwordToBeChanged;
+    }
+
+    public SecuritySubjectViewBean toViewBean() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(this, SecuritySubjectViewBean.class);
     }
 }

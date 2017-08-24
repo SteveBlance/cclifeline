@@ -8,17 +8,24 @@ import ma.glasnost.orika.impl.DefaultMapperFactory;
 
 public class SecuritySubjectViewBean {
 
+    private Long id;
+
     private String forename;
-
     private String surname;
-
     private String username;
-
     private String password;
-
     private String confirmPassword;
     private int failedLoginAttempts;
     private boolean accountLocked;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getForename() {
         return forename;

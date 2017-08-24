@@ -232,12 +232,6 @@ public class Member {
         this.prizeWins = prizeWins;
     }
 
-    public MemberViewBean toViewBean() {
-        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        MapperFacade mapper = mapperFactory.getMapperFacade();
-        return mapper.map(this, MemberViewBean.class);
-    }
-
     public void setIsEligibleForDraw(boolean isEligibleForDraw) {
         this.isEligibleForDraw = isEligibleForDraw;
     }
@@ -257,4 +251,11 @@ public class Member {
     public void setPaymentReferences(List<PaymentReference> paymentReferences) {
         this.paymentReferences = paymentReferences;
     }
+
+    public MemberViewBean toViewBean() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(this, MemberViewBean.class);
+    }
+
 }
