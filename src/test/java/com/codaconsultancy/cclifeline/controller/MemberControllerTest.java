@@ -4,10 +4,12 @@ import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Notification;
+import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.*;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -53,6 +55,11 @@ public class MemberControllerTest extends BaseTest {
 
     @MockBean
     NotificationService notificationService;
+
+    @Before
+    public void setup() {
+        when(securitySubjectService.findByUsername(any(String.class))).thenReturn(new SecuritySubject());
+    }
 
     @Test
     public void home() throws Exception {

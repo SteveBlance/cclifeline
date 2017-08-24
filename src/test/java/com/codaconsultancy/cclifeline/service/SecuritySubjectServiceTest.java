@@ -69,10 +69,11 @@ public class SecuritySubjectServiceTest extends LifelineServiceTest {
         securitySubjectViewBean.setForename("Bobby");
         securitySubjectViewBean.setSurname("Smith");
         securitySubjectViewBean.setUsername("bobby");
-        securitySubjectViewBean.setPassword("pa55w0rd");
+        securitySubjectViewBean.setPassword("Pa55w0rd");
+        securitySubjectViewBean.setConfirmPassword("Pa55w0rd");
         when(securitySubjectRepository.save(any(SecuritySubject.class))).thenReturn(securitySubjectViewBean.toEntity());
         when(securitySubjectRepository.countByUsername("bobby")).thenReturn(0);
-        when(passwordEncoder.encode("pa55w0rd")).thenReturn("EncodedPassword");
+        when(passwordEncoder.encode("Pa55w0rd")).thenReturn("EncodedPassword");
 
         SecuritySubject savedSubject = securityService.registerNewSecuritySubject(securitySubjectViewBean);
 
@@ -81,7 +82,7 @@ public class SecuritySubjectServiceTest extends LifelineServiceTest {
         assertEquals("Bobby", savedSubject.getForename());
         assertEquals("Smith", savedSubject.getSurname());
         assertEquals("bobby", savedSubject.getUsername());
-        assertEquals("pa55w0rd", savedSubject.getPassword());
+        assertEquals("Pa55w0rd", savedSubject.getPassword());
 
         assertEquals("bobby", securitySubjectArgumentCaptor.getValue().getUsername());
         assertEquals("Bobby", securitySubjectArgumentCaptor.getValue().getForename());

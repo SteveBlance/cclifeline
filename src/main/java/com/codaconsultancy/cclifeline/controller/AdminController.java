@@ -1,12 +1,12 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
+import com.codaconsultancy.cclifeline.exceptions.SubjectPasswordIncorrectException;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -21,14 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Controller
 public class AdminController extends LifelineController {
-
-    @Autowired
-    private SecuritySubjectService securitySubjectService;
 
     private Logger logger = LoggerFactory.getLogger(AdminController.class);
 
@@ -43,7 +38,7 @@ public class AdminController extends LifelineController {
     @RequestMapping(value = "/add-administrator", method = RequestMethod.GET)
     public ModelAndView navigateToAddAdministrator() {
         SecuritySubjectViewBean administrator = new SecuritySubjectViewBean();
-        return modelAndView("add-administrator").addObject("administrator", administrator);
+        return addAlertMessage(new ModelAndView("add-administrator").addObject("administrator", administrator), "info", SecuritySubjectService.PASSWORD_RULES_MESSAGE);
     }
 
     @RequestMapping(value = "/administrator", method = RequestMethod.POST)
@@ -52,19 +47,14 @@ public class AdminController extends LifelineController {
             logger.debug("Validation errors for securitySubject: ", securitySubjectViewBean);
             return modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
         }
-        if (!securitySubjectViewBean.getPassword().equals(securitySubjectViewBean.getConfirmPassword())) {
-            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
-            return addAlertMessage(modelAndView, "danger", "Password and Confirmation don't match");
-        }
-        if (!passwordRulesMet(securitySubjectViewBean.getPassword())) {
-            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
-            return addAlertMessage(modelAndView, "danger", "Password must be between 8 and 100 characters and a mixture of uppercase characters, lowercase characters and numbers.");
-        }
         try {
             securitySubjectService.registerNewSecuritySubject(securitySubjectViewBean);
         } catch (SubjectUsernameExistsException e) {
             ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
             return addAlertMessage(modelAndView, "danger", "Username already exists");
+        } catch (SubjectPasswordIncorrectException e) {
+            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
+            return addAlertMessage(modelAndView, "danger", e.getMessage());
         }
 
         return navigateToAdministrators();
@@ -82,37 +72,33 @@ public class AdminController extends LifelineController {
             logger.debug("Validation errors for securitySubject: ", securitySubjectViewBean);
             return navigateToChangePassword(securitySubjectViewBean.getUsername());
         }
-        if (!securitySubjectViewBean.getPassword().equals(securitySubjectViewBean.getConfirmPassword())) {
-            return addAlertMessage(navigateToChangePassword(securitySubjectViewBean.getUsername()), "danger", "Password and Confirmation don't match");
+        try {
+            securitySubjectService.updatePassword(securitySubjectViewBean);
+        } catch (SubjectPasswordIncorrectException e) {
+            return addAlertMessage(navigateToChangePassword(securitySubjectViewBean.getUsername()), "danger", e.getMessage());
         }
-        if (!passwordRulesMet(securitySubjectViewBean.getPassword())) {
-            return addAlertMessage(navigateToChangePassword(securitySubjectViewBean.getUsername()), "danger", "Password must be between 8 and 100 characters and a mixture of uppercase characters, lowercase characters and numbers.");
-        }
-        securitySubjectService.updatePassword(securitySubjectViewBean);
 
         return modelAndView("index");
     }
 
-
-
-    private boolean passwordRulesMet(String password) {
-        //Between 8 and 100 characters. Must be a mixture of uppercase characters, lowercase characters and numbers.
-        StringBuilder patternBuilder = new StringBuilder();
-        patternBuilder.append("((?=.*[a-z])");
-        patternBuilder.append("(?=.*[A-Z])");
-        patternBuilder.append("(?=.*[0-9])");
-        patternBuilder.append(".{8,100})");
-        String pattern = patternBuilder.toString();
-        Pattern p = Pattern.compile(pattern);
-        Matcher m = p.matcher(password);
-        boolean passwordMatches = m.matches();
-        return passwordMatches;
-    }
+//    private boolean passwordRulesMet(String password) {
+//        //Between 8 and 100 characters. Must be a mixture of uppercase characters, lowercase characters and numbers.
+//        StringBuilder patternBuilder = new StringBuilder();
+//        patternBuilder.append("((?=.*[a-z])");
+//        patternBuilder.append("(?=.*[A-Z])");
+//        patternBuilder.append("(?=.*[0-9])");
+//        patternBuilder.append(".{8,100})");
+//        String pattern = patternBuilder.toString();
+//        Pattern p = Pattern.compile(pattern);
+//        Matcher m = p.matcher(password);
+//        boolean passwordMatches = m.matches();
+//        return passwordMatches;
+//    }
 
     @EventListener
     public void authenticationSuccess(AuthenticationSuccessEvent event) {
-        User username = (User) event.getAuthentication().getPrincipal();
-        securitySubjectService.registerSuccessfulLogin(username.getUsername());
+        User user = (User) event.getAuthentication().getPrincipal();
+        securitySubjectService.registerSuccessfulLogin(user.getUsername());
     }
 
     @EventListener

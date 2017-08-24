@@ -13,6 +13,7 @@ public class SecuritySubjectViewBean {
     private String forename;
     private String surname;
     private String username;
+    private String previousPassword;
     private String password;
     private String confirmPassword;
     private int failedLoginAttempts;
@@ -49,6 +50,14 @@ public class SecuritySubjectViewBean {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPreviousPassword() {
+        return previousPassword;
+    }
+
+    public void setPreviousPassword(String previousPassword) {
+        this.previousPassword = previousPassword;
     }
 
     public String getPassword() {

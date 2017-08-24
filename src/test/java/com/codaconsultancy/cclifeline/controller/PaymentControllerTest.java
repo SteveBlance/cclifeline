@@ -1,16 +1,14 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.common.TestHelper;
-import com.codaconsultancy.cclifeline.domain.Member;
-import com.codaconsultancy.cclifeline.domain.Notification;
-import com.codaconsultancy.cclifeline.domain.Payment;
-import com.codaconsultancy.cclifeline.domain.PaymentReference;
+import com.codaconsultancy.cclifeline.domain.*;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.PaymentService;
 import com.codaconsultancy.cclifeline.view.PaymentReferenceViewBean;
 import com.codaconsultancy.cclifeline.view.PaymentViewBean;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -48,6 +46,11 @@ public class PaymentControllerTest extends BaseTest {
 
     @MockBean
     NotificationService notificationService;
+
+    @Before
+    public void setup() {
+        when(securitySubjectService.findByUsername(any(String.class))).thenReturn(new SecuritySubject());
+    }
 
     @Test
     public void navigateToPayments() throws Exception {

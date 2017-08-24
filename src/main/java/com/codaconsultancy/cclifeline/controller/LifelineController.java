@@ -1,7 +1,9 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.Notification;
+import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.service.NotificationService;
+import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,6 +14,9 @@ import java.util.List;
 
 @Controller
 class LifelineController {
+
+    @Autowired
+    protected SecuritySubjectService securitySubjectService;
 
     @Autowired
     NotificationService notificationService;
@@ -28,10 +33,17 @@ class LifelineController {
     }
 
     ModelAndView modelAndView(String page) {
+        ModelAndView modelAndView;
         List<Notification> notifications = notificationService.fetchLatestNotifications();
-
-        return new ModelAndView(page).addObject("loggedInUser", loggedInUser())
-                .addObject("notifications", notifications).addObject("alertMessage", "");
+        String username = loggedInUser();
+        SecuritySubject securitySubject = !username.equals("anonymousUser") ? securitySubjectService.findByUsername(username) : null;
+        if (securitySubject != null && securitySubject.isPasswordToBeChanged()) {
+            modelAndView = addAlertMessage(new ModelAndView("change-password").addObject("user", securitySubject.toViewBean()), "info", SecuritySubjectService.PASSWORD_RULES_MESSAGE);
+        } else {
+            modelAndView = new ModelAndView(page).addObject("loggedInUser", username)
+                    .addObject("notifications", notifications).addObject("alertMessage", "");
+        }
+        return modelAndView;
     }
 
 

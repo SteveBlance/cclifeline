@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.service;
 
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
+import com.codaconsultancy.cclifeline.exceptions.SubjectPasswordIncorrectException;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
 import com.codaconsultancy.cclifeline.repositories.SecuritySubjectRepository;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
@@ -16,9 +17,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class SecuritySubjectService extends LifelineService implements UserDetailsService {
+
+    public static final String PASSWORD_RULES_MESSAGE = "Password must be between 8 and 100 characters and must contain uppercase characters, lowercase characters and numbers";
+    private static final String BLACKLISTED_WORD_MESSAGES = "Password contains a disallowed word or number. Examples include easily inferred words like Password, Pars, Lifeline, DAFC, 1885 etc.";
+    private static final String PASSWORD_AND_CONFIRMATION_MISMATCH_MESSAGE = "Password and Confirmation don't match";
+    private static final String PASSWORD_MUST_CHANGE_MESSAGE = "The New Password must not be the same as the Current Password";
 
     @Autowired
     private SecuritySubjectRepository securitySubjectRepository;
@@ -30,16 +38,26 @@ public class SecuritySubjectService extends LifelineService implements UserDetai
         return securitySubjectRepository.findAll();
     }
 
-    public SecuritySubject registerNewSecuritySubject(SecuritySubjectViewBean securitySubjectViewBean) throws SubjectUsernameExistsException {
+    public SecuritySubject registerNewSecuritySubject(SecuritySubjectViewBean securitySubjectViewBean) throws SubjectUsernameExistsException, SubjectPasswordIncorrectException {
+        String enteredNewPassword = securitySubjectViewBean.getPassword();
+        String enteredNewPasswordConfirmation = securitySubjectViewBean.getConfirmPassword();
         if (usernameExists(securitySubjectViewBean.getUsername())) {
-            throw new SubjectUsernameExistsException(
-                    "There is an account with that username:" + securitySubjectViewBean.getUsername());
+            throw new SubjectUsernameExistsException("Username: '" + securitySubjectViewBean.getUsername() + "' already exists");
+        }
+        if (!enteredNewPassword.equals(enteredNewPasswordConfirmation)) {
+            throw new SubjectPasswordIncorrectException(PASSWORD_AND_CONFIRMATION_MISMATCH_MESSAGE);
+        }
+        if (!passwordRulesMet(securitySubjectViewBean.getPassword())) {
+            throw new SubjectPasswordIncorrectException(PASSWORD_RULES_MESSAGE);
+        }
+        if (containsBlacklistedWord(securitySubjectViewBean, enteredNewPassword)) {
+            throw new SubjectPasswordIncorrectException(BLACKLISTED_WORD_MESSAGES);
         }
         SecuritySubject securitySubject = new SecuritySubject();
         securitySubject.setForename(securitySubjectViewBean.getForename());
         securitySubject.setSurname(securitySubjectViewBean.getSurname());
         securitySubject.setUsername(securitySubjectViewBean.getUsername());
-
+        securitySubject.setPasswordToBeChanged(true);
         securitySubject.setPassword(passwordEncoder.encode(securitySubjectViewBean.getPassword()));
 
         return securitySubjectRepository.save(securitySubject);
@@ -86,17 +104,64 @@ public class SecuritySubjectService extends LifelineService implements UserDetai
         }
     }
 
-    private void logMessage(String message) {
-        eventLogRepository.save(new EventLog(message));
-    }
-
-    public void updatePassword(SecuritySubjectViewBean securitySubjectViewBean) {
+    public void updatePassword(SecuritySubjectViewBean securitySubjectViewBean) throws SubjectPasswordIncorrectException {
         SecuritySubject securitySubject = securitySubjectRepository.getOne(securitySubjectViewBean.getId());
+        String enteredCurrentPassword = securitySubjectViewBean.getPreviousPassword();
+        String storedCurrentPassword = securitySubject.getPassword();
+        String enteredNewPassword = securitySubjectViewBean.getPassword();
+        String enteredNewPasswordConfirmation = securitySubjectViewBean.getConfirmPassword();
+        if (!passwordEncoder.matches(enteredCurrentPassword, storedCurrentPassword)) {
+            throw new SubjectPasswordIncorrectException("The Current Password entered is incorrect");
+        }
+        if (passwordEncoder.matches(enteredNewPassword, storedCurrentPassword)) {
+            throw new SubjectPasswordIncorrectException(PASSWORD_MUST_CHANGE_MESSAGE);
+        }
+        if (!enteredNewPassword.equals(enteredNewPasswordConfirmation)) {
+            throw new SubjectPasswordIncorrectException(PASSWORD_AND_CONFIRMATION_MISMATCH_MESSAGE);
+        }
+        if (!passwordRulesMet(enteredNewPassword)) {
+            throw new SubjectPasswordIncorrectException(PASSWORD_RULES_MESSAGE);
+        }
+        if (containsBlacklistedWord(securitySubjectViewBean, enteredNewPassword)) {
+            throw new SubjectPasswordIncorrectException(BLACKLISTED_WORD_MESSAGES);
+        }
         securitySubject.setPassword(passwordEncoder.encode(securitySubjectViewBean.getPassword()));
+        securitySubject.setPasswordToBeChanged(false);
         securitySubjectRepository.save(securitySubject);
     }
 
     public SecuritySubject findByUsername(String username) {
         return securitySubjectRepository.findByUsername(username);
     }
+
+    private boolean passwordRulesMet(String password) {
+        //Between 8 and 100 characters. Must be a mixture of uppercase characters, lowercase characters and numbers.
+        StringBuilder patternBuilder = new StringBuilder();
+        patternBuilder.append("((?=.*[a-z])");
+        patternBuilder.append("(?=.*[A-Z])");
+        patternBuilder.append("(?=.*[0-9])");
+        patternBuilder.append(".{8,100})");
+        String pattern = patternBuilder.toString();
+        Pattern p = Pattern.compile(pattern);
+        Matcher m = p.matcher(password);
+        boolean passwordMatches = m.matches();
+        return passwordMatches;
+    }
+
+    private boolean containsBlacklistedWord(SecuritySubjectViewBean securitySubjectViewBean, String password) {
+        String[] blacklistedWords = {"password", "dafc", "d.a.f.c", "pars", "dunfermline", "1885", "eastend", "kozma", "cclifeline", "lifeline", "centenary", "football", "qwerty"};
+        String lowerCasePassword = password.toLowerCase();
+        for (String blacklistedWord : blacklistedWords) {
+            if (lowerCasePassword.contains(blacklistedWord)) {
+                return true;
+            }
+        }
+        if (lowerCasePassword.contains(securitySubjectViewBean.getUsername().toLowerCase()) ||
+                lowerCasePassword.contains(securitySubjectViewBean.getForename().toLowerCase()) ||
+                lowerCasePassword.contains(securitySubjectViewBean.getSurname().toLowerCase())) {
+            return true;
+        }
+        return false;
+    }
+
 }

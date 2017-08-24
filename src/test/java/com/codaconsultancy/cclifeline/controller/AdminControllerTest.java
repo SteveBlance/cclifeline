@@ -3,7 +3,6 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.NotificationService;
-import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -30,10 +30,6 @@ public class AdminControllerTest extends BaseTest {
     @MockBean
     NotificationService notificationService;
 
-    @MockBean
-    private SecuritySubjectService securitySubjectService;
-
-
     @Test
     public void navigateToAdministrators() throws Exception {
         List<SecuritySubject> administrators = new ArrayList<>();
@@ -43,6 +39,8 @@ public class AdminControllerTest extends BaseTest {
         administrators.add(ross);
         administrators.add(steve);
         when(securitySubjectService.findAllSecuritySubjects()).thenReturn(administrators);
+        when(securitySubjectService.findByUsername(any(String.class))).thenReturn(new SecuritySubject());
+
 
         ModelAndView modelAndView = adminController.navigateToAdministrators();
 
@@ -54,13 +52,12 @@ public class AdminControllerTest extends BaseTest {
 
     @Test
     public void navigateToAddAdministrator() throws Exception {
-
+        when(securitySubjectService.findByUsername(any(String.class))).thenReturn(new SecuritySubject());
         ModelAndView modelAndView = adminController.navigateToAddAdministrator();
         assertTrue(modelAndView.getModel().get("administrator") instanceof SecuritySubjectViewBean);
         assertEquals("add-administrator", modelAndView.getViewName());
-
-
     }
+
 //
 //    @Test
 //    public void encryptPassword() {

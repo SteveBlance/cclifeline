@@ -3,12 +3,14 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
+import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.joda.time.DateTime;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -43,6 +45,11 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @MockBean
     private NotificationService notificationService;
+
+    @Before
+    public void setup() {
+        when(securitySubjectService.findByUsername(any(String.class))).thenReturn(new SecuritySubject());
+    }
 
     @Test
     public void navigateToWinners() {
