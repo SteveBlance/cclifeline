@@ -106,7 +106,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
         unmatchedPayments.add(payment1);
         unmatchedPayments.add(payment2);
         unmatchedPayments.add(payment3);
-        when(paymentRepository.findByMemberIsNull()).thenReturn(unmatchedPayments);
+        when(paymentRepository.findByMemberIsNullAndIsLotteryPayment(true)).thenReturn(unmatchedPayments);
 
         List<Payment> foundPayments = paymentService.findAllUnmatchedPayments();
 
@@ -115,7 +115,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     }
 
     @Test
-    public void findAllMatchedPayments() throws Exception {
+    public void findAllMatchedLotteryPayments() throws Exception {
         List<Payment> matchedPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
@@ -127,13 +127,31 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payment2.setMember(member);
         matchedPayments.add(payment1);
         matchedPayments.add(payment2);
-        when(paymentRepository.findByMemberIsNotNull()).thenReturn(matchedPayments);
+        when(paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true)).thenReturn(matchedPayments);
 
-        List<Payment> foundPayments = paymentService.findAllMatchedPayments();
+        List<Payment> foundPayments = paymentService.findAllMatchedLotteryPayments();
 
         assertEquals(2, foundPayments.size());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
         assertEquals(1234L, foundPayments.get(0).getMember().getMembershipNumber().longValue());
+    }
+
+    @Test
+    public void findAllNonLotteryPayments() throws Exception {
+        List<Payment> nonLotteryPayments = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment1 = new Payment(paymentDate, 100.00F, "POTY SPONSOR", "83776900435093BZ", "BOB SMITH");
+        Payment payment2 = new Payment(paymentDate, 500.00F, "POTY TABLE BOOKING", "83776900435093BZ", "ALEX REID");
+        nonLotteryPayments.add(payment1);
+        nonLotteryPayments.add(payment2);
+        when(paymentRepository.findByIsLotteryPayment(false)).thenReturn(nonLotteryPayments);
+
+        List<Payment> foundPayments = paymentService.findAllNonLotteryPayments();
+
+        assertEquals(2, foundPayments.size());
+        assertEquals("POTY SPONSOR", foundPayments.get(0).getCreditReference());
+        assertEquals("POTY TABLE BOOKING", foundPayments.get(1).getCreditReference());
     }
 
     @Test
@@ -366,16 +384,16 @@ public class PaymentServiceTest extends LifelineServiceTest {
     }
 
     @Test
-    public void findLatestPaymentForMember() {
+    public void findLatestLotteryPaymentForMember() {
         Payment payment = new Payment();
         payment.setId(2865L);
         Member member = new Member();
         member.setId(34L);
-        when(paymentRepository.findTopByMemberOrderByPaymentDateDesc(member)).thenReturn(payment);
+        when(paymentRepository.findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(member, true)).thenReturn(payment);
 
-        Payment foundPayment = paymentService.findLatestPayment(member);
+        Payment foundPayment = paymentService.findLatestLotteryPayment(member);
 
-        verify(paymentRepository, times(1)).findTopByMemberOrderByPaymentDateDesc(member);
+        verify(paymentRepository, times(1)).findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(member, true);
         assertEquals(2865L, foundPayment.getId().longValue());
     }
 

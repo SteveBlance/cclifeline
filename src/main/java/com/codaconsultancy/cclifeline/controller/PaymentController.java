@@ -42,7 +42,7 @@ public class PaymentController extends LifelineController {
         String matchedTabStatus = "enabled";
         String unmatchedTabStatus = "enabled";
         if (filter.equalsIgnoreCase("matched")) {
-            payments = paymentService.findAllMatchedPayments();
+            payments = paymentService.findAllMatchedLotteryPayments();
             title = "Matched payments";
             matchedTabStatus = "disabled";
         } else if (filter.equalsIgnoreCase("unmatched")) {

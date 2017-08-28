@@ -8,8 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PaymentViewBeanTest {
     private PaymentViewBean paymentViewBean;
@@ -30,6 +29,7 @@ public class PaymentViewBeanTest {
         Member member = new Member();
         member.setId(67L);
         paymentViewBean.setMemberId(member.getId());
+        paymentViewBean.setIsLotteryPayment(true);
     }
 
     @Test
@@ -76,6 +76,13 @@ public class PaymentViewBeanTest {
     @Test
     public void isStoreReferenceForMatching() {
         assertTrue(paymentViewBean.isStoreReferenceForMatching());
+    }
+
+    @Test
+    public void isLotteryPayment() {
+        assertTrue(paymentViewBean.isLotteryPayment());
+        paymentViewBean.setIsLotteryPayment(false);
+        assertFalse(paymentViewBean.isLotteryPayment());
     }
 
     @Test

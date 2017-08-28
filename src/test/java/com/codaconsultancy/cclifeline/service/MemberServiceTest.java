@@ -195,9 +195,9 @@ public class MemberServiceTest extends LifelineServiceTest {
         ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
-        when(paymentRepository.getTotalPaymentSince(monthlyLastPaymentCutoffDate.capture(), eq(66L))).thenReturn(20.00D);
-        when(paymentRepository.getTotalPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(404L))).thenReturn(60.00D);
-        when(paymentRepository.getTotalPaymentSince(annualLastPaymentCutoffDate.capture(), eq(999L))).thenReturn(239.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(monthlyLastPaymentCutoffDate.capture(), eq(66L))).thenReturn(20.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(404L))).thenReturn(60.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(annualLastPaymentCutoffDate.capture(), eq(999L))).thenReturn(239.00D);
 
         List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
 
@@ -209,7 +209,7 @@ public class MemberServiceTest extends LifelineServiceTest {
         assertEquals(expectedLastPaymentForMonthly.toString(dtf), new DateTime(monthlyLastPaymentCutoffDate.getValue()).toString(dtf));
         assertEquals(expectedLastPaymentForQuarterly.toString(dtf), new DateTime(quarterlyLastPaymentCutoffDate.getValue()).toString(dtf));
         assertEquals(expectedLastPaymentForAnnual.toString(dtf), new DateTime(annualLastPaymentCutoffDate.getValue()).toString(dtf));
-        verify(paymentRepository, times(3)).getTotalPaymentSince(any(Date.class), any(Long.class));
+        verify(paymentRepository, times(3)).getTotalLotteryPaymentSince(any(Date.class), any(Long.class));
         assertEquals(6, memberDrawEntries.size());
         assertTrue(memberDrawEntries.contains(lifelineMember1));
         assertTrue(memberDrawEntries.contains(lifelineMember2));
@@ -241,9 +241,9 @@ public class MemberServiceTest extends LifelineServiceTest {
         ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
-        when(paymentRepository.getTotalPaymentSince(monthlyLastPaymentCutoffDate.capture(), eq(87L))).thenReturn(8.66D);
-        when(paymentRepository.getTotalPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(4L))).thenReturn(26.00D);
-        when(paymentRepository.getTotalPaymentSince(annualLastPaymentCutoffDate.capture(), eq(89L))).thenReturn(103.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(monthlyLastPaymentCutoffDate.capture(), eq(87L))).thenReturn(8.66D);
+        when(paymentRepository.getTotalLotteryPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(4L))).thenReturn(26.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(annualLastPaymentCutoffDate.capture(), eq(89L))).thenReturn(103.00D);
 
         List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
 

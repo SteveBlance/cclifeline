@@ -95,7 +95,7 @@ public class PaymentControllerTest extends BaseTest {
     @Test
     public void navigateToPaymentsWithMatchedFilter() throws Exception {
         List<Payment> payments = getPayments();
-        when(paymentService.findAllMatchedPayments()).thenReturn(payments);
+        when(paymentService.findAllMatchedLotteryPayments()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
 

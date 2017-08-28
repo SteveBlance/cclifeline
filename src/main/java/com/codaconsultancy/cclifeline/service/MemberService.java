@@ -124,7 +124,7 @@ public class MemberService extends LifelineService {
 
         DateTime lastExpectedPaymentDate = getLastExpectedPaymentDate(today, payerType).minus(Period.days(gracePeriodInDays));
 
-        Double paymentTotalThisPeriod = paymentRepository.getTotalPaymentSince(lastExpectedPaymentDate.toDate(), member.getId());
+        Double paymentTotalThisPeriod = paymentRepository.getTotalLotteryPaymentSince(lastExpectedPaymentDate.toDate(), member.getId());
 
         return (paymentTotalThisPeriod >= requiredPaymentFrom(payerType, membershipType));
     }

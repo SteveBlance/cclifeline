@@ -13,17 +13,19 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByMember(Member member);
 
-    List<Payment> findByMemberIsNull();
+    List<Payment> findByMemberIsNullAndIsLotteryPayment(boolean isLotteryPayment);
 
-    List<Payment> findByMemberIsNotNull();
+    List<Payment> findByMemberIsNotNullAndIsLotteryPayment(boolean isLotteryPayment);
 
-    Payment findTopByMemberOrderByPaymentDateDesc(Member member);
+    List<Payment> findByIsLotteryPayment(boolean isLotteryPayment);
+
+    Payment findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(Member member, boolean isLotteryPayment);
 
     @Query(value =
             "SELECT IFNULL(SUM(PAYMENT_AMOUNT), 0) " +
                     "FROM PAYMENTS WHERE MEMBER_ID = :member " +
-                    "AND PAYMENT_DATE >= :lastExpectedPaymentDate",
+                    "AND PAYMENT_DATE >= :lastExpectedPaymentDate " +
+                    "AND IS_LOTTERY_PAYMENT = TRUE ",
             nativeQuery = true)
-    Double getTotalPaymentSince(@Param("lastExpectedPaymentDate") Date lastExpectedPaymentDate, @Param("member") Long memberId);
-
+    Double getTotalLotteryPaymentSince(@Param("lastExpectedPaymentDate") Date lastExpectedPaymentDate, @Param("member") Long memberId);
 }

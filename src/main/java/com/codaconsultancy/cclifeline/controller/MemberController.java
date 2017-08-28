@@ -105,7 +105,7 @@ public class MemberController extends LifelineController {
         boolean isEligible = memberService.isEligibleForDraw(member);
         member.setIsEligibleForDraw(isEligible);
         MemberViewBean memberViewBean = member.toViewBean();
-        memberViewBean.setLastPayment(paymentService.findLatestPayment(member));
+        memberViewBean.setLastPayment(paymentService.findLatestLotteryPayment(member));
         return modelAndView("member").addObject("member", memberViewBean);
     }
 

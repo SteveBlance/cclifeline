@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class PaymentTest {
 
@@ -30,6 +30,7 @@ public class PaymentTest {
         member.setForename("Hamish");
         member.setSurname("Petrie");
         payment.setMember(member);
+        payment.setIsLotteryPayment(true);
     }
 
     @Test
@@ -73,6 +74,13 @@ public class PaymentTest {
         assertEquals("Petrie", payment.getMember().getSurname());
         assertEquals(9944L, payment.getMember().getId().longValue());
         assertEquals(9944L, payment.toViewBean().getMemberId().longValue());
+    }
+
+    @Test
+    public void isLotteryPayment() {
+        assertTrue(payment.isLotteryPayment());
+        payment.setIsLotteryPayment(false);
+        assertFalse(payment.isLotteryPayment());
     }
 
     @Test

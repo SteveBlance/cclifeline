@@ -40,11 +40,15 @@ public class PaymentService extends LifelineService {
     }
 
     public List<Payment> findAllUnmatchedPayments() {
-        return paymentRepository.findByMemberIsNull();
+        return paymentRepository.findByMemberIsNullAndIsLotteryPayment(true);
     }
 
-    public List<Payment> findAllMatchedPayments() {
-        return paymentRepository.findByMemberIsNotNull();
+    public List<Payment> findAllMatchedLotteryPayments() {
+        return paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true);
+    }
+
+    public List<Payment> findAllNonLotteryPayments() {
+        return paymentRepository.findByIsLotteryPayment(false);
     }
 
     public Payment savePayment(Payment payment) {
@@ -157,8 +161,8 @@ public class PaymentService extends LifelineService {
         return paymentRepository.findByMember(member);
     }
 
-    public Payment findLatestPayment(Member member) {
-        return paymentRepository.findTopByMemberOrderByPaymentDateDesc(member);
+    public Payment findLatestLotteryPayment(Member member) {
+        return paymentRepository.findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(member, true);
     }
 
     public List<Member> findPossiblePayers(Payment payment) {

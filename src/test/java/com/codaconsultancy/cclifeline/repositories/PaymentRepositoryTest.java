@@ -26,6 +26,7 @@ public class PaymentRepositoryTest extends BaseTest {
     private Payment payment1;
     private Payment payment2;
     private Payment payment3;
+    private Payment payment4;
 
     @Before
     public void setUp() throws Exception {
@@ -39,9 +40,12 @@ public class PaymentRepositoryTest extends BaseTest {
         payment2 = new Payment(date2, 8.66F, "FPS CREDIT 0222 LINDSAY", "Legacy Current Account", "BOB SMITH");
         payment3 = new Payment(date2, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH");
         payment3.setMember(member);
+        payment4 = new Payment(date2, 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JOHN SMITH");
+        payment4.setIsLotteryPayment(false);
         entityManager.persist(payment1);
         entityManager.persist(payment2);
         entityManager.persist(payment3);
+        entityManager.persist(payment4);
     }
 
     @After
@@ -50,11 +54,12 @@ public class PaymentRepositoryTest extends BaseTest {
         entityManager.remove(payment2);
         entityManager.remove(payment3);
         entityManager.remove(member);
+        entityManager.remove(payment4);
     }
 
     @Test
     public void findAll() throws Exception {
-        assertEquals(3, paymentRepository.findAll().size());
+        assertEquals(4, paymentRepository.findAll().size());
     }
 
     @Test
@@ -70,7 +75,7 @@ public class PaymentRepositoryTest extends BaseTest {
 
     @Test
     public void findLatestPaymentForMember_success() {
-        Payment latestPayment = paymentRepository.findTopByMemberOrderByPaymentDateDesc(member);
+        Payment latestPayment = paymentRepository.findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(member, true);
         assertEquals(20.00F, latestPayment.getPaymentAmount(), 0.002F);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         assertEquals("30/11/2014", simpleDateFormat.format(latestPayment.getPaymentDate()));
@@ -81,13 +86,26 @@ public class PaymentRepositoryTest extends BaseTest {
         Member newMember = TestHelper.newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
         entityManager.persist(newMember);
 
-        Payment latestPayment = paymentRepository.findTopByMemberOrderByPaymentDateDesc(newMember);
+        Payment latestPayment = paymentRepository.findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(newMember, true);
         assertNull(latestPayment);
     }
 
     @Test
-    public void findByMemberIsNull() throws Exception {
-        List<Payment> unmatchedPayments = paymentRepository.findByMemberIsNull();
+    public void findLatestPaymentForMember_noLotteryPayments() {
+        Member newMember = TestHelper.newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
+        entityManager.persist(newMember);
+        Payment nonLotteryPayment = new Payment(DateTime.now().toDate(), 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JIM SAUNDERS");
+        nonLotteryPayment.setIsLotteryPayment(false);
+        nonLotteryPayment.setMember(newMember);
+        entityManager.persist(nonLotteryPayment);
+
+        Payment latestPayment = paymentRepository.findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(newMember, true);
+        assertNull(latestPayment);
+    }
+
+    @Test
+    public void findByMemberIsNullAndIsLotteryPayment() throws Exception {
+        List<Payment> unmatchedPayments = paymentRepository.findByMemberIsNullAndIsLotteryPayment(true);
 
         assertEquals(1, unmatchedPayments.size());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -98,8 +116,8 @@ public class PaymentRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void findByMemberIsNotNull() throws Exception {
-        List<Payment> matchedPayments = paymentRepository.findByMemberIsNotNull();
+    public void findByMemberIsNotNullAndIsLotteryPayment() throws Exception {
+        List<Payment> matchedPayments = paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true);
 
         assertEquals(2, matchedPayments.size());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -110,12 +128,20 @@ public class PaymentRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void getTotalPaymentSince() {
+    public void getTotalLotteryPaymentSince() {
         DateTime dateTime = new DateTime(2014, 11, 23, 0, 0);
-        Double totalPayment = paymentRepository.getTotalPaymentSince(dateTime.toDate(), member.getId());
+        Double totalPayment = paymentRepository.getTotalLotteryPaymentSince(dateTime.toDate(), member.getId());
         assertEquals(40.00D, totalPayment, 0.001D);
-        totalPayment = paymentRepository.getTotalPaymentSince(new DateTime().toDate(), member.getId());
+        totalPayment = paymentRepository.getTotalLotteryPaymentSince(new DateTime().toDate(), member.getId());
         assertEquals(0.00D, totalPayment, 0.001D);
+    }
+
+    @Test
+    public void findByIsLotteryPayment() {
+        assertEquals(1, paymentRepository.findByIsLotteryPayment(false).size());
+        assertEquals(500F, paymentRepository.findByIsLotteryPayment(false).get(0).getPaymentAmount(), 0.002F);
+        assertEquals("POTY SPONSORSHIP", paymentRepository.findByIsLotteryPayment(false).get(0).getCreditReference());
+        assertEquals(3, paymentRepository.findByIsLotteryPayment(true).size());
     }
 
 }

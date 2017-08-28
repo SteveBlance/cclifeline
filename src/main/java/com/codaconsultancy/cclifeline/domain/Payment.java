@@ -48,6 +48,9 @@ public class Payment {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "IS_LOTTERY_PAYMENT")
+    private boolean isLotteryPayment = true;
+
     @ManyToOne
     private Member member;
 
@@ -105,6 +108,14 @@ public class Payment {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public boolean isLotteryPayment() {
+        return isLotteryPayment;
+    }
+
+    public void setIsLotteryPayment(boolean isLotteryPayment) {
+        this.isLotteryPayment = isLotteryPayment;
     }
 
     public PaymentViewBean toViewBean() {
