@@ -45,6 +45,7 @@
                 <th>Name</th>
                 <th>Credited Account</th>
                 <th>Member</th>
+                <th>Lottery Payment?</th>
             </tr>
             </thead>
             <tbody>
@@ -59,6 +60,10 @@
                 <td th:text="${payment.creditedAccount}">Credited Account</td>
                 <td th:text="${payment.member}? ${payment.member.membershipNumber + ': ' + payment.member.forename + ' '
                 + payment.member.surname}">Member
+                </td>
+                <td th:style="${payment.isLotteryPayment()}? 'color: green' : 'color: red'"
+                    th:utext="${payment.isLotteryPayment()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">
+                    Is Lottery Payment?
                 </td>
             </tr>
             </tbody>

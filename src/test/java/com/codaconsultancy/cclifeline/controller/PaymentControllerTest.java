@@ -95,6 +95,20 @@ public class PaymentControllerTest extends BaseTest {
     }
 
     @Test
+    public void navigateToPaymentDetails() {
+        Payment payment = new Payment();
+        long paymentId = 73L;
+        payment.setId(paymentId);
+        when(paymentService.findById(paymentId)).thenReturn(payment);
+
+        ModelAndView modelAndView = paymentController.navigateToPaymentDetails(paymentId);
+
+        verify(paymentService, times(1)).findById(paymentId);
+        assertEquals("payment", modelAndView.getViewName());
+        assertSame(payment, modelAndView.getModel().get("payment"));
+    }
+
+    @Test
     public void navigateToPaymentsWithMatchedFilter() throws Exception {
         List<Payment> payments = getPayments();
         when(paymentService.findAllMatchedLotteryPayments()).thenReturn(payments);
@@ -228,6 +242,8 @@ public class PaymentControllerTest extends BaseTest {
         Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
         member.setId(555L);
         when(memberService.findMemberById(member.getId())).thenReturn(member);
+        Payment payment = paymentViewBean.toEntity();
+        when(paymentService.savePayment(paymentArgumentCaptor.capture())).thenReturn(payment);
 
         ModelAndView modelAndView = paymentController.addPayment(paymentViewBean, bindingResult);
 
@@ -239,7 +255,7 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals(12.23F, savedPayment.getPaymentAmount(), 0.002F);
         assertEquals("f@mail.com", savedPayment.getMember().getEmail());
         verify(notificationService, times(1)).logPayment(1);
-        assertEquals("payments", modelAndView.getViewName());
+        assertEquals("payment", modelAndView.getViewName());
     }
 
     public void addPaymentAndStoreReference_success() throws Exception {
@@ -376,6 +392,30 @@ public class PaymentControllerTest extends BaseTest {
         verify(paymentService, times(1)).deletePayment(78L);
         assertEquals("payments", modelAndView.getViewName());
         assertEquals("Unmatched payments", modelAndView.getModel().get("title"));
+    }
+
+    @Test
+    public void markPaymentAsNonLottery() {
+        long paymentId = 99L;
+
+        ModelAndView modelAndView = paymentController.markPaymentAsNonLottery(paymentId);
+
+        verify(paymentService, times(1)).markPaymentAsNonLottery(paymentId);
+        assertEquals("payment", modelAndView.getViewName());
+        assertEquals("Payment marked as non-lottery payment", modelAndView.getModel().get("alertMessage"));
+        assertEquals("alert alert-success", modelAndView.getModel().get("alertClass"));
+    }
+
+    @Test
+    public void markPaymentForLottery() {
+        long paymentId = 98L;
+
+        ModelAndView modelAndView = paymentController.markPaymentForLottery(paymentId);
+
+        verify(paymentService, times(1)).markPaymentForLottery(paymentId);
+        assertEquals("payment", modelAndView.getViewName());
+        assertEquals("alert alert-success", modelAndView.getModel().get("alertClass"));
+        assertEquals("Payment marked as a lottery payment", modelAndView.getModel().get("alertMessage"));
     }
 
 }

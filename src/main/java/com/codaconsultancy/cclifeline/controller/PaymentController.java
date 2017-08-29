@@ -123,12 +123,13 @@ public class PaymentController extends LifelineController {
             return navigateToAddPayment();
         }
         Payment payment = paymentViewBean.toEntity();
+        payment.setLotteryPayment(true);
         Member member = memberService.findMemberById(paymentViewBean.getMemberId());
         payment.setMember(member);
-        paymentService.savePayment(payment);
+        Payment savedPayment = paymentService.savePayment(payment);
         notificationService.logPayment(1);
 
-        return navigateToPayments("all");
+        return navigateToPaymentDetails(savedPayment.getId());
     }
 
     @RequestMapping(value = "/delete-payment/{id}", method = RequestMethod.POST)

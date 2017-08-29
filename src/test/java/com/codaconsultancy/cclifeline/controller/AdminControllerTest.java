@@ -1,6 +1,8 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
+import com.codaconsultancy.cclifeline.exceptions.SubjectPasswordIncorrectException;
+import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
@@ -10,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -18,7 +22,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AdminController.class)
@@ -55,6 +59,60 @@ public class AdminControllerTest extends BaseTest {
         when(securitySubjectService.findByUsername(any(String.class))).thenReturn(new SecuritySubject());
         ModelAndView modelAndView = adminController.navigateToAddAdministrator();
         assertTrue(modelAndView.getModel().get("administrator") instanceof SecuritySubjectViewBean);
+        assertEquals("add-administrator", modelAndView.getViewName());
+    }
+
+    @Test
+    public void addNewAdministrator_success() throws Exception {
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+
+        ModelAndView modelAndView = adminController.addNewAdministrator(securitySubjectViewBean, getBindingResult("subject"));
+
+        verify(securitySubjectService, times(1)).registerNewSecuritySubject(securitySubjectViewBean);
+        assertEquals("administrators", modelAndView.getViewName());
+    }
+
+    @Test
+    public void addNewAdministrator_failUserExists() throws Exception {
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+        when(securitySubjectService.registerNewSecuritySubject(securitySubjectViewBean)).thenThrow(new SubjectUsernameExistsException("Username already exists"));
+
+        ModelAndView modelAndView = adminController.addNewAdministrator(securitySubjectViewBean, getBindingResult("subject"));
+
+        verify(securitySubjectService, times(1)).registerNewSecuritySubject(securitySubjectViewBean);
+        assertEquals("add-administrator", modelAndView.getViewName());
+        String alertMessage = (String) modelAndView.getModel().get("alertMessage");
+        assertEquals("Username already exists", alertMessage);
+        String alertClass = (String) modelAndView.getModel().get("alertClass");
+        assertEquals("alert alert-danger", alertClass);
+    }
+
+    @Test
+    public void addNewAdministrator_failPasswordAndConfirmMismatch() throws Exception {
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+        when(securitySubjectService.registerNewSecuritySubject(securitySubjectViewBean)).thenThrow(new SubjectPasswordIncorrectException("Password must match confirmation"));
+
+        ModelAndView modelAndView = adminController.addNewAdministrator(securitySubjectViewBean, getBindingResult("subject"));
+
+        verify(securitySubjectService, times(1)).registerNewSecuritySubject(securitySubjectViewBean);
+        assertEquals("add-administrator", modelAndView.getViewName());
+        String alertMessage = (String) modelAndView.getModel().get("alertMessage");
+        assertEquals("Password must match confirmation", alertMessage);
+        String alertClass = (String) modelAndView.getModel().get("alertClass");
+        assertEquals("alert alert-danger", alertClass);
+    }
+
+    @Test
+    public void addNewAdministrator__validationErrors() throws Exception {
+        BindingResult bindingResult = getBindingResult("administrator");
+        bindingResult.addError(new ObjectError("administrator", "Problem with administrator"));
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+
+
+        ModelAndView modelAndView = adminController.addNewAdministrator(securitySubjectViewBean, bindingResult);
+
+        verify(securitySubjectService, never()).registerNewSecuritySubject(securitySubjectViewBean);
+
         assertEquals("add-administrator", modelAndView.getViewName());
     }
 

@@ -49,10 +49,7 @@ public class AdminController extends LifelineController {
         }
         try {
             securitySubjectService.registerNewSecuritySubject(securitySubjectViewBean);
-        } catch (SubjectUsernameExistsException e) {
-            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
-            return addAlertMessage(modelAndView, "danger", "Username already exists");
-        } catch (SubjectPasswordIncorrectException e) {
+        } catch (SubjectUsernameExistsException | SubjectPasswordIncorrectException e) {
             ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
             return addAlertMessage(modelAndView, "danger", e.getMessage());
         }
