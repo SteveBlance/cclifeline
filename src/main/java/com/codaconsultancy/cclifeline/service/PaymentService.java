@@ -78,10 +78,10 @@ public class PaymentService extends LifelineService {
         for (CSVRecord record : parser) {
             String paymentDateText = record.get(0);
             Date date = DateTime.parse(paymentDateText, fmt).toDate();
-            String transactionType = record.get(4);
             String accountNumber = record.get(2);
-            String description = record.get(8);
+            String transactionType = record.get(4);
             String creditAmountText = record.get(7);
+            String description = record.get(8);
             String name = record.get(9);
             if (transactionType.equalsIgnoreCase("CR") && (!creditAmountText.isEmpty())) {
                 Float creditAmount = Float.parseFloat(creditAmountText);

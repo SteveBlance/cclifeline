@@ -40,6 +40,8 @@
             <li role="presentation" th:class="${matchedTabStatus}"><a th:href="@{/payments/matched}">Matched</a></li>
             <li role="presentation" th:class="${unmatchedTabStatus}"><a th:href="@{/payments/unmatched}">Unmatched</a>
             </li>
+            <li role="presentation" th:class="${nonLotteryTabStatus}"><a
+                    th:href="@{/payments/non-lottery}">Non-lottery</a></li>
         </ul>
         <br/>
         <table id="payments_tab" class="table-condensed table-striped table-bordered table-hover" cellspacing="0"

@@ -41,6 +41,7 @@ public class PaymentController extends LifelineController {
         String allTabStatus = "enabled";
         String matchedTabStatus = "enabled";
         String unmatchedTabStatus = "enabled";
+        String nonLotteryTabStatus = "enabled";
         if (filter.equalsIgnoreCase("matched")) {
             payments = paymentService.findAllMatchedLotteryPayments();
             title = "Matched payments";
@@ -49,6 +50,10 @@ public class PaymentController extends LifelineController {
             payments = paymentService.findAllUnmatchedPayments();
             title = "Unmatched payments";
             unmatchedTabStatus = "disabled";
+        } else if (filter.equalsIgnoreCase("non-lottery")) {
+            payments = paymentService.findAllNonLotteryPayments();
+            title = "Non-lottery payments";
+            nonLotteryTabStatus = "disabled";
         } else {
             payments = paymentService.findAllPayments();
             title = "All payments";
@@ -58,7 +63,8 @@ public class PaymentController extends LifelineController {
                 .addObject("title", title)
                 .addObject("allTabStatus", allTabStatus)
                 .addObject("matchedTabStatus", matchedTabStatus)
-                .addObject("unmatchedTabStatus", unmatchedTabStatus);
+                .addObject("unmatchedTabStatus", unmatchedTabStatus)
+                .addObject("nonLotteryTabStatus", nonLotteryTabStatus);
     }
 
     @RequestMapping(value = "payments/member/{membershipNumber}", method = RequestMethod.GET)
