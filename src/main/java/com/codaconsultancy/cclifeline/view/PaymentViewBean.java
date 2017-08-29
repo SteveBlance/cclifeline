@@ -14,12 +14,13 @@ public class PaymentViewBean {
     public PaymentViewBean() {
     }
 
-    public PaymentViewBean(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name) {
+    public PaymentViewBean(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name, boolean isLotteryPayment) {
         this.paymentDate = paymentDate;
         this.paymentAmount = paymentAmount;
         this.creditReference = creditReference;
         this.creditedAccount = creditedAccount;
         this.name = name;
+        this.isLotteryPayment = isLotteryPayment;
     }
 
     private Long id;
@@ -104,7 +105,7 @@ public class PaymentViewBean {
         return isLotteryPayment;
     }
 
-    public void setIsLotteryPayment(boolean isLotteryPayment) {
+    public void setLotteryPayment(boolean isLotteryPayment) {
         this.isLotteryPayment = isLotteryPayment;
     }
 

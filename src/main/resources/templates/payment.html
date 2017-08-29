@@ -62,6 +62,13 @@
                         <td th:text="${payment.creditedAccount}">Credited Account</td>
                     </tr>
                     <tr>
+                        <td><strong>Is Lottery Payment?</strong></td>
+                        <td th:style="${payment.isLotteryPayment()}? 'color: green' : 'color: red'"
+                            th:utext="${payment.isLotteryPayment()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">
+                            Is Lottery Payment?
+                        </td>
+                    </tr>
+                    <tr>
                         <td><strong>Member</strong></td>
                         <td th:text="${payment.member}? ${payment.member.membershipNumber + ': ' + payment.member.forename + ' '
                 + payment.member.surname}">Member
@@ -75,34 +82,90 @@
                 <a th:href="@{/payments/all}" class="btn btn-default active" role="button">Back</a>
                 <a th:href="@{/edit-payment/} + ${payment.id}" class="btn btn-primary"
                    role="button">Edit</a>
+                <button th:if="${payment.isLotteryPayment()}" id="markNonLotteryConfirmation"
+                        class="btn btn-default btn-primary">Mark as non-lottery payment
+                </button>
+                <button th:if="${!payment.isLotteryPayment()}" id="markLotteryConfirmation"
+                        class="btn btn-default btn-primary">Mark as lottery payment
+                </button>
                 <button id="deleteConfirmation" class="btn btn-default btn-danger">Delete</button>
             </div>
 
             <script>
                 $(function () {
-                    $("#dialog-confirm").dialog({
+                    $("#dialog-confirm-delete").dialog({
                         autoOpen: false,
                         modal: true
                     });
 
                     $("#deleteConfirmation").on("click", function () {
-                        $("#dialog-confirm").dialog("open");
+                        $("#dialog-confirm-delete").dialog("open");
                     });
                     $("#closeModal").on("click", function () {
-                        $("#dialog-confirm").dialog("close");
+                        $("#dialog-confirm-delete").dialog("close");
+                    });
+                });
+
+                $(function () {
+                    $("#dialog-confirm-mark-non-lottery").dialog({
+                        autoOpen: false,
+                        modal: true
+                    });
+
+                    $("#markNonLotteryConfirmation").on("click", function () {
+                        $("#dialog-confirm-mark-non-lottery").dialog("open");
+                    });
+                    $("#closeModal").on("click", function () {
+                        $("#dialog-confirm-mark-non-lottery").dialog("close");
+                    });
+                });
+
+                $(function () {
+                    $("#dialog-confirm-mark-lottery").dialog({
+                        autoOpen: false,
+                        modal: true
+                    });
+
+                    $("#markLotteryConfirmation").on("click", function () {
+                        $("#dialog-confirm-mark-lottery").dialog("open");
+                    });
+                    $("#closeModal").on("click", function () {
+                        $("#dialog-confirm-mark-lottery").dialog("close");
                     });
                 });
 
             </script>
 
-            <div id="dialog-confirm" title="Confirm Delete Payment" style="display:none;">
+            <div id="dialog-confirm-delete" title="Confirm Delete Payment" style="display:none;">
                 <p>Delete this payment?</p>
                 <form action="#" th:action="@{'/delete-payment/{id}'(id=*{id})}" th:method="POST">
                     <input type="hidden" name="_method" value="post"/>
                     <button type="submit" id="confirmDelete" class="btn btn-default btn-success">
                         Yes
                     </button>
-                    <button type="button" class="btn btn-default btn-danger" id="closeModal">No</button>
+                    <button type="button" class="btn btn-default btn-danger" id="closeDeleteModal">No</button>
+
+                </form>
+            </div>
+            <div id="dialog-confirm-mark-non-lottery" title="Confirm Non-Lottery" style="display:none;">
+                <p>Mark this as a non-lottery payment?</p>
+                <form action="#" th:action="@{'/mark-payment-non-lottery/{id}'(id=*{id})}" th:method="POST">
+                    <input type="hidden" name="_method" value="post"/>
+                    <button type="submit" id="confirmChangeNon" class="btn btn-default btn-success">
+                        Yes
+                    </button>
+                    <button type="button" class="btn btn-default btn-danger" id="closeChangeNonModal">No</button>
+
+                </form>
+            </div>
+            <div id="dialog-confirm-mark-lottery" title="Confirm For Lottery" style="display:none;">
+                <p>Mark this as a lottery payment?</p>
+                <form action="#" th:action="@{'/mark-payment-for-lottery/{id}'(id=*{id})}" th:method="POST">
+                    <input type="hidden" name="_method" value="post"/>
+                    <button type="submit" id="confirmChangeFor" class="btn btn-default btn-success">
+                        Yes
+                    </button>
+                    <button type="button" class="btn btn-default btn-danger" id="closeChangeForModal">No</button>
 
                 </form>
             </div>

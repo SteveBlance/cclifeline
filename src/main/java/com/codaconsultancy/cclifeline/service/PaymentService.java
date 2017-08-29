@@ -85,7 +85,7 @@ public class PaymentService extends LifelineService {
             String name = record.get(9);
             if (transactionType.equalsIgnoreCase("CR") && (!creditAmountText.isEmpty())) {
                 Float creditAmount = Float.parseFloat(creditAmountText);
-                Payment payment = new Payment(date, creditAmount, description, accountNumber, name);
+                Payment payment = new Payment(date, creditAmount, description, accountNumber, name, true);
                 matchWithMember(payment);
                 payments.add(payment);
             }
@@ -196,5 +196,17 @@ public class PaymentService extends LifelineService {
             member.setStatus("Open");
             memberRepository.save(member);
         }
+    }
+
+    public void markPaymentAsNonLottery(Long id) {
+        Payment payment = paymentRepository.getOne(id);
+        payment.setLotteryPayment(false);
+        paymentRepository.save(payment);
+    }
+
+    public void markPaymentForLottery(Long id) {
+        Payment payment = paymentRepository.getOne(id);
+        payment.setLotteryPayment(true);
+        paymentRepository.save(payment);
     }
 }

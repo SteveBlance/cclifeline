@@ -17,12 +17,13 @@ public class Payment {
     public Payment() {
     }
 
-    public Payment(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name) {
+    public Payment(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name, boolean isLotteryPayment) {
         this.paymentDate = paymentDate;
         this.paymentAmount = paymentAmount;
         this.creditReference = creditReference;
         this.creditedAccount = creditedAccount;
         this.name = name;
+        this.isLotteryPayment = isLotteryPayment;
     }
 
     @Id
@@ -49,7 +50,7 @@ public class Payment {
     private String name;
 
     @Column(name = "IS_LOTTERY_PAYMENT")
-    private boolean isLotteryPayment = true;
+    private boolean isLotteryPayment;
 
     @ManyToOne
     private Member member;
@@ -114,7 +115,7 @@ public class Payment {
         return isLotteryPayment;
     }
 
-    public void setIsLotteryPayment(boolean isLotteryPayment) {
+    public void setLotteryPayment(boolean isLotteryPayment) {
         this.isLotteryPayment = isLotteryPayment;
     }
 

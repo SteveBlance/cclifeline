@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.view;
 
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.domain.Payment;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,7 +30,7 @@ public class PaymentViewBeanTest {
         Member member = new Member();
         member.setId(67L);
         paymentViewBean.setMemberId(member.getId());
-        paymentViewBean.setIsLotteryPayment(true);
+        paymentViewBean.setLotteryPayment(true);
     }
 
     @Test
@@ -81,19 +82,28 @@ public class PaymentViewBeanTest {
     @Test
     public void isLotteryPayment() {
         assertTrue(paymentViewBean.isLotteryPayment());
-        paymentViewBean.setIsLotteryPayment(false);
+        paymentViewBean.setLotteryPayment(false);
         assertFalse(paymentViewBean.isLotteryPayment());
     }
 
     @Test
-    public void testConstructor() throws ParseException {
+    public void testConstructor() throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse("26/03/2016");
-        PaymentViewBean paymentViewBean = new PaymentViewBean(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account", "BOB SMITH");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account", "BOB SMITH", true);
         assertEquals("26/03/2016", simpleDateFormat.format(paymentViewBean.getPaymentDate()));
         assertEquals(20.00F, paymentViewBean.getPaymentAmount(), 0.001);
         assertEquals("FPS CREDIT 9888 MONK", paymentViewBean.getCreditReference());
         assertEquals("Lifeline Account", paymentViewBean.getCreditedAccount());
+    }
+
+    @Test
+    public void toEntity() throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse("26/03/2016");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account", "BOB SMITH", true);
+        Payment payment = paymentViewBean.toEntity();
+        assertTrue(payment.isLotteryPayment());
     }
 
 }

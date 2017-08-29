@@ -36,7 +36,7 @@ public class MemberViewBeanTest {
         Date lastPaymentDate = sdf.parse("31-05-2015");
         memberViewBean.setJoinDate(joinDate);
         memberViewBean.setLeaveDate(leaveDate);
-        Payment lastPayment = new Payment(lastPaymentDate, 20.00F, "BL123", "12354678", "PETRIE");
+        Payment lastPayment = new Payment(lastPaymentDate, 20.00F, "BL123", "12354678", "PETRIE", true);
         memberViewBean.setLastPayment(lastPayment);
         memberViewBean.setCardRequestDate(cardRequestDate);
         memberViewBean.setCardIssuedDate(cardIssuedDate);

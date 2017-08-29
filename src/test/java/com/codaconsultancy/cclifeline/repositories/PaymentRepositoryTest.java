@@ -35,13 +35,13 @@ public class PaymentRepositoryTest extends BaseTest {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date1 = simpleDateFormat.parse("23/11/2014");
         Date date2 = simpleDateFormat.parse("30/11/2014");
-        payment1 = new Payment(date1, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH");
+        payment1 = new Payment(date1, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH", true);
         payment1.setMember(member);
-        payment2 = new Payment(date2, 8.66F, "FPS CREDIT 0222 LINDSAY", "Legacy Current Account", "BOB SMITH");
-        payment3 = new Payment(date2, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH");
+        payment2 = new Payment(date2, 8.66F, "FPS CREDIT 0222 LINDSAY", "Legacy Current Account", "BOB SMITH", true);
+        payment3 = new Payment(date2, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH", true);
         payment3.setMember(member);
-        payment4 = new Payment(date2, 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JOHN SMITH");
-        payment4.setIsLotteryPayment(false);
+        payment4 = new Payment(date2, 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JOHN SMITH", true);
+        payment4.setLotteryPayment(false);
         entityManager.persist(payment1);
         entityManager.persist(payment2);
         entityManager.persist(payment3);
@@ -94,8 +94,8 @@ public class PaymentRepositoryTest extends BaseTest {
     public void findLatestPaymentForMember_noLotteryPayments() {
         Member newMember = TestHelper.newMember(5566L, "Jim", "Saunders", "jimbo@email.com", "01383 226655", "0778 866 5544", "Monthly", "Lifeline", "New member", "Open");
         entityManager.persist(newMember);
-        Payment nonLotteryPayment = new Payment(DateTime.now().toDate(), 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JIM SAUNDERS");
-        nonLotteryPayment.setIsLotteryPayment(false);
+        Payment nonLotteryPayment = new Payment(DateTime.now().toDate(), 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JIM SAUNDERS", true);
+        nonLotteryPayment.setLotteryPayment(false);
         nonLotteryPayment.setMember(newMember);
         entityManager.persist(nonLotteryPayment);
 

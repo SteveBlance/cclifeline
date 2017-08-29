@@ -30,7 +30,7 @@ public class PaymentTest {
         member.setForename("Hamish");
         member.setSurname("Petrie");
         payment.setMember(member);
-        payment.setIsLotteryPayment(true);
+        payment.setLotteryPayment(true);
     }
 
     @Test
@@ -78,8 +78,9 @@ public class PaymentTest {
 
     @Test
     public void isLotteryPayment() {
+        payment.setLotteryPayment(true);
         assertTrue(payment.isLotteryPayment());
-        payment.setIsLotteryPayment(false);
+        payment.setLotteryPayment(false);
         assertFalse(payment.isLotteryPayment());
     }
 
@@ -87,11 +88,12 @@ public class PaymentTest {
     public void testConstructor() throws ParseException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse("26/03/2016");
-        Payment payment = new Payment(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account", "BOB SMITH");
+        Payment payment = new Payment(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account", "BOB SMITH", true);
         assertEquals("26/03/2016", simpleDateFormat.format(payment.getPaymentDate()));
         assertEquals(20.00F, payment.getPaymentAmount(), 0.001);
         assertEquals("FPS CREDIT 9888 MONK", payment.getCreditReference());
         assertEquals("Lifeline Account", payment.getCreditedAccount());
+        assertTrue(payment.isLotteryPayment());
     }
 
 }

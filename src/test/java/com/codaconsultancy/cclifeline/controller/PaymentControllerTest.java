@@ -159,9 +159,9 @@ public class PaymentControllerTest extends BaseTest {
         List<Payment> payments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 3344 LINDSAY", "83776900435093BZ", "BOB SMITH");
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0998 JONES", "83776900435093BZ", "BOB SMITH");
-        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 3344 LINDSAY", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0998 JONES", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         payments.add(payment1);
         payments.add(payment2);
         payments.add(payment3);
@@ -196,6 +196,7 @@ public class PaymentControllerTest extends BaseTest {
         when(memberService.findAllMembersOrderedBySurname()).thenReturn(members);
         Payment payment = new Payment();
         payment.setCreditReference("GH 1234");
+        payment.setLotteryPayment(true);
         when(paymentService.findById(1234L)).thenReturn(payment);
         List<Member> possiblePayers = new ArrayList<>();
         Member possiblePayer1 = new Member();
@@ -219,7 +220,7 @@ public class PaymentControllerTest extends BaseTest {
     public void addPayment_success() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ", "BOB SMITH");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ", "BOB SMITH", true);
         paymentViewBean.setId(367L);
         paymentViewBean.setMemberId(555L);
         BindingResult bindingResult = getBindingResult("payment");
@@ -244,7 +245,7 @@ public class PaymentControllerTest extends BaseTest {
     public void addPaymentAndStoreReference_success() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT JACK", "83776900435093BZ", "BOB SMITH");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT JACK", "83776900435093BZ", "BOB SMITH", true);
         paymentViewBean.setId(367L);
         paymentViewBean.setMemberId(555L);
         paymentViewBean.setStoreReferenceForMatching(true);
@@ -275,7 +276,7 @@ public class PaymentControllerTest extends BaseTest {
     public void addPayment_validationErrors() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ", "BOB SMITH");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ", "BOB SMITH", true);
         paymentViewBean.setId(367L);
         paymentViewBean.setMemberId(555L);
         BindingResult bindingResult = getBindingResult("payment");

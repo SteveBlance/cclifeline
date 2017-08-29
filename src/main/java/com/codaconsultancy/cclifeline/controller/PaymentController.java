@@ -138,6 +138,20 @@ public class PaymentController extends LifelineController {
         return addAlertMessage(modelAndView, "success", "Payment deleted");
     }
 
+    @RequestMapping(value = "/mark-payment-non-lottery/{id}", method = RequestMethod.POST)
+    public ModelAndView markPaymentAsNonLottery(@PathVariable Long id) {
+        paymentService.markPaymentAsNonLottery(id);
+        ModelAndView modelAndView = navigateToPaymentDetails(id);
+        return addAlertMessage(modelAndView, "success", "Payment marked as non-lottery payment");
+    }
+
+    @RequestMapping(value = "/mark-payment-for-lottery/{id}", method = RequestMethod.POST)
+    public ModelAndView markPaymentForLottery(@PathVariable Long id) {
+        paymentService.markPaymentForLottery(id);
+        ModelAndView modelAndView = navigateToPaymentDetails(id);
+        return addAlertMessage(modelAndView, "success", "Payment marked as a lottery payment");
+    }
+
     @RequestMapping(value = "/payment-references/member/{number}", method = RequestMethod.GET)
     public ModelAndView navigateToPaymentReferencesForMember(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);

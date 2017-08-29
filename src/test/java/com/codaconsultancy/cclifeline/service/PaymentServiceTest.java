@@ -81,9 +81,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         List<Payment> payments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Date paymentDate = sdf.parse("2017/01/03 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH");
-        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH", true);
         payments.add(payment1);
         payments.add(payment2);
         payments.add(payment3);
@@ -100,9 +100,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         List<Payment> unmatchedPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH");
-        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH", true);
         unmatchedPayments.add(payment1);
         unmatchedPayments.add(payment2);
         unmatchedPayments.add(payment3);
@@ -121,9 +121,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         Date paymentDate = sdf.parse("20170103 ");
         Member member = new Member();
         member.setMembershipNumber(1234L);
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         payment1.setMember(member);
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH");
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
         payment2.setMember(member);
         matchedPayments.add(payment1);
         matchedPayments.add(payment2);
@@ -141,8 +141,8 @@ public class PaymentServiceTest extends LifelineServiceTest {
         List<Payment> nonLotteryPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 100.00F, "POTY SPONSOR", "83776900435093BZ", "BOB SMITH");
-        Payment payment2 = new Payment(paymentDate, 500.00F, "POTY TABLE BOOKING", "83776900435093BZ", "ALEX REID");
+        Payment payment1 = new Payment(paymentDate, 100.00F, "POTY SPONSOR", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment2 = new Payment(paymentDate, 500.00F, "POTY TABLE BOOKING", "83776900435093BZ", "ALEX REID", true);
         nonLotteryPayments.add(payment1);
         nonLotteryPayments.add(payment2);
         when(paymentRepository.findByIsLotteryPayment(false)).thenReturn(nonLotteryPayments);
@@ -158,7 +158,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void savePayment_unallocated() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         when(paymentRepository.save(payment)).thenReturn(payment);
 
         Payment savedPayment = paymentService.savePayment(payment);
@@ -174,7 +174,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void savePayment_currentMember() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         Member member = new Member();
         payment.setMember(member);
         member.setStatus("Open");
@@ -193,7 +193,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void savePayment_tbcMember() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         Member member = new Member();
         payment.setMember(member);
         member.setStatus("TBC");
@@ -212,7 +212,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void updatePayment_currentMember() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         Member member = new Member();
         payment.setMember(member);
         member.setStatus("Open");
@@ -231,7 +231,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void updatePayment_tbcMember() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH");
+        Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         Member member = new Member();
         payment.setMember(member);
         member.setStatus("TBC");
@@ -430,5 +430,34 @@ public class PaymentServiceTest extends LifelineServiceTest {
         verify(paymentRepository, times(1)).delete(69L);
     }
 
+    @Test
+    public void markPaymentAsNonLottery() {
+        Payment payment = new Payment();
+        payment.setId(68L);
+        payment.setLotteryPayment(true);
+        when(paymentRepository.getOne(68L)).thenReturn(payment);
+        assertTrue(payment.isLotteryPayment());
+
+        paymentService.markPaymentAsNonLottery(68L);
+
+        verify(paymentRepository, times(1)).getOne(68L);
+        verify(paymentRepository, times(1)).save(payment);
+        assertFalse(payment.isLotteryPayment());
+    }
+
+    @Test
+    public void markPaymentForLottery() {
+        Payment payment = new Payment();
+        payment.setId(68L);
+        payment.setLotteryPayment(false);
+        when(paymentRepository.getOne(68L)).thenReturn(payment);
+        assertFalse(payment.isLotteryPayment());
+
+        paymentService.markPaymentForLottery(68L);
+
+        verify(paymentRepository, times(1)).getOne(68L);
+        verify(paymentRepository, times(1)).save(payment);
+        assertTrue(payment.isLotteryPayment());
+    }
 
 }
