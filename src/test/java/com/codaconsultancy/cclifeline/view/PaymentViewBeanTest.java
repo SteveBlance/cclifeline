@@ -31,6 +31,7 @@ public class PaymentViewBeanTest {
         member.setId(67L);
         paymentViewBean.setMemberId(member.getId());
         paymentViewBean.setLotteryPayment(true);
+        paymentViewBean.setComments("Paid at meeting");
     }
 
     @Test
@@ -87,6 +88,11 @@ public class PaymentViewBeanTest {
     }
 
     @Test
+    public void comments() {
+        assertEquals("Paid at meeting", paymentViewBean.getComments());
+    }
+
+    @Test
     public void testConstructor() throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse("26/03/2016");
@@ -102,8 +108,10 @@ public class PaymentViewBeanTest {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse("26/03/2016");
         PaymentViewBean paymentViewBean = new PaymentViewBean(date, 20.00F, "FPS CREDIT 9888 MONK", "Lifeline Account", "BOB SMITH", true);
+        paymentViewBean.setComments("Paid by cheque");
         Payment payment = paymentViewBean.toEntity();
         assertTrue(payment.isLotteryPayment());
+        assertEquals("Paid by cheque", payment.getComments());
     }
 
 }

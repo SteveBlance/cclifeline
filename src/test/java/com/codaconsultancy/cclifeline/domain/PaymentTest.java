@@ -31,6 +31,7 @@ public class PaymentTest {
         member.setSurname("Petrie");
         payment.setMember(member);
         payment.setLotteryPayment(true);
+        payment.setComments("Paid at meeting");
     }
 
     @Test
@@ -82,6 +83,11 @@ public class PaymentTest {
         assertTrue(payment.isLotteryPayment());
         payment.setLotteryPayment(false);
         assertFalse(payment.isLotteryPayment());
+    }
+
+    @Test
+    public void comments() {
+        assertEquals("Paid at meeting", payment.getComments());
     }
 
     @Test

@@ -168,7 +168,11 @@ public class PaymentService extends LifelineService {
     public List<Member> findPossiblePayers(Payment payment) {
         List<Member> possiblePayers = new ArrayList<>();
         String creditReference = payment.getCreditReference();
-        String name = payment.getName().toUpperCase().replace("MR ", " ").replace("MRS ", " ").replace("MISS ", " ").replace("DR ", " ");
+        String paymentName = payment.getName();
+        String name = "";
+        if (payment.getName() != null) {
+            name = paymentName.toUpperCase().replace("MR ", " ").replace("MRS ", " ").replace("MISS ", " ").replace("DR ", " ");
+        }
         Long membershipNumber = findMembershipNumberInReference(creditReference);
         Member membershipNumberMatch = memberRepository.findByMembershipNumber(membershipNumber);
         if (null != membershipNumberMatch) {

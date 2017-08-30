@@ -43,6 +43,8 @@ public class PaymentViewBean {
 
     private boolean isLotteryPayment;
 
+    private String comments;
+
     private boolean storeReferenceForMatching;
 
     public Long getId() {
@@ -107,6 +109,14 @@ public class PaymentViewBean {
 
     public void setLotteryPayment(boolean isLotteryPayment) {
         this.isLotteryPayment = isLotteryPayment;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
     }
 
     public Long getMemberId() {
