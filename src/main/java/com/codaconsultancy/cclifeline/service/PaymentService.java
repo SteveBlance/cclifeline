@@ -196,7 +196,7 @@ public class PaymentService extends LifelineService {
 
     private void reactivatePayerMembership(Payment payment) {
         Member member = payment.getMember();
-        if (null != member && !member.getStatus().equalsIgnoreCase("Open")) {
+        if (null != member && (member.getStatus().equals("Closed") || member.getStatus().equals("TBC"))) {
             member.setStatus("Open");
             memberRepository.save(member);
         }
