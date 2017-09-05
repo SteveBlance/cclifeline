@@ -3,6 +3,7 @@ package com.codaconsultancy.cclifeline.repositories;
 import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
+import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -138,6 +139,21 @@ public class PaymentRepositoryTest extends BaseTest {
         assertEquals(20.00F, matchedPayments.get(0).getPaymentAmount(), 0.001F);
         assertEquals("Lifeline Current Account", matchedPayments.get(0).getCreditedAccount());
         assertNotNull(matchedPayments.get(0).getMember());
+        assertEquals("Saunders", matchedPayments.get(0).getMember().getSurname());
+
+    }
+
+    @Test
+    public void findMatchedLotteryPayments() throws Exception {
+        List<PaymentViewBean> matchedPayments = paymentRepository.findMatchedLotteryPayments();
+
+        assertEquals(2, matchedPayments.size());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        assertEquals("23/11/2014", simpleDateFormat.format(matchedPayments.get(0).getPaymentDate()));
+        assertEquals(20.00F, matchedPayments.get(0).getPaymentAmount(), 0.001F);
+        assertEquals("Lifeline Current Account", matchedPayments.get(0).getCreditedAccount());
+        assertNotNull(matchedPayments.get(0).getMemberId());
+        assertEquals("5566: Jim Saunders", matchedPayments.get(0).getMemberDisplayText());
     }
 
     @Test

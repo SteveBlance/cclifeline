@@ -2,6 +2,7 @@ package com.codaconsultancy.cclifeline.repositories;
 
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
+import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,12 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     List<Payment> findByMemberIsNullAndIsLotteryPayment(boolean isLotteryPayment);
 
     List<Payment> findByMemberIsNotNullAndIsLotteryPayment(boolean isLotteryPayment);
+
+    @Query(value =
+            "SELECT new com.codaconsultancy.cclifeline.view.PaymentViewBean(p.paymentDate, p.paymentAmount, p.creditReference, p.creditedAccount, p.name, p.isLotteryPayment, m.id, CONCAT(m.membershipNumber,': ',m.forename,' ',m.surname) as displ) " +
+                    "FROM Payment p JOIN p.member m " +
+                    "WHERE p.isLotteryPayment = true ")
+    List<PaymentViewBean> findMatchedLotteryPayments();
 
     List<Payment> findByIsLotteryPayment(boolean isLotteryPayment);
 

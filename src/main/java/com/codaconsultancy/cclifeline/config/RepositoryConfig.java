@@ -23,9 +23,9 @@ public class RepositoryConfig {
 
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
 //      remember to change for aws
-        dataSource.setUrl("jdbc:mysql://cclifeline.culgi7xfux33.eu-west-1.rds.amazonaws.com:3306/cclifeline");
+        dataSource.setUrl("jdbc:mysql://localhost:3306/cclifeline");
         dataSource.setUsername("root");
-        dataSource.setPassword("comeonyepars68boisaN");
+        dataSource.setPassword("nottherealPassword123!");
 
         return dataSource;
     }

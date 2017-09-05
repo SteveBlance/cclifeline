@@ -23,6 +23,17 @@ public class PaymentViewBean {
         this.isLotteryPayment = isLotteryPayment;
     }
 
+    public PaymentViewBean(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name, boolean isLotteryPayment, Long memberId, String memberDisplayText) {
+        this.paymentDate = paymentDate;
+        this.paymentAmount = paymentAmount;
+        this.creditReference = creditReference;
+        this.creditedAccount = creditedAccount;
+        this.name = name;
+        this.isLotteryPayment = isLotteryPayment;
+        this.memberId = memberId;
+        this.memberDisplayText = memberDisplayText;
+    }
+
     private Long id;
 
     @NotNull
@@ -40,6 +51,8 @@ public class PaymentViewBean {
     private String name;
 
     private Long memberId;
+
+    private String memberDisplayText;
 
     private boolean isLotteryPayment;
 
@@ -125,6 +138,14 @@ public class PaymentViewBean {
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
+    }
+
+    public String getMemberDisplayText() {
+        return memberDisplayText;
+    }
+
+    public void setMemberDisplayText(String memberDisplayText) {
+        this.memberDisplayText = memberDisplayText;
     }
 
     public Payment toEntity() {

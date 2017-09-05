@@ -52,6 +52,11 @@ public class PaymentService extends LifelineService {
         return paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true);
     }
 
+    //TODO: Do this
+//    public List<PaymentViewBean> findAllMatchedLotteryPayments() {
+//        return paymentRepository.findMatchedLotteryPayments(true);
+//    }
+
     public List<Payment> findAllNonLotteryPayments() {
         return paymentRepository.findByIsLotteryPayment(false);
     }

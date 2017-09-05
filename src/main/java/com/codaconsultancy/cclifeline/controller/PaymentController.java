@@ -31,11 +31,11 @@ public class PaymentController extends LifelineController {
     private static final String MEMBER_PAYMENTS_PAGE = "member-payments";
     private static final String PAYMENT_DETAILS_PAGE = "payment";
     private static final String ADD_PAYMENT_PAGE = "add-payment";
-    private static final String CREDITED_ACCOUNT = "82621900174982CA";
     private static final String EDIT_PAYMENT_PAGE = "edit-payment";
     private static final String PAYMENT_REFERENCES_PAGE = "payment-references";
     private static final String ADD_PAYMENT_REFERENCE_PAGE = "add-payment-reference";
     private static final String UPLOAD_PAYMENTS_PAGE = "upload-payments";
+    private static final String CREDITED_ACCOUNT = "82621900174982CA";
 
     @Autowired
     private PaymentService paymentService;
@@ -58,7 +58,7 @@ public class PaymentController extends LifelineController {
             case "recent":
                 payments = paymentService.findPaymentsForLastMonth();
                 title = "Recent payments";
-                recentTabStatus = "disabled";
+                recentTabStatus = DISABLED;
                 break;
             case "matched":
                 payments = paymentService.findAllMatchedLotteryPayments();
@@ -68,17 +68,17 @@ public class PaymentController extends LifelineController {
             case "unmatched":
                 payments = paymentService.findAllUnmatchedPayments();
                 title = "Unmatched payments";
-                unmatchedTabStatus = "disabled";
+                unmatchedTabStatus = DISABLED;
                 break;
             case "non-lottery":
                 payments = paymentService.findAllNonLotteryPayments();
                 title = "Non-lottery payments";
-                nonLotteryTabStatus = "disabled";
+                nonLotteryTabStatus = DISABLED;
                 break;
             default:
                 payments = paymentService.findAllPayments();
                 title = "All payments";
-                allTabStatus = "disabled";
+                allTabStatus = DISABLED;
                 break;
         }
         return modelAndView("payments").addObject("payments", payments)
@@ -210,7 +210,7 @@ public class PaymentController extends LifelineController {
 
     @RequestMapping(value = "/upload-payments", method = RequestMethod.GET)
     public ModelAndView navigateToUploadPayments() {
-        return modelAndView(UPLOAD_PAYMENTS_PAGE).addObject("disabled", true);
+        return modelAndView(UPLOAD_PAYMENTS_PAGE).addObject(DISABLED, true);
     }
 
     @RequestMapping(value = "/upload-payments", method = RequestMethod.POST)
@@ -225,11 +225,11 @@ public class PaymentController extends LifelineController {
             paymentService.savePayments(parsedPayments);
         } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
             logger.error(e.getMessage());
-            ModelAndView modelAndView = modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", true);
+            ModelAndView modelAndView = modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject(DISABLED, true);
             return addAlertMessage(modelAndView, "danger", "Upload of payment failed. Please check bank statement file.");
         }
         notificationService.logPayment(parsedPayments.size());
-        return modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", false);
+        return modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject(DISABLED, false);
     }
 
 }
