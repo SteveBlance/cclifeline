@@ -74,6 +74,19 @@ public class PaymentRepositoryTest extends BaseTest {
     }
 
     @Test
+    public void findByPaymentDateAfter() throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse("29/11/2014");
+        List<Payment> allPayments = paymentRepository.findAll();
+        assertEquals(4, allPayments.size());
+        List<Payment> payments = paymentRepository.findByPaymentDateAfter(date);
+        assertEquals(3, payments.size());
+        assertTrue(payments.get(0).getPaymentDate().after(date));
+        assertTrue(payments.get(1).getPaymentDate().after(date));
+        assertTrue(payments.get(2).getPaymentDate().after(date));
+    }
+
+    @Test
     public void findLatestPaymentForMember_success() {
         Payment latestPayment = paymentRepository.findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(member, true);
         assertEquals(20.00F, latestPayment.getPaymentAmount(), 0.002F);

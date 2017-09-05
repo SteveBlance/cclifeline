@@ -31,7 +31,7 @@ public class PaymentReference {
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 

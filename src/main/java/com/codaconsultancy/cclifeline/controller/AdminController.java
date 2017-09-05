@@ -25,6 +25,8 @@ import java.util.List;
 @Controller
 public class AdminController extends LifelineController {
 
+    public static final String ADD_ADMINISTRATOR_PAGE = "add-administrator";
+    public static final String CHANGE_PASSWORD_PAGE = "change-password";
     private Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 
@@ -38,19 +40,19 @@ public class AdminController extends LifelineController {
     @RequestMapping(value = "/add-administrator", method = RequestMethod.GET)
     public ModelAndView navigateToAddAdministrator() {
         SecuritySubjectViewBean administrator = new SecuritySubjectViewBean();
-        return addAlertMessage(new ModelAndView("add-administrator").addObject("administrator", administrator), "info", SecuritySubjectService.PASSWORD_RULES_MESSAGE);
+        return addAlertMessage(new ModelAndView(ADD_ADMINISTRATOR_PAGE).addObject("administrator", administrator), "info", SecuritySubjectService.PASSWORD_RULES_MESSAGE);
     }
 
     @RequestMapping(value = "/administrator", method = RequestMethod.POST)
     public ModelAndView addNewAdministrator(@Valid @ModelAttribute("subject") SecuritySubjectViewBean securitySubjectViewBean, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             logger.debug("Validation errors for securitySubject: ", securitySubjectViewBean);
-            return modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
+            return modelAndView(ADD_ADMINISTRATOR_PAGE).addObject("administrator", securitySubjectViewBean);
         }
         try {
             securitySubjectService.registerNewSecuritySubject(securitySubjectViewBean);
         } catch (SubjectUsernameExistsException | SubjectPasswordIncorrectException e) {
-            ModelAndView modelAndView = modelAndView("add-administrator").addObject("administrator", securitySubjectViewBean);
+            ModelAndView modelAndView = modelAndView(ADD_ADMINISTRATOR_PAGE).addObject("administrator", securitySubjectViewBean);
             return addAlertMessage(modelAndView, "danger", e.getMessage());
         }
 
@@ -60,7 +62,7 @@ public class AdminController extends LifelineController {
     @RequestMapping(value = "/change-password/{username}", method = RequestMethod.GET)
     private ModelAndView navigateToChangePassword(@PathVariable String username) {
         SecuritySubject securitySubject = securitySubjectService.findByUsername(username);
-        return modelAndView("change-password").addObject("user", securitySubject.toViewBean());
+        return modelAndView(CHANGE_PASSWORD_PAGE).addObject("user", securitySubject.toViewBean());
     }
 
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)

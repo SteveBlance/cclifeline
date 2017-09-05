@@ -114,7 +114,7 @@ public class MemberService extends LifelineService {
         //TODO: use stored config for gracePeriodInDays
         int gracePeriodInDays = 30;
 
-        return member.getStatus().equalsIgnoreCase("Open") && (paymentsAreUpToDate(member, gracePeriodInDays));
+        return member.getStatus().equals("Open") && (paymentsAreUpToDate(member, gracePeriodInDays));
     }
 
     private boolean paymentsAreUpToDate(Member member, int gracePeriodInDays) {
@@ -131,18 +131,18 @@ public class MemberService extends LifelineService {
 
     private Double requiredPaymentFrom(String payerType, String membershipType) {
         Double requiredPayment;
-        if ("Lifeline".equalsIgnoreCase(membershipType)) {
-            if ("Annual".equalsIgnoreCase(payerType)) {
+        if ("Lifeline".equals(membershipType)) {
+            if ("Annual".equals(payerType)) {
                 requiredPayment = 240.00D;
-            } else if ("Quarterly".equalsIgnoreCase(payerType)) {
+            } else if ("Quarterly".equals(payerType)) {
                 requiredPayment = 60.00D;
             } else {
                 requiredPayment = 20.00D;
             }
         } else {
-            if ("Annual".equalsIgnoreCase(payerType)) {
+            if ("Annual".equals(payerType)) {
                 requiredPayment = 104.00D;
-            } else if ("Quarterly".equalsIgnoreCase(payerType)) {
+            } else if ("Quarterly".equals(payerType)) {
                 requiredPayment = 26.00D;
             } else {
                 requiredPayment = 8.66D;
@@ -153,9 +153,9 @@ public class MemberService extends LifelineService {
 
     DateTime getLastExpectedPaymentDate(DateTime fromDate, String payerType) {
         DateTime lastExpectedPaymentDate;
-        if ("Annual".equalsIgnoreCase(payerType)) {
+        if ("Annual".equals(payerType)) {
             lastExpectedPaymentDate = fromDate.minus(Period.years(1));
-        } else if ("Quarterly".equalsIgnoreCase(payerType)) {
+        } else if ("Quarterly".equals(payerType)) {
             lastExpectedPaymentDate = fromDate.minus(Period.months(3));
         } else {
             lastExpectedPaymentDate = fromDate.minus(Period.months(1));

@@ -7,10 +7,12 @@ import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentReferenceRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
+import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -93,6 +95,25 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
         assertEquals(3, foundPayments.size());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
+    }
+
+    @Test
+    public void findPaymentsForLastMonth() {
+        List<Payment> payments = new ArrayList<>();
+        when(paymentRepository.findByPaymentDateAfter(any(Date.class))).thenReturn(payments);
+
+        List<Payment> recentPayments = paymentService.findPaymentsForLastMonth();
+
+        ArgumentCaptor<Date> dateArgumentCaptor = ArgumentCaptor.forClass(Date.class);
+        verify(paymentRepository, times(1)).findByPaymentDateAfter(dateArgumentCaptor.capture());
+        assertSame(payments, recentPayments);
+        Date now = DateTime.now().toDate();
+        Date threeWeeksAgo = DateTime.now().minusWeeks(3).toDate();
+        Date fiveWeeksAgo = DateTime.now().minusWeeks(5).toDate();
+        Date dateFrom = dateArgumentCaptor.getValue();
+        assertTrue(now.after(dateFrom));
+        assertTrue(threeWeeksAgo.after(dateFrom));
+        assertFalse(fiveWeeksAgo.after(dateFrom));
     }
 
     @Test
@@ -292,7 +313,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
         Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByOrderBySurnameAscForenameAsc()).thenReturn(members);
+        when(memberRepository.findAll()).thenReturn(members);
 
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
 
@@ -314,7 +335,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
         Member member2 = TestHelper.newMember(379L, "Ross", "McKinlay", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByOrderBySurnameAscForenameAsc()).thenReturn(members);
+        when(memberRepository.findAll()).thenReturn(members);
         List<Payment> payments = paymentService.parsePayments(MATCH__3_DIGIT_MEMBERSHIP_NUMBER, "test.csv");
         assertEquals(1, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");

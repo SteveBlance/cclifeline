@@ -19,6 +19,8 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     List<Payment> findByIsLotteryPayment(boolean isLotteryPayment);
 
+    List<Payment> findByPaymentDateAfter(Date date);
+
     Payment findTopByMemberAndIsLotteryPaymentOrderByPaymentDateDesc(Member member, boolean isLotteryPayment);
 
     @Query(value =

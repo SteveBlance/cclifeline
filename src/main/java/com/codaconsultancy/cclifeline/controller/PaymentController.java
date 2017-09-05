@@ -26,6 +26,16 @@ import java.util.List;
 @Controller
 public class PaymentController extends LifelineController {
 
+    private static final String ENABLED = "enabled";
+    private static final String MEMBER_PAYMENTS_PAGE = "member-payments";
+    private static final String PAYMENT_DETAILS_PAGE = "payment";
+    private static final String ADD_PAYMENT_PAGE = "add-payment";
+    private static final String CREDITED_ACCOUNT = "82621900174982CA";
+    private static final String EDIT_PAYMENT_PAGE = "edit-payment";
+    private static final String PAYMENT_REFERENCES_PAGE = "payment-references";
+    private static final String ADD_PAYMENT_REFERENCE_PAGE = "add-payment-reference";
+    private static final String UPLOAD_PAYMENTS_PAGE = "upload-payments";
+
     @Autowired
     private PaymentService paymentService;
 
@@ -38,54 +48,66 @@ public class PaymentController extends LifelineController {
     public ModelAndView navigateToPayments(@PathVariable String filter) {
         List<Payment> payments;
         String title;
-        String allTabStatus = "enabled";
-        String matchedTabStatus = "enabled";
-        String unmatchedTabStatus = "enabled";
-        String nonLotteryTabStatus = "enabled";
-        if (filter.equalsIgnoreCase("matched")) {
-            payments = paymentService.findAllMatchedLotteryPayments();
-            title = "Matched payments";
-            matchedTabStatus = "disabled";
-        } else if (filter.equalsIgnoreCase("unmatched")) {
-            payments = paymentService.findAllUnmatchedPayments();
-            title = "Unmatched payments";
-            unmatchedTabStatus = "disabled";
-        } else if (filter.equalsIgnoreCase("non-lottery")) {
-            payments = paymentService.findAllNonLotteryPayments();
-            title = "Non-lottery payments";
-            nonLotteryTabStatus = "disabled";
-        } else {
-            payments = paymentService.findAllPayments();
-            title = "All payments";
-            allTabStatus = "disabled";
+        String recentTabStatus = ENABLED;
+        String matchedTabStatus = ENABLED;
+        String unmatchedTabStatus = ENABLED;
+        String nonLotteryTabStatus = ENABLED;
+        String allTabStatus = ENABLED;
+        switch (filter) {
+            case "recent":
+                payments = paymentService.findPaymentsForLastMonth();
+                title = "Recent payments";
+                recentTabStatus = "disabled";
+                break;
+            case "matched":
+                payments = paymentService.findAllMatchedLotteryPayments();
+                title = "Matched payments";
+                matchedTabStatus = "disabled";
+                break;
+            case "unmatched":
+                payments = paymentService.findAllUnmatchedPayments();
+                title = "Unmatched payments";
+                unmatchedTabStatus = "disabled";
+                break;
+            case "non-lottery":
+                payments = paymentService.findAllNonLotteryPayments();
+                title = "Non-lottery payments";
+                nonLotteryTabStatus = "disabled";
+                break;
+            default:
+                payments = paymentService.findAllPayments();
+                title = "All payments";
+                allTabStatus = "disabled";
+                break;
         }
         return modelAndView("payments").addObject("payments", payments)
                 .addObject("title", title)
-                .addObject("allTabStatus", allTabStatus)
+                .addObject("recentTabStatus", recentTabStatus)
                 .addObject("matchedTabStatus", matchedTabStatus)
                 .addObject("unmatchedTabStatus", unmatchedTabStatus)
-                .addObject("nonLotteryTabStatus", nonLotteryTabStatus);
+                .addObject("nonLotteryTabStatus", nonLotteryTabStatus)
+                .addObject("allTabStatus", allTabStatus);
     }
 
     @RequestMapping(value = "payments/member/{membershipNumber}", method = RequestMethod.GET)
     public ModelAndView navigateToPaymentsForMember(@PathVariable Long membershipNumber) {
         Member member = memberService.findMemberByMembershipNumber(membershipNumber);
         List<Payment> payments = paymentService.findPaymentsForMember(member);
-        return modelAndView("member-payments").addObject("payments", payments).addObject("member", member);
+        return modelAndView(MEMBER_PAYMENTS_PAGE).addObject("payments", payments).addObject("member", member);
     }
 
     @RequestMapping(value = "/payment/{id}", method = RequestMethod.GET)
     public ModelAndView navigateToPaymentDetails(@PathVariable Long id) {
         Payment payment = paymentService.findById(id);
-        return modelAndView("payment").addObject("payment", payment);
+        return modelAndView(PAYMENT_DETAILS_PAGE).addObject("payment", payment);
     }
 
     @RequestMapping(value = "/add-payment", method = RequestMethod.GET)
     public ModelAndView navigateToAddPayment() {
         List<Member> members = memberService.findAllMembersOrderedBySurname();
         PaymentViewBean payment = new PaymentViewBean();
-        payment.setCreditedAccount("82621900174982CA");
-        return modelAndView("add-payment").addObject("payment", payment).addObject("members", members);
+        payment.setCreditedAccount(CREDITED_ACCOUNT);
+        return modelAndView(ADD_PAYMENT_PAGE).addObject("payment", payment).addObject("members", members);
     }
 
     @RequestMapping(value = "/edit-payment/{id}", method = RequestMethod.GET)
@@ -94,7 +116,7 @@ public class PaymentController extends LifelineController {
         List<Member> possiblePayers = paymentService.findPossiblePayers(payment);
         List<Member> members = memberService.findAllMembersOrderedBySurname();
         PaymentViewBean paymentViewBean = payment.toViewBean();
-        return modelAndView("edit-payment").addObject("payment", paymentViewBean).addObject("members", members).addObject("possiblePayers", possiblePayers);
+        return modelAndView(EDIT_PAYMENT_PAGE).addObject("payment", paymentViewBean).addObject("members", members).addObject("possiblePayers", possiblePayers);
     }
 
     @RequestMapping(value = "/edit-payment", method = RequestMethod.POST)
@@ -156,7 +178,7 @@ public class PaymentController extends LifelineController {
     @RequestMapping(value = "/payment-references/member/{number}", method = RequestMethod.GET)
     public ModelAndView navigateToPaymentReferencesForMember(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
-        return modelAndView("payment-references").addObject("member", member);
+        return modelAndView(PAYMENT_REFERENCES_PAGE).addObject("member", member);
     }
 
     @RequestMapping(value = "/add-payment-reference/member/{number}", method = RequestMethod.GET)
@@ -164,7 +186,7 @@ public class PaymentController extends LifelineController {
         Member member = memberService.findMemberByMembershipNumber(number);
         PaymentReferenceViewBean paymentReferenceViewBean = new PaymentReferenceViewBean();
         paymentReferenceViewBean.setMember(member);
-        return modelAndView("add-payment-reference").addObject("paymentReference", paymentReferenceViewBean);
+        return modelAndView(ADD_PAYMENT_REFERENCE_PAGE).addObject("paymentReference", paymentReferenceViewBean);
     }
 
     @RequestMapping(value = "/payment-reference", method = RequestMethod.POST)
@@ -187,7 +209,7 @@ public class PaymentController extends LifelineController {
 
     @RequestMapping(value = "/upload-payments", method = RequestMethod.GET)
     public ModelAndView navigateToUploadPayments() {
-        return modelAndView("upload-payments").addObject("disabled", true);
+        return modelAndView(UPLOAD_PAYMENTS_PAGE).addObject("disabled", true);
     }
 
     @RequestMapping(value = "/upload-payments", method = RequestMethod.POST)
@@ -202,11 +224,11 @@ public class PaymentController extends LifelineController {
             paymentService.savePayments(parsedPayments);
         } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
             logger.error(e.getMessage());
-            ModelAndView modelAndView = modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", true);
+            ModelAndView modelAndView = modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", true);
             return addAlertMessage(modelAndView, "danger", "Upload of payment failed. Please check bank statement file.");
         }
         notificationService.logPayment(parsedPayments.size());
-        return modelAndView("upload-payments").addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", false);
+        return modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject("disabled", false);
     }
 
 }

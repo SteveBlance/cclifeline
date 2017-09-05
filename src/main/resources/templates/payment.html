@@ -83,7 +83,7 @@
             </div>
             <br/>
             <div class="row">
-                <a th:href="@{/payments/all}" class="btn btn-default active" role="button">Back</a>
+                <a th:href="@{/payments/recent}" class="btn btn-default active" role="button">Back</a>
                 <a th:href="@{/edit-payment/} + ${payment.id}" class="btn btn-primary"
                    role="button">Edit</a>
                 <button th:if="${payment.isLotteryPayment()}" id="markNonLotteryConfirmation"

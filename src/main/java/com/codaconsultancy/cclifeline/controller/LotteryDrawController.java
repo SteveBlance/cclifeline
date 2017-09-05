@@ -27,6 +27,10 @@ import java.util.concurrent.ThreadLocalRandom;
 @Controller
 public class LotteryDrawController extends LifelineController {
 
+    public static final String LOTTERY_DRAWS_PAGE = "draws";
+    public static final String PREPARE_DRAW_PAGE = "prepare-draw";
+    public static final String MAKE_DRAW_PAGE = "make-draw";
+    public static final String DRAW_RESULT_PAGE = "draw-result";
     @Autowired
     private LotteryDrawService lotteryDrawService;
 
@@ -40,7 +44,7 @@ public class LotteryDrawController extends LifelineController {
     public ModelAndView navigateToWinners() {
         List<LotteryDraw> lotteryDraws = lotteryDrawService.fetchAllLotteryDraws();
         Long totalNumberOfWinners = lotteryDrawService.countAllWinners();
-        return modelAndView("draws").addObject("lotteryDraws", lotteryDraws).addObject("totalNumberOfWinners", totalNumberOfWinners);
+        return modelAndView(LOTTERY_DRAWS_PAGE).addObject("lotteryDraws", lotteryDraws).addObject("totalNumberOfWinners", totalNumberOfWinners);
     }
 
     @RequestMapping(value = "/prepare-draw", method = RequestMethod.GET)
@@ -49,7 +53,7 @@ public class LotteryDrawController extends LifelineController {
         Date today = DateTime.now().toDate();
         lotteryDrawViewBean.setDrawDate(today);
         lotteryDrawViewBean.setDrawMaster(loggedInUser());
-        return modelAndView("prepare-draw").addObject("lotteryDraw", lotteryDrawViewBean);
+        return modelAndView(PREPARE_DRAW_PAGE).addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
     @RequestMapping(value = "/prepare-draw", method = RequestMethod.POST)
@@ -70,7 +74,7 @@ public class LotteryDrawController extends LifelineController {
 
     @RequestMapping(value = "/make-draw", method = RequestMethod.GET)
     private ModelAndView navigateToMakeDraw(LotteryDrawViewBean lotteryDrawViewBean) {
-        return modelAndView("make-draw").addObject("lotteryDraw", lotteryDrawViewBean);
+        return modelAndView(MAKE_DRAW_PAGE).addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
     @RequestMapping(value = "/make-draw", method = RequestMethod.POST)
@@ -108,7 +112,7 @@ public class LotteryDrawController extends LifelineController {
     }
 
     private ModelAndView navigateToViewDrawResult(LotteryDrawViewBean lotteryDrawViewBean) {
-        return modelAndView("draw-result").addObject("lotteryDraw", lotteryDrawViewBean);
+        return modelAndView(DRAW_RESULT_PAGE).addObject("lotteryDraw", lotteryDrawViewBean);
     }
 
 }

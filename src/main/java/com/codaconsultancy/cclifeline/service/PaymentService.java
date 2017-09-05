@@ -43,6 +43,11 @@ public class PaymentService extends LifelineService {
         return paymentRepository.findByMemberIsNullAndIsLotteryPayment(true);
     }
 
+    public List<Payment> findPaymentsForLastMonth() {
+        DateTime oneMonthAgo = DateTime.now().minusMonths(1);
+        return paymentRepository.findByPaymentDateAfter(oneMonthAgo.toDate());
+    }
+
     public List<Payment> findAllMatchedLotteryPayments() {
         return paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true);
     }
@@ -74,17 +79,24 @@ public class PaymentService extends LifelineService {
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd");
         CSVFormat format = CSVFormat.DEFAULT;
         CSVParser parser = CSVParser.parse(contents, format);
-
+        String paymentDateText;
+        Date date;
+        String accountNumber;
+        String transactionType;
+        String creditAmountText;
+        String description;
+        String name;
+        Float creditAmount;
         for (CSVRecord record : parser) {
-            String paymentDateText = record.get(0);
-            Date date = DateTime.parse(paymentDateText, fmt).toDate();
-            String accountNumber = record.get(2);
-            String transactionType = record.get(4);
-            String creditAmountText = record.get(7);
-            String description = record.get(8);
-            String name = record.get(9);
+            paymentDateText = record.get(0);
+            date = DateTime.parse(paymentDateText, fmt).toDate();
+            accountNumber = record.get(2);
+            transactionType = record.get(4);
+            creditAmountText = record.get(7);
+            description = record.get(8);
+            name = record.get(9);
             if (transactionType.equalsIgnoreCase("CR") && (!creditAmountText.isEmpty())) {
-                Float creditAmount = Float.parseFloat(creditAmountText);
+                creditAmount = Float.parseFloat(creditAmountText);
                 Payment payment = new Payment(date, creditAmount, description, accountNumber, name, true);
                 matchWithMember(payment);
                 payments.add(payment);
@@ -118,7 +130,7 @@ public class PaymentService extends LifelineService {
         String reference = payment.getCreditReference();
         String name = payment.getName();
         String fullDescription = (reference + name).toUpperCase();
-        List<Member> allMembers = memberRepository.findAllByOrderBySurnameAscForenameAsc();
+        List<Member> allMembers = memberRepository.findAll();
         for (Member member : allMembers) {
             if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) && (fullDescription.contains(member.getSurname().toUpperCase()) || fullDescription.contains(member.getForename().toUpperCase()))) {
                 payment.setMember(member);

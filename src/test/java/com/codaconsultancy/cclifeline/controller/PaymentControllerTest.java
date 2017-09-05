@@ -53,7 +53,34 @@ public class PaymentControllerTest extends BaseTest {
     }
 
     @Test
-    public void navigateToPayments() throws Exception {
+    public void navigateToRecentPayments() throws Exception {
+        List<Payment> payments = getPayments();
+        when(paymentService.findPaymentsForLastMonth()).thenReturn(payments);
+        List<Notification> notifications = new ArrayList<>();
+        when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
+
+        ModelAndView modelAndView = paymentController.navigateToPayments("recent");
+
+        assertEquals("payments", modelAndView.getViewName());
+        List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
+        assertEquals(3, foundPayments.size());
+        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002F);
+        assertEquals("FPS CREDIT 3344 LINDSAY", payments.get(0).getCreditReference());
+        assertEquals(240.00F, payments.get(1).getPaymentAmount(), 0.002F);
+        assertEquals("FPS CREDIT 0998 JONES", payments.get(1).getCreditReference());
+        assertEquals(20.00F, payments.get(2).getPaymentAmount(), 0.002F);
+        assertEquals("FPS CREDIT 0101 THOMAS", payments.get(2).getCreditReference());
+        assertSame(notifications, modelAndView.getModel().get("notifications"));
+        assertEquals("Recent payments", modelAndView.getModel().get("title"));
+        assertEquals("disabled", modelAndView.getModel().get("recentTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("matchedTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("unmatchedTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("nonLotteryTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("allTabStatus"));
+    }
+
+    @Test
+    public void navigateToAllPayments() throws Exception {
         List<Payment> payments = getPayments();
         when(paymentService.findAllPayments()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
@@ -73,10 +100,10 @@ public class PaymentControllerTest extends BaseTest {
         assertSame(notifications, modelAndView.getModel().get("notifications"));
         assertEquals("All payments", modelAndView.getModel().get("title"));
         assertEquals("disabled", modelAndView.getModel().get("allTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("recentTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("matchedTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("unmatchedTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("nonLotteryTabStatus"));
-
     }
 
     @Test
@@ -123,6 +150,7 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals(3, foundPayments.size());
         assertEquals("Matched payments", modelAndView.getModel().get("title"));
         assertEquals("enabled", modelAndView.getModel().get("allTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("recentTabStatus"));
         assertEquals("disabled", modelAndView.getModel().get("matchedTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("unmatchedTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("nonLotteryTabStatus"));
@@ -143,6 +171,7 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals(3, foundPayments.size());
         assertSame(notifications, modelAndView.getModel().get("notifications"));
         assertEquals("enabled", modelAndView.getModel().get("allTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("recentTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("matchedTabStatus"));
         assertEquals("disabled", modelAndView.getModel().get("unmatchedTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("nonLotteryTabStatus"));
@@ -163,6 +192,7 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals(3, foundPayments.size());
         assertSame(notifications, modelAndView.getModel().get("notifications"));
         assertEquals("enabled", modelAndView.getModel().get("allTabStatus"));
+        assertEquals("enabled", modelAndView.getModel().get("recentTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("matchedTabStatus"));
         assertEquals("enabled", modelAndView.getModel().get("unmatchedTabStatus"));
         assertEquals("disabled", modelAndView.getModel().get("nonLotteryTabStatus"));

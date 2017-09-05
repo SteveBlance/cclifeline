@@ -27,6 +27,14 @@ public class MemberController extends LifelineController {
 
     private static final String ENABLED = "enabled";
     private static final String DISABLED = "disabled";
+    public static final String MEMBER_PAGE = "member";
+    public static final String ADD_MEMBER_PAGE = "add-member";
+    public static final String EDIT_MEMBER_PAGE = "edit-member";
+    public static final String ADD_ADDRESS_PAGE = "add-address";
+    public static final String EDIT_ADDRESS_PAGE = "edit-address";
+    public static final String LOGIN_PAGE = "login";
+    public static final String LOGOUT_PAGE = "logout";
+    public static final String EXPORT_DATA_PAGE = "export-data";
 
     @Autowired
     private MemberService memberService;
@@ -60,26 +68,32 @@ public class MemberController extends LifelineController {
         String allTabStatus = ENABLED;
         String eligibleTabStatus = ENABLED;
         String ineligibleTabStatus = ENABLED;
-        if (filter.equalsIgnoreCase("current")) {
-            members = memberService.findCurrentMembers();
-            title = "Current members";
-            currentTabStatus = DISABLED;
-        } else if (filter.equalsIgnoreCase("former")) {
-            members = memberService.findFormerMembers();
-            title = "Former members";
-            formerTabStatus = DISABLED;
-        } else if (filter.equalsIgnoreCase("eligible")) {
-            members = memberService.findEligibleMembers();
-            title = "Eligible for draw";
-            eligibleTabStatus = DISABLED;
-        } else if (filter.equalsIgnoreCase("ineligible")) {
-            members = memberService.findIneligibleMembers();
-            title = "Ineligible for draw";
-            ineligibleTabStatus = DISABLED;
-        } else {
-            members = memberService.findAllMembers();
-            title = "All members";
-            allTabStatus = DISABLED;
+        switch (filter) {
+            case "current":
+                members = memberService.findCurrentMembers();
+                title = "Current members";
+                currentTabStatus = DISABLED;
+                break;
+            case "former":
+                members = memberService.findFormerMembers();
+                title = "Former members";
+                formerTabStatus = DISABLED;
+                break;
+            case "eligible":
+                members = memberService.findEligibleMembers();
+                title = "Eligible for draw";
+                eligibleTabStatus = DISABLED;
+                break;
+            case "ineligible":
+                members = memberService.findIneligibleMembers();
+                title = "Ineligible for draw";
+                ineligibleTabStatus = DISABLED;
+                break;
+            default:
+                members = memberService.findAllMembers();
+                title = "All members";
+                allTabStatus = DISABLED;
+                break;
         }
         for (Member member : members) {
             if (memberService.isEligibleForDraw(member)) {
@@ -106,13 +120,13 @@ public class MemberController extends LifelineController {
         member.setIsEligibleForDraw(isEligible);
         MemberViewBean memberViewBean = member.toViewBean();
         memberViewBean.setLastPayment(paymentService.findLatestLotteryPayment(member));
-        return modelAndView("member").addObject("member", memberViewBean);
+        return modelAndView(MEMBER_PAGE).addObject("member", memberViewBean);
     }
 
     @RequestMapping(value = "/add-member", method = RequestMethod.GET)
     public ModelAndView navigateToAddMember() {
         MemberViewBean member = new MemberViewBean();
-        return modelAndView("add-member").addObject("member", member);
+        return modelAndView(ADD_MEMBER_PAGE).addObject("member", member);
     }
 
     @RequestMapping(value = "/member", method = RequestMethod.POST)
@@ -131,7 +145,7 @@ public class MemberController extends LifelineController {
     @RequestMapping(value = "/edit-member/{number}", method = RequestMethod.GET)
     public ModelAndView navigateToEditMember(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
-        return modelAndView("edit-member").addObject("member", member);
+        return modelAndView(EDIT_MEMBER_PAGE).addObject("member", member);
     }
 
     @RequestMapping(value = "/edit-member", method = RequestMethod.POST)
@@ -151,7 +165,7 @@ public class MemberController extends LifelineController {
         AddressViewBean addressViewBean = new AddressViewBean();
         addressViewBean.setIsActive(true);
         addressViewBean.setMemberId(memberId);
-        return modelAndView("add-address").addObject("address", addressViewBean);
+        return modelAndView(ADD_ADDRESS_PAGE).addObject("address", addressViewBean);
     }
 
     @RequestMapping(value = "/member/{membershipNumber}/edit-address", method = RequestMethod.GET)
@@ -165,7 +179,7 @@ public class MemberController extends LifelineController {
         }
         addressViewBean.setIsActive(true);
         addressViewBean.setMemberId(member.getId());
-        return modelAndView("edit-address").addObject("address", addressViewBean).addObject("member", member);
+        return modelAndView(EDIT_ADDRESS_PAGE).addObject("address", addressViewBean).addObject("member", member);
     }
 
     @RequestMapping(value = "/address", method = RequestMethod.POST)
@@ -184,12 +198,12 @@ public class MemberController extends LifelineController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView navigateToLogin() {
-        return modelAndView("login");
+        return modelAndView(LOGIN_PAGE);
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ModelAndView navigateToLogout() {
-        return modelAndView("logout");
+        return modelAndView(LOGOUT_PAGE);
     }
 
     @RequestMapping(value = "/reports", method = RequestMethod.GET)
@@ -199,6 +213,6 @@ public class MemberController extends LifelineController {
 
     @RequestMapping(value = "/export-data", method = RequestMethod.GET)
     public ModelAndView navigateExportData() {
-        return modelAndView("export-data");
+        return modelAndView(EXPORT_DATA_PAGE);
     }
 }

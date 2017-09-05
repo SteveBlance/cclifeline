@@ -14,7 +14,7 @@ public class Prize {
     @Column(name = "PRIZE")
     private String prize;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "WINNER_ID")
     private Member winner;
 
@@ -24,7 +24,7 @@ public class Prize {
     @Column(name = "PRIZE_COLLECTED_DATE")
     private Date prizeCollectedDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "LOTTERY_DRAW_ID")
     private LotteryDraw lotteryDraw;
 

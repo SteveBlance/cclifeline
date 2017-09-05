@@ -55,7 +55,7 @@ public class Payment {
     @Column(name = "COMMENTS")
     private String comments;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
     public Long getId() {
