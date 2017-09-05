@@ -27,6 +27,7 @@ import java.util.List;
 public class PaymentController extends LifelineController {
 
     private static final String ENABLED = "enabled";
+    private static final String DISABLED = "disabled";
     private static final String MEMBER_PAYMENTS_PAGE = "member-payments";
     private static final String PAYMENT_DETAILS_PAGE = "payment";
     private static final String ADD_PAYMENT_PAGE = "add-payment";
