@@ -41,7 +41,7 @@ public class PaymentRepositoryTest extends BaseTest {
         payment2 = new Payment(date2, 8.66F, "FPS CREDIT 0222 LINDSAY", "Legacy Current Account", "BOB SMITH", true);
         payment3 = new Payment(date2, 20.00F, "FPS CREDIT 0299 SMITH", "Lifeline Current Account", "BOB SMITH", true);
         payment3.setMember(member);
-        payment4 = new Payment(date2, 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JOHN SMITH", true);
+        payment4 = new Payment(date2, 500.00F, "POTY SPONSORSHIP", "Lifeline Current Account", "JOHN SMITH", false);
         payment4.setLotteryPayment(false);
         entityManager.persist(payment1);
         entityManager.persist(payment2);
@@ -64,6 +64,16 @@ public class PaymentRepositoryTest extends BaseTest {
     }
 
     @Test
+    public void findAllPayments() throws Exception {
+        List<PaymentViewBean> allPayments = paymentRepository.findAllPayments();
+        assertEquals(4, allPayments.size());
+        assertEquals("5566: Jim Saunders", allPayments.get(0).getMemberDisplayText());
+        assertNull(allPayments.get(1).getMemberDisplayText());
+        assertEquals("5566: Jim Saunders", allPayments.get(2).getMemberDisplayText());
+        assertNull(allPayments.get(3).getMemberDisplayText());
+    }
+
+    @Test
     public void findByMember() throws Exception {
         List<Payment> paymentsByMember = paymentRepository.findByMember(member);
 
@@ -81,6 +91,19 @@ public class PaymentRepositoryTest extends BaseTest {
         List<Payment> allPayments = paymentRepository.findAll();
         assertEquals(4, allPayments.size());
         List<Payment> payments = paymentRepository.findByPaymentDateAfter(date);
+        assertEquals(3, payments.size());
+        assertTrue(payments.get(0).getPaymentDate().after(date));
+        assertTrue(payments.get(1).getPaymentDate().after(date));
+        assertTrue(payments.get(2).getPaymentDate().after(date));
+    }
+
+    @Test
+    public void findAllPaymentsAfter() throws Exception {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        Date date = simpleDateFormat.parse("29/11/2014");
+        List<PaymentViewBean> allPayments = paymentRepository.findAllPayments();
+        assertEquals(4, allPayments.size());
+        List<PaymentViewBean> payments = paymentRepository.findAllPaymentsAfter(date);
         assertEquals(3, payments.size());
         assertTrue(payments.get(0).getPaymentDate().after(date));
         assertTrue(payments.get(1).getPaymentDate().after(date));
@@ -140,7 +163,6 @@ public class PaymentRepositoryTest extends BaseTest {
         assertEquals("Lifeline Current Account", matchedPayments.get(0).getCreditedAccount());
         assertNotNull(matchedPayments.get(0).getMember());
         assertEquals("Saunders", matchedPayments.get(0).getMember().getSurname());
-
     }
 
     @Test
@@ -154,6 +176,14 @@ public class PaymentRepositoryTest extends BaseTest {
         assertEquals("Lifeline Current Account", matchedPayments.get(0).getCreditedAccount());
         assertNotNull(matchedPayments.get(0).getMemberId());
         assertEquals("5566: Jim Saunders", matchedPayments.get(0).getMemberDisplayText());
+    }
+
+    @Test
+    public void findUnmatchedLotteryPayments() {
+        List<PaymentViewBean> unmatchedLotteryPayments = paymentRepository.findUnmatchedLotteryPayments();
+        assertEquals(1, unmatchedLotteryPayments.size());
+        assertEquals(0L, unmatchedLotteryPayments.get(0).getMemberId().longValue());
+        assertEquals("", unmatchedLotteryPayments.get(0).getMemberDisplayText());
     }
 
     @Test
@@ -171,6 +201,13 @@ public class PaymentRepositoryTest extends BaseTest {
         assertEquals(500F, paymentRepository.findByIsLotteryPayment(false).get(0).getPaymentAmount(), 0.002F);
         assertEquals("POTY SPONSORSHIP", paymentRepository.findByIsLotteryPayment(false).get(0).getCreditReference());
         assertEquals(3, paymentRepository.findByIsLotteryPayment(true).size());
+    }
+
+    @Test
+    public void findNonLotteryPayments() {
+        assertEquals(1, paymentRepository.findAllNonLotteryPayments().size());
+        assertEquals(500F, paymentRepository.findAllNonLotteryPayments().get(0).getPaymentAmount(), 0.002F);
+        assertEquals("POTY SPONSORSHIP", paymentRepository.findAllNonLotteryPayments().get(0).getCreditReference());
     }
 
 }
