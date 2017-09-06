@@ -88,9 +88,9 @@ public class PaymentRepositoryTest extends BaseTest {
     public void findByPaymentDateAfter() throws Exception {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         Date date = simpleDateFormat.parse("29/11/2014");
-        List<Payment> allPayments = paymentRepository.findAll();
+        List<PaymentViewBean> allPayments = paymentRepository.findAllPayments();
         assertEquals(4, allPayments.size());
-        List<Payment> payments = paymentRepository.findByPaymentDateAfter(date);
+        List<PaymentViewBean> payments = paymentRepository.findAllPaymentsAfter(date);
         assertEquals(3, payments.size());
         assertTrue(payments.get(0).getPaymentDate().after(date));
         assertTrue(payments.get(1).getPaymentDate().after(date));

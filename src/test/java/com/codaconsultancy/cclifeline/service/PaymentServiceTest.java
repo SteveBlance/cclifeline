@@ -7,6 +7,7 @@ import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentReferenceRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
+import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.joda.time.DateTime;
 import org.junit.Rule;
 import org.junit.Test;
@@ -80,18 +81,18 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
     @Test
     public void findAllPayments() throws Exception {
-        List<Payment> payments = new ArrayList<>();
+        List<PaymentViewBean> payments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
         Date paymentDate = sdf.parse("2017/01/03 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
-        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH", true);
+        PaymentViewBean payment1 = new PaymentViewBean(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
+        PaymentViewBean payment2 = new PaymentViewBean(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
+        PaymentViewBean payment3 = new PaymentViewBean(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH", true);
         payments.add(payment1);
         payments.add(payment2);
         payments.add(payment3);
-        when(paymentRepository.findAll()).thenReturn(payments);
+        when(paymentRepository.findAllPayments()).thenReturn(payments);
 
-        List<Payment> foundPayments = paymentService.findAllPayments();
+        List<PaymentViewBean> foundPayments = paymentService.findAllPayments();
 
         assertEquals(3, foundPayments.size());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
@@ -99,13 +100,13 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
     @Test
     public void findPaymentsForLastMonth() {
-        List<Payment> payments = new ArrayList<>();
-        when(paymentRepository.findByPaymentDateAfter(any(Date.class))).thenReturn(payments);
+        List<PaymentViewBean> payments = new ArrayList<>();
+        when(paymentRepository.findAllPaymentsAfter(any(Date.class))).thenReturn(payments);
 
-        List<Payment> recentPayments = paymentService.findPaymentsForLastMonth();
+        List<PaymentViewBean> recentPayments = paymentService.findPaymentsForLastMonth();
 
         ArgumentCaptor<Date> dateArgumentCaptor = ArgumentCaptor.forClass(Date.class);
-        verify(paymentRepository, times(1)).findByPaymentDateAfter(dateArgumentCaptor.capture());
+        verify(paymentRepository, times(1)).findAllPaymentsAfter(dateArgumentCaptor.capture());
         assertSame(payments, recentPayments);
         Date now = DateTime.now().toDate();
         Date threeWeeksAgo = DateTime.now().minusWeeks(3).toDate();
@@ -118,18 +119,18 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
     @Test
     public void findAllUnmatchedPayments() throws Exception {
-        List<Payment> unmatchedPayments = new ArrayList<>();
+        List<PaymentViewBean> unmatchedPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
-        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH", true);
+        PaymentViewBean payment1 = new PaymentViewBean(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
+        PaymentViewBean payment2 = new PaymentViewBean(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
+        PaymentViewBean payment3 = new PaymentViewBean(paymentDate, 20.00F, "FPS CREDIT 0111 MCDONNELL", "83776900435093BZ", "BOB SMITH", true);
         unmatchedPayments.add(payment1);
         unmatchedPayments.add(payment2);
         unmatchedPayments.add(payment3);
-        when(paymentRepository.findByMemberIsNullAndIsLotteryPayment(true)).thenReturn(unmatchedPayments);
+        when(paymentRepository.findUnmatchedLotteryPayments()).thenReturn(unmatchedPayments);
 
-        List<Payment> foundPayments = paymentService.findAllUnmatchedPayments();
+        List<PaymentViewBean> foundPayments = paymentService.findAllUnmatchedPayments();
 
         assertEquals(3, foundPayments.size());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
@@ -137,38 +138,35 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
     @Test
     public void findAllMatchedLotteryPayments() throws Exception {
-        List<Payment> matchedPayments = new ArrayList<>();
+        List<PaymentViewBean> matchedPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Member member = new Member();
-        member.setMembershipNumber(1234L);
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
-        payment1.setMember(member);
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true);
-        payment2.setMember(member);
+        PaymentViewBean payment1 = new PaymentViewBean(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true, 999L, "0101: Bob Smith");
+        PaymentViewBean payment2 = new PaymentViewBean(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true, 999L, "0101: Bob Harris");
         matchedPayments.add(payment1);
         matchedPayments.add(payment2);
-        when(paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true)).thenReturn(matchedPayments);
+        when(paymentRepository.findMatchedLotteryPayments()).thenReturn(matchedPayments);
 
-        List<Payment> foundPayments = paymentService.findAllMatchedLotteryPayments();
+        List<PaymentViewBean> foundPayments = paymentService.findAllMatchedLotteryPayments();
 
         assertEquals(2, foundPayments.size());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
-        assertEquals(1234L, foundPayments.get(0).getMember().getMembershipNumber().longValue());
+        assertEquals(999L, foundPayments.get(0).getMemberId().longValue());
+        assertEquals("0101: Bob Smith", foundPayments.get(0).getMemberDisplayText());
     }
 
     @Test
     public void findAllNonLotteryPayments() throws Exception {
-        List<Payment> nonLotteryPayments = new ArrayList<>();
+        List<PaymentViewBean> nonLotteryPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 100.00F, "POTY SPONSOR", "83776900435093BZ", "BOB SMITH", true);
-        Payment payment2 = new Payment(paymentDate, 500.00F, "POTY TABLE BOOKING", "83776900435093BZ", "ALEX REID", true);
+        PaymentViewBean payment1 = new PaymentViewBean(paymentDate, 100.00F, "POTY SPONSOR", "83776900435093BZ", "BOB SMITH", true);
+        PaymentViewBean payment2 = new PaymentViewBean(paymentDate, 500.00F, "POTY TABLE BOOKING", "83776900435093BZ", "ALEX REID", true);
         nonLotteryPayments.add(payment1);
         nonLotteryPayments.add(payment2);
-        when(paymentRepository.findByIsLotteryPayment(false)).thenReturn(nonLotteryPayments);
+        when(paymentRepository.findAllNonLotteryPayments()).thenReturn(nonLotteryPayments);
 
-        List<Payment> foundPayments = paymentService.findAllNonLotteryPayments();
+        List<PaymentViewBean> foundPayments = paymentService.findAllNonLotteryPayments();
 
         assertEquals(2, foundPayments.size());
         assertEquals("POTY SPONSOR", foundPayments.get(0).getCreditReference());

@@ -54,7 +54,7 @@ public class PaymentControllerTest extends BaseTest {
 
     @Test
     public void navigateToRecentPayments() throws Exception {
-        List<Payment> payments = getPayments();
+        List<PaymentViewBean> payments = getPaymentsAsViewBeans();
         when(paymentService.findPaymentsForLastMonth()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
@@ -81,7 +81,7 @@ public class PaymentControllerTest extends BaseTest {
 
     @Test
     public void navigateToAllPayments() throws Exception {
-        List<Payment> payments = getPayments();
+        List<PaymentViewBean> payments = getPaymentsAsViewBeans();
         when(paymentService.findAllPayments()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
@@ -137,7 +137,7 @@ public class PaymentControllerTest extends BaseTest {
 
     @Test
     public void navigateToPaymentsWithMatchedFilter() throws Exception {
-        List<Payment> payments = getPayments();
+        List<PaymentViewBean> payments = getPaymentsAsViewBeans();
         when(paymentService.findAllMatchedLotteryPayments()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
@@ -145,7 +145,7 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.navigateToPayments("matched");
 
         assertEquals("payments", modelAndView.getViewName());
-        List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
+        List<PaymentViewBean> foundPayments = (List<PaymentViewBean>) modelAndView.getModel().get("payments");
         assertSame(notifications, modelAndView.getModel().get("notifications"));
         assertEquals(3, foundPayments.size());
         assertEquals("Matched payments", modelAndView.getModel().get("title"));
@@ -159,7 +159,7 @@ public class PaymentControllerTest extends BaseTest {
 
     @Test
     public void navigateToPaymentsWithUnmatchedFilter() throws Exception {
-        List<Payment> payments = getPayments();
+        List<PaymentViewBean> payments = getPaymentsAsViewBeans();
         when(paymentService.findAllUnmatchedPayments()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
@@ -167,7 +167,7 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.navigateToPayments("unmatched");
 
         assertEquals("payments", modelAndView.getViewName());
-        List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
+        List<PaymentViewBean> foundPayments = (List<PaymentViewBean>) modelAndView.getModel().get("payments");
         assertEquals(3, foundPayments.size());
         assertSame(notifications, modelAndView.getModel().get("notifications"));
         assertEquals("enabled", modelAndView.getModel().get("allTabStatus"));
@@ -180,7 +180,7 @@ public class PaymentControllerTest extends BaseTest {
 
     @Test
     public void navigateToPaymentsWithNonLotteryFilter() throws Exception {
-        List<Payment> payments = getPayments();
+        List<PaymentViewBean> payments = getPaymentsAsViewBeans();
         when(paymentService.findAllNonLotteryPayments()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
@@ -188,7 +188,7 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.navigateToPayments("non-lottery");
 
         assertEquals("payments", modelAndView.getViewName());
-        List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
+        List<PaymentViewBean> foundPayments = (List<PaymentViewBean>) modelAndView.getModel().get("payments");
         assertEquals(3, foundPayments.size());
         assertSame(notifications, modelAndView.getModel().get("notifications"));
         assertEquals("enabled", modelAndView.getModel().get("allTabStatus"));
@@ -197,19 +197,6 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals("enabled", modelAndView.getModel().get("unmatchedTabStatus"));
         assertEquals("disabled", modelAndView.getModel().get("nonLotteryTabStatus"));
         assertEquals("Non-lottery payments", modelAndView.getModel().get("title"));
-    }
-
-    private List<Payment> getPayments() throws ParseException {
-        List<Payment> payments = new ArrayList<>();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date paymentDate = sdf.parse("20170103 ");
-        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 3344 LINDSAY", "83776900435093BZ", "BOB SMITH", true);
-        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0998 JONES", "83776900435093BZ", "BOB SMITH", true);
-        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
-        payments.add(payment1);
-        payments.add(payment2);
-        payments.add(payment3);
-        return payments;
     }
 
     @Test
@@ -446,6 +433,29 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals("payment", modelAndView.getViewName());
         assertEquals("alert alert-success", modelAndView.getModel().get("alertClass"));
         assertEquals("Payment marked as a lottery payment", modelAndView.getModel().get("alertMessage"));
+    }
+
+
+    private List<Payment> getPayments() throws ParseException {
+        List<Payment> payments = new ArrayList<>();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        Payment payment1 = new Payment(paymentDate, 20.00F, "FPS CREDIT 3344 LINDSAY", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment2 = new Payment(paymentDate, 240.00F, "FPS CREDIT 0998 JONES", "83776900435093BZ", "BOB SMITH", true);
+        Payment payment3 = new Payment(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
+        payments.add(payment1);
+        payments.add(payment2);
+        payments.add(payment3);
+        return payments;
+    }
+
+    private List<PaymentViewBean> getPaymentsAsViewBeans() throws Exception {
+        List<PaymentViewBean> paymentViewBeans = new ArrayList<>();
+        List<Payment> payments = getPayments();
+        for (Payment payment : payments) {
+            paymentViewBeans.add(payment.toViewBean());
+        }
+        return paymentViewBeans;
     }
 
 }

@@ -47,7 +47,7 @@ public class PaymentController extends LifelineController {
 
     @RequestMapping(value = "/payments/{filter}", method = RequestMethod.GET)
     public ModelAndView navigateToPayments(@PathVariable String filter) {
-        List<Payment> payments;
+        List<PaymentViewBean> payments;
         String title;
         String recentTabStatus = ENABLED;
         String matchedTabStatus = ENABLED;

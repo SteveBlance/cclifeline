@@ -6,6 +6,7 @@ import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentReferenceRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
+import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -35,30 +36,25 @@ public class PaymentService extends LifelineService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public List<Payment> findAllPayments() {
-        return paymentRepository.findAll();
+    public List<PaymentViewBean> findAllPayments() {
+        return paymentRepository.findAllPayments();
     }
 
-    public List<Payment> findAllUnmatchedPayments() {
-        return paymentRepository.findByMemberIsNullAndIsLotteryPayment(true);
+    public List<PaymentViewBean> findAllUnmatchedPayments() {
+        return paymentRepository.findUnmatchedLotteryPayments();
     }
 
-    public List<Payment> findPaymentsForLastMonth() {
+    public List<PaymentViewBean> findPaymentsForLastMonth() {
         DateTime oneMonthAgo = DateTime.now().minusMonths(1);
-        return paymentRepository.findByPaymentDateAfter(oneMonthAgo.toDate());
+        return paymentRepository.findAllPaymentsAfter(oneMonthAgo.toDate());
     }
 
-    public List<Payment> findAllMatchedLotteryPayments() {
-        return paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true);
+    public List<PaymentViewBean> findAllMatchedLotteryPayments() {
+        return paymentRepository.findMatchedLotteryPayments();
     }
 
-    //TODO: Do this
-//    public List<PaymentViewBean> findAllMatchedLotteryPayments() {
-//        return paymentRepository.findMatchedLotteryPayments(true);
-//    }
-
-    public List<Payment> findAllNonLotteryPayments() {
-        return paymentRepository.findByIsLotteryPayment(false);
+    public List<PaymentViewBean> findAllNonLotteryPayments() {
+        return paymentRepository.findAllNonLotteryPayments();
     }
 
     public Payment savePayment(Payment payment) {
