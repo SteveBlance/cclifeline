@@ -141,18 +141,21 @@ public class PaymentServiceTest extends LifelineServiceTest {
         List<PaymentViewBean> matchedPayments = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date paymentDate = sdf.parse("20170103 ");
-        PaymentViewBean payment1 = new PaymentViewBean(paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true, 999L, "0101: Bob Smith");
-        PaymentViewBean payment2 = new PaymentViewBean(paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true, 999L, "0101: Bob Harris");
+        PaymentViewBean payment1 = new PaymentViewBean(75L, paymentDate, 20.00F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true, 999L, "0101: Bob Smith");
+        PaymentViewBean payment2 = new PaymentViewBean(76L, paymentDate, 240.00F, "FPS CREDIT 0155 HARRIS", "83776900435093BZ", "BOB SMITH", true, 999L, "0101: Bob Harris");
         matchedPayments.add(payment1);
         matchedPayments.add(payment2);
         when(paymentRepository.findMatchedLotteryPayments()).thenReturn(matchedPayments);
 
         List<PaymentViewBean> foundPayments = paymentService.findAllMatchedLotteryPayments();
 
+        verify(paymentRepository, times(1)).findMatchedLotteryPayments();
         assertEquals(2, foundPayments.size());
+        assertEquals(75L, foundPayments.get(0).getId().longValue());
         assertEquals("FPS CREDIT 0101 THOMAS", foundPayments.get(0).getCreditReference());
         assertEquals(999L, foundPayments.get(0).getMemberId().longValue());
         assertEquals("0101: Bob Smith", foundPayments.get(0).getMemberDisplayText());
+        assertEquals(76L, foundPayments.get(1).getId().longValue());
     }
 
     @Test

@@ -141,31 +141,6 @@ public class PaymentRepositoryTest extends BaseTest {
     }
 
     @Test
-    public void findByMemberIsNullAndIsLotteryPayment() throws Exception {
-        List<Payment> unmatchedPayments = paymentRepository.findByMemberIsNullAndIsLotteryPayment(true);
-
-        assertEquals(1, unmatchedPayments.size());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        assertEquals("30/11/2014", simpleDateFormat.format(unmatchedPayments.get(0).getPaymentDate()));
-        assertEquals(8.66F, unmatchedPayments.get(0).getPaymentAmount(), 0.001F);
-        assertEquals("Legacy Current Account", unmatchedPayments.get(0).getCreditedAccount());
-        assertNull(unmatchedPayments.get(0).getMember());
-    }
-
-    @Test
-    public void findByMemberIsNotNullAndIsLotteryPayment() throws Exception {
-        List<Payment> matchedPayments = paymentRepository.findByMemberIsNotNullAndIsLotteryPayment(true);
-
-        assertEquals(2, matchedPayments.size());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        assertEquals("23/11/2014", simpleDateFormat.format(matchedPayments.get(0).getPaymentDate()));
-        assertEquals(20.00F, matchedPayments.get(0).getPaymentAmount(), 0.001F);
-        assertEquals("Lifeline Current Account", matchedPayments.get(0).getCreditedAccount());
-        assertNotNull(matchedPayments.get(0).getMember());
-        assertEquals("Saunders", matchedPayments.get(0).getMember().getSurname());
-    }
-
-    @Test
     public void findMatchedLotteryPayments() throws Exception {
         List<PaymentViewBean> matchedPayments = paymentRepository.findMatchedLotteryPayments();
 
@@ -193,14 +168,6 @@ public class PaymentRepositoryTest extends BaseTest {
         assertEquals(40.00D, totalPayment, 0.001D);
         totalPayment = paymentRepository.getTotalLotteryPaymentSince(new DateTime().toDate(), member.getId());
         assertEquals(0.00D, totalPayment, 0.001D);
-    }
-
-    @Test
-    public void findByIsLotteryPayment() {
-        assertEquals(1, paymentRepository.findByIsLotteryPayment(false).size());
-        assertEquals(500F, paymentRepository.findByIsLotteryPayment(false).get(0).getPaymentAmount(), 0.002F);
-        assertEquals("POTY SPONSORSHIP", paymentRepository.findByIsLotteryPayment(false).get(0).getCreditReference());
-        assertEquals(3, paymentRepository.findByIsLotteryPayment(true).size());
     }
 
     @Test

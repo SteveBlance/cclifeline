@@ -23,7 +23,8 @@ public class PaymentViewBean {
         this.isLotteryPayment = isLotteryPayment;
     }
 
-    public PaymentViewBean(Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name, boolean isLotteryPayment, Long memberId, String memberDisplayText) {
+    public PaymentViewBean(Long id, Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name, boolean isLotteryPayment, Long memberId, String memberDisplayText) {
+        this.id = id;
         this.paymentDate = paymentDate;
         this.paymentAmount = paymentAmount;
         this.creditReference = creditReference;
