@@ -16,6 +16,24 @@ import java.util.List;
 
 public class MemberViewBean {
 
+    public MemberViewBean() {
+    }
+
+    public MemberViewBean(Long id, Long membershipNumber, String forename, String surname, String membershipType, String status, String payerType, Date joinDate, Date leaveDate, String email, String landlineNumber, String mobileNumber) {
+        this.id = id;
+        this.membershipNumber = membershipNumber;
+        this.forename = forename;
+        this.surname = surname;
+        this.membershipType = membershipType;
+        this.status = status;
+        this.payerType = payerType;
+        this.joinDate = joinDate;
+        this.leaveDate = leaveDate;
+        this.email = email;
+        this.landlineNumber = landlineNumber;
+        this.mobileNumber = mobileNumber;
+    }
+
     private Long id;
 
     private Long membershipNumber;

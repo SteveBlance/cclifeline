@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.domain;
 
+import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,9 +15,9 @@ public class SecuritySubjectTest {
     public void setUp() throws Exception {
         securitySubject = new SecuritySubject();
         securitySubject.setId(93L);
-        securitySubject.setForename("Ross");
+        securitySubject.setForename("Bill");
         securitySubject.setSurname("Lindsay");
-        securitySubject.setUsername("ross");
+        securitySubject.setUsername("bill");
         securitySubject.setPassword("passw0rD");
         securitySubject.setFailedLoginAttempts(3);
         securitySubject.setAccountLocked(true);
@@ -30,7 +31,7 @@ public class SecuritySubjectTest {
 
     @Test
     public void getForename() {
-        assertEquals("Ross", securitySubject.getForename());
+        assertEquals("Bill", securitySubject.getForename());
     }
 
     @Test
@@ -40,7 +41,7 @@ public class SecuritySubjectTest {
 
     @Test
     public void getUsername() {
-        assertEquals("ross", securitySubject.getUsername());
+        assertEquals("bill", securitySubject.getUsername());
     }
 
     @Test
@@ -61,6 +62,17 @@ public class SecuritySubjectTest {
     @Test
     public void isPasswordToBeChanged() {
         assertTrue(securitySubject.isPasswordToBeChanged());
+    }
+
+    @Test
+    public void toViewBean() {
+        SecuritySubjectViewBean securitySubjectViewBean = securitySubject.toViewBean();
+        assertEquals("bill", securitySubjectViewBean.getUsername());
+        assertEquals("Bill", securitySubjectViewBean.getForename());
+        assertEquals("Lindsay", securitySubjectViewBean.getSurname());
+        assertEquals("passw0rD", securitySubjectViewBean.getPassword());
+        assertEquals(93L, securitySubjectViewBean.getId().longValue());
+        assertTrue(securitySubjectViewBean.isAccountLocked());
     }
 
 }

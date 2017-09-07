@@ -1,11 +1,11 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
-import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
+import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,12 +84,12 @@ public class LotteryDrawController extends LifelineController {
             return navigateToPrepareDraw();
         }
         List<Prize> prizes = lotteryDrawViewBean.getPrizes();
-        List<Member> membersDrawEntries = memberService.fetchMemberDrawEntries();
+        List<MemberViewBean> membersDrawEntries = memberService.fetchMemberDrawEntries();
 
         for (Prize prize : prizes) {
             int index = ThreadLocalRandom.current().nextInt(membersDrawEntries.size());
-            Member winner = membersDrawEntries.get(index);
-            prize.setWinner(winner);
+            MemberViewBean winner = membersDrawEntries.get(index);
+            prize.setWinner(winner.toEntity());
             removeAllEntriesForWinner(winner.getId(), membersDrawEntries);
         }
         lotteryDrawViewBean.setNumberOfPrizes(prizes.size());
@@ -101,9 +101,9 @@ public class LotteryDrawController extends LifelineController {
         return navigateToViewDrawResult(lotteryDrawViewBean);
     }
 
-    private void removeAllEntriesForWinner(Long winnerId, List<Member> membersDrawEntries) {
-        for (Iterator<Member> iterator = membersDrawEntries.iterator(); iterator.hasNext(); ) {
-            Member member = iterator.next();
+    private void removeAllEntriesForWinner(Long winnerId, List<MemberViewBean> membersDrawEntries) {
+        for (Iterator<MemberViewBean> iterator = membersDrawEntries.iterator(); iterator.hasNext(); ) {
+            MemberViewBean member = iterator.next();
             Long id = member.getId();
             if (id.equals(winnerId)) {
                 iterator.remove();

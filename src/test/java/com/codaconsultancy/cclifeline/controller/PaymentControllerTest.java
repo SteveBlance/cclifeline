@@ -326,6 +326,89 @@ public class PaymentControllerTest extends BaseTest {
     }
 
     @Test
+    public void editPayment_success() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ", "BOB SMITH", true);
+        paymentViewBean.setId(367L);
+        paymentViewBean.setMemberId(555L);
+        BindingResult bindingResult = getBindingResult("payment");
+        ArgumentCaptor<Payment> paymentArgumentCaptor = ArgumentCaptor.forClass(Payment.class);
+        Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
+        member.setId(555L);
+        when(memberService.findMemberById(member.getId())).thenReturn(member);
+        Payment payment = paymentViewBean.toEntity();
+        when(paymentService.updatePayment(paymentArgumentCaptor.capture())).thenReturn(payment);
+
+        ModelAndView modelAndView = paymentController.editPayment(paymentViewBean, bindingResult);
+
+        verify(memberService, times(1)).findMemberById(555L);
+        verify(paymentService, never()).savePaymentReference(any(PaymentReference.class));
+        verify(paymentService, times(1)).updatePayment(paymentArgumentCaptor.capture());
+        Payment updatedPayment = paymentArgumentCaptor.getValue();
+        assertEquals(367L, updatedPayment.getId().longValue());
+        assertEquals(12.23F, updatedPayment.getPaymentAmount(), 0.002F);
+        assertEquals("f@mail.com", updatedPayment.getMember().getEmail());
+        assertEquals("payment", modelAndView.getViewName());
+    }
+
+    @Test
+    public void editPaymentAndStoreReference_success() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ", "BOB SMITH", true);
+        paymentViewBean.setId(367L);
+        paymentViewBean.setMemberId(555L);
+        paymentViewBean.setStoreReferenceForMatching(true);
+        BindingResult bindingResult = getBindingResult("payment");
+        ArgumentCaptor<Payment> paymentArgumentCaptor = ArgumentCaptor.forClass(Payment.class);
+        Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
+        member.setId(555L);
+        when(memberService.findMemberById(member.getId())).thenReturn(member);
+        Payment payment = paymentViewBean.toEntity();
+        when(paymentService.updatePayment(paymentArgumentCaptor.capture())).thenReturn(payment);
+
+        ModelAndView modelAndView = paymentController.editPayment(paymentViewBean, bindingResult);
+
+        ArgumentCaptor<PaymentReference> paymentReferenceArgumentCaptor = ArgumentCaptor.forClass(PaymentReference.class);
+        verify(paymentService, times(1)).savePaymentReference(paymentReferenceArgumentCaptor.capture());
+        PaymentReference savePaymentReference = paymentReferenceArgumentCaptor.getValue();
+        assertEquals("FPS CREDIT 1986 JACK", savePaymentReference.getReference());
+        assertEquals("BOB SMITH", savePaymentReference.getName());
+        verify(memberService, times(1)).findMemberById(555L);
+        verify(paymentService, times(1)).savePaymentReference(any(PaymentReference.class));
+        verify(paymentService, times(1)).updatePayment(paymentArgumentCaptor.capture());
+        Payment updatedPayment = paymentArgumentCaptor.getValue();
+        assertEquals(367L, updatedPayment.getId().longValue());
+        assertEquals(12.23F, updatedPayment.getPaymentAmount(), 0.002F);
+        assertEquals("f@mail.com", updatedPayment.getMember().getEmail());
+        assertEquals("payment", modelAndView.getViewName());
+    }
+
+    @Test
+    public void editPayment_validationErrors() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date paymentDate = sdf.parse("20170103 ");
+        PaymentViewBean paymentViewBean = new PaymentViewBean(paymentDate, 12.23F, "FPS CREDIT 1986 JACK", "83776900435093BZ", "BOB SMITH", true);
+        paymentViewBean.setId(367L);
+        paymentViewBean.setMemberId(555L);
+        BindingResult bindingResult = getBindingResult("payment");
+        bindingResult.addError(new ObjectError("paymentAmount", "Payment amount cannot be blank"));
+        Member member = TestHelper.newMember(3678L, "Fred", "Reid", "f@mail.com", "01323234", null, "Monthly", "Lifeline", null, "Open");
+        member.setId(555L);
+        when(memberService.findMemberById(member.getId())).thenReturn(member);
+        when(memberService.findAllMembersOrderedBySurname()).thenReturn(new ArrayList<>());
+        when(paymentService.findById(367L)).thenReturn(paymentViewBean.toEntity());
+        when(paymentService.findPossiblePayers(any(Payment.class))).thenReturn(new ArrayList<>());
+
+        paymentController.editPayment(paymentViewBean, bindingResult);
+
+        verify(memberService, never()).findMemberById(555L);
+        verify(paymentService, never()).updatePayment(any(Payment.class));
+    }
+
+
+    @Test
     public void navigateToPaymentReferencesForMember() {
         Member member = new Member();
         member.setMembershipNumber(7676L);

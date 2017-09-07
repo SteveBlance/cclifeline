@@ -1,7 +1,6 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
-import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
@@ -9,6 +8,7 @@ import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
+import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -117,12 +117,12 @@ public class LotteryDrawControllerTest extends BaseTest {
         prize2.setPrize("£50");
         newPrizesWithoutWinners.add(prize3);
         lotteryDrawViewBean.setPrizes(newPrizesWithoutWinners);
-        List<Member> memberDrawEntries = new ArrayList<>();
-        Member member1 = new Member();
+        List<MemberViewBean> memberDrawEntries = new ArrayList<>();
+        MemberViewBean member1 = new MemberViewBean();
         member1.setId(1L);
-        Member member2 = new Member();
+        MemberViewBean member2 = new MemberViewBean();
         member2.setId(2L);
-        Member member3 = new Member();
+        MemberViewBean member3 = new MemberViewBean();
         member3.setId(3L);
         memberDrawEntries.add(member1);
         memberDrawEntries.add(member1);

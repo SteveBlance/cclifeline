@@ -3,29 +3,35 @@ package com.codaconsultancy.cclifeline.service;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
+import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class MemberService extends LifelineService {
 
-    public static final String ANNUAL = "Annual";
+    public static final String MONTHLY = "Monthly";
     public static final String QUARTERLY = "Quarterly";
+    public static final String ANNUAL = "Annual";
     public static final String LIFELINE = "Lifeline";
+    public static final int PAYMENT_GRACE_PERIOD_IN_DAYS = 30;
+    public static final String OPEN_STATUS = "Open";
+
     @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
     private PaymentRepository paymentRepository;
 
-    public List<Member> findAllMembers() {
-        List<Member> members = memberRepository.findAll();
-        for (Member member : members) {
+    public List<MemberViewBean> findAllMembers() {
+        List<MemberViewBean> members = memberRepository.findAllMembers();
+        for (MemberViewBean member : members) {
             if (isEligibleForDraw(member)) {
                 member.setIsEligibleForDraw(true);
             } else {
@@ -35,9 +41,9 @@ public class MemberService extends LifelineService {
         return members;
     }
 
-    public List<Member> findCurrentMembers() {
-        List<Member> members = memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open");
-        for (Member member : members) {
+    public List<MemberViewBean> findCurrentMembers() {
+        List<MemberViewBean> members = memberRepository.findCurrentMembers();
+        for (MemberViewBean member : members) {
             if (isEligibleForDraw(member)) {
                 member.setIsEligibleForDraw(true);
             } else {
@@ -47,10 +53,10 @@ public class MemberService extends LifelineService {
         return members;
     }
 
-    public List<Member> findEligibleMembers() {
-        List<Member> currentMembers = findCurrentMembers();
-        List<Member> eligibleMembers = new ArrayList<>();
-        for (Member member : currentMembers) {
+    public List<MemberViewBean> findEligibleMembers() {
+        List<MemberViewBean> currentMembers = findCurrentMembers();
+        List<MemberViewBean> eligibleMembers = new ArrayList<>();
+        for (MemberViewBean member : currentMembers) {
             if (isEligibleForDraw(member)) {
                 member.setIsEligibleForDraw(true);
                 eligibleMembers.add(member);
@@ -59,10 +65,10 @@ public class MemberService extends LifelineService {
         return eligibleMembers;
     }
 
-    public List<Member> findIneligibleMembers() {
-        List<Member> currentMembers = findCurrentMembers();
-        List<Member> ineligibleMembers = new ArrayList<>();
-        for (Member member : currentMembers) {
+    public List<MemberViewBean> findIneligibleMembers() {
+        List<MemberViewBean> currentMembers = findCurrentMembers();
+        List<MemberViewBean> ineligibleMembers = new ArrayList<>();
+        for (MemberViewBean member : currentMembers) {
             if (!isEligibleForDraw(member)) {
                 member.setIsEligibleForDraw(false);
                 ineligibleMembers.add(member);
@@ -71,14 +77,8 @@ public class MemberService extends LifelineService {
         return ineligibleMembers;
     }
 
-    public List<Member> findFormerMembers() {
-        List<Member> formerMembers = new ArrayList<>();
-        formerMembers.addAll(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Cancelled"));
-        formerMembers.addAll(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Closed"));
-        for (Member formerMember : formerMembers) {
-            formerMember.setIsEligibleForDraw(false);
-        }
-        return formerMembers;
+    public List<MemberViewBean> findFormerMembers() {
+        return memberRepository.findFormerMembers();
     }
 
     public List<Member> findAllMembersOrderedBySurname() {
@@ -110,10 +110,10 @@ public class MemberService extends LifelineService {
         return memberRepository.findOne(memberId);
     }
 
-    public List<Member> fetchMemberDrawEntries() {
-        List<Member> memberDrawEntries = new ArrayList<>();
-        List<Member> allMembers = findAllMembers();
-        for (Member member : allMembers) {
+    public List<MemberViewBean> fetchMemberDrawEntries() {
+        List<MemberViewBean> memberDrawEntries = new ArrayList<>();
+        List<MemberViewBean> allMembers = findAllMembers();
+        for (MemberViewBean member : allMembers) {
             if (member.isEligibleForDraw()) {
                 if (isLifelineMember(member)) {
                     // 3 entries for lifeline members
@@ -130,25 +130,22 @@ public class MemberService extends LifelineService {
         return memberDrawEntries;
     }
 
-    private boolean isLifelineMember(Member member) {
+    private boolean isLifelineMember(MemberViewBean member) {
         return member.getMembershipType().equalsIgnoreCase(LIFELINE);
     }
 
-    public boolean isEligibleForDraw(Member member) {
-        //TODO: use stored config for gracePeriodInDays
-        int gracePeriodInDays = 30;
-
-        return member.getStatus().equals("Open") && (paymentsAreUpToDate(member, gracePeriodInDays));
+    public boolean isEligibleForDraw(MemberViewBean member) {
+        return OPEN_STATUS.equals(member.getStatus()) && (paymentsAreUpToDate(member, PAYMENT_GRACE_PERIOD_IN_DAYS));
     }
 
-    private boolean paymentsAreUpToDate(Member member, int gracePeriodInDays) {
+    private boolean paymentsAreUpToDate(MemberViewBean member, int gracePeriodInDays) {
         String payerType = member.getPayerType();
         String membershipType = member.getMembershipType();
         DateTime today = new DateTime();
 
-        DateTime lastExpectedPaymentDate = getLastExpectedPaymentDate(today, payerType).minus(Period.days(gracePeriodInDays));
+        Date lastExpectedPaymentDate = getLastExpectedPaymentDate(today, payerType).minus(Period.days(gracePeriodInDays)).toDate();
 
-        Double paymentTotalThisPeriod = paymentRepository.getTotalLotteryPaymentSince(lastExpectedPaymentDate.toDate(), member.getId());
+        Double paymentTotalThisPeriod = paymentRepository.getTotalLotteryPaymentSince(lastExpectedPaymentDate, member.getId());
 
         return (paymentTotalThisPeriod >= requiredPaymentFrom(payerType, membershipType));
     }
@@ -156,20 +153,34 @@ public class MemberService extends LifelineService {
     private Double requiredPaymentFrom(String payerType, String membershipType) {
         Double requiredPayment;
         if (LIFELINE.equals(membershipType)) {
-            if (ANNUAL.equals(payerType)) {
-                requiredPayment = 240.00D;
-            } else if (QUARTERLY.equals(payerType)) {
-                requiredPayment = 60.00D;
-            } else {
-                requiredPayment = 20.00D;
+            switch (payerType) {
+                case MONTHLY:
+                    requiredPayment = 20.00D;
+                    break;
+                case QUARTERLY:
+                    requiredPayment = 60.00D;
+                    break;
+                case ANNUAL:
+                    requiredPayment = 240.00D;
+                    break;
+                default:
+                    requiredPayment = 20.00D;
+                    break;
             }
         } else {
-            if (ANNUAL.equals(payerType)) {
-                requiredPayment = 104.00D;
-            } else if (QUARTERLY.equals(payerType)) {
-                requiredPayment = 26.00D;
-            } else {
-                requiredPayment = 8.66D;
+            switch (payerType) {
+                case MONTHLY:
+                    requiredPayment = 8.66D;
+                    break;
+                case QUARTERLY:
+                    requiredPayment = 26.00D;
+                    break;
+                case ANNUAL:
+                    requiredPayment = 104.00D;
+                    break;
+                default:
+                    requiredPayment = 8.66D;
+                    break;
             }
         }
         return requiredPayment;
@@ -177,12 +188,19 @@ public class MemberService extends LifelineService {
 
     DateTime getLastExpectedPaymentDate(DateTime fromDate, String payerType) {
         DateTime lastExpectedPaymentDate;
-        if (ANNUAL.equals(payerType)) {
-            lastExpectedPaymentDate = fromDate.minus(Period.years(1));
-        } else if (QUARTERLY.equals(payerType)) {
-            lastExpectedPaymentDate = fromDate.minus(Period.months(3));
-        } else {
-            lastExpectedPaymentDate = fromDate.minus(Period.months(1));
+        switch (payerType) {
+            case MONTHLY:
+                lastExpectedPaymentDate = fromDate.minus(Period.months(1));
+                break;
+            case QUARTERLY:
+                lastExpectedPaymentDate = fromDate.minus(Period.months(3));
+                break;
+            case ANNUAL:
+                lastExpectedPaymentDate = fromDate.minus(Period.years(1));
+                break;
+            default:
+                lastExpectedPaymentDate = fromDate.minus(Period.months(1));
+                break;
         }
         return lastExpectedPaymentDate;
     }

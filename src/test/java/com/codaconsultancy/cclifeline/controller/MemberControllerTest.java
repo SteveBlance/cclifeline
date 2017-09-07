@@ -81,9 +81,9 @@ public class MemberControllerTest extends BaseTest {
 
     @Test
     public void members() throws Exception {
-        List<Member> members = new ArrayList<>();
-        Member member1 = TestHelper.newMember(123L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
-        Member member2 = TestHelper.newMember(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
+        List<MemberViewBean> members = new ArrayList<>();
+        MemberViewBean member1 = TestHelper.newMemberViewBean(123L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        MemberViewBean member2 = TestHelper.newMemberViewBean(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
         members.add(member1);
         members.add(member2);
         when(memberService.countAllCurrentMembers()).thenReturn(22L);
@@ -103,14 +103,16 @@ public class MemberControllerTest extends BaseTest {
     @Test
     public void getMemberDetails() throws Exception {
         long memberNumber = 1234L;
-        Member member1234 = TestHelper.newMember(1234L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
-        when(memberService.findMemberByMembershipNumber(1234L)).thenReturn(member1234);
-        when(memberService.isEligibleForDraw(member1234)).thenReturn(true);
+        Member member1234 = TestHelper.newMember(memberNumber, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        when(memberService.findMemberByMembershipNumber(memberNumber)).thenReturn(member1234);
+        ArgumentCaptor<MemberViewBean> memberViewBeanArgumentCaptor = ArgumentCaptor.forClass(MemberViewBean.class);
+        when(memberService.isEligibleForDraw(memberViewBeanArgumentCaptor.capture())).thenReturn(true);
 
         ModelAndView response = memberController.memberDetails(memberNumber);
 
-        verify(memberService, times(1)).isEligibleForDraw(member1234);
+        verify(memberService, times(1)).isEligibleForDraw(memberViewBeanArgumentCaptor.capture());
         verify(memberService, times(1)).findMemberByMembershipNumber(1234L);
+        assertEquals(1234L, memberViewBeanArgumentCaptor.getValue().getMembershipNumber().longValue());
         assertEquals("Bobby", ((MemberViewBean) response.getModel().get("member")).getForename());
         assertTrue(((MemberViewBean) response.getModel().get("member")).isEligibleForDraw());
         assertEquals("member", response.getViewName());
@@ -176,7 +178,7 @@ public class MemberControllerTest extends BaseTest {
         BindingResult bindingResult = getBindingResult("address");
 
         when(memberService.findMemberById(888L)).thenReturn(member);
-        when(memberService.isEligibleForDraw(member)).thenReturn(true);
+        when(memberService.isEligibleForDraw(member.toViewBean())).thenReturn(true);
         when(memberService.findMemberByMembershipNumber(3399L)).thenReturn(member);
         ArgumentCaptor<Address> addressArgumentCaptor = ArgumentCaptor.forClass(Address.class);
 

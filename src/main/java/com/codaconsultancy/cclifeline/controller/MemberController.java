@@ -61,7 +61,7 @@ public class MemberController extends LifelineController {
 
     @RequestMapping("/members/{filter}")
     public ModelAndView members(@PathVariable String filter) {
-        List<Member> members;
+        List<MemberViewBean> members;
         String title;
         String currentTabStatus = ENABLED;
         String formerTabStatus = ENABLED;
@@ -109,9 +109,9 @@ public class MemberController extends LifelineController {
     @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)
     public ModelAndView memberDetails(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
-        boolean isEligible = memberService.isEligibleForDraw(member);
-        member.setIsEligibleForDraw(isEligible);
         MemberViewBean memberViewBean = member.toViewBean();
+        boolean isEligible = memberService.isEligibleForDraw(memberViewBean);
+        memberViewBean.setIsEligibleForDraw(isEligible);
         memberViewBean.setLastPayment(paymentService.findLatestLotteryPayment(member));
         return modelAndView(MEMBER_PAGE).addObject("member", memberViewBean);
     }

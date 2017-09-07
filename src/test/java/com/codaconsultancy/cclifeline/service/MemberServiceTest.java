@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
+import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
@@ -38,24 +39,24 @@ public class MemberServiceTest extends LifelineServiceTest {
 
     @Test
     public void findAllMembers() {
-        List<Member> members = new ArrayList<>();
-        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        List<MemberViewBean> members = new ArrayList<>();
+        MemberViewBean member1 = TestHelper.newMemberViewBean(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         member1.setId(69L);
-        Member member2 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        MemberViewBean member2 = TestHelper.newMemberViewBean(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         member2.setId(88L);
-        Member member3 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        MemberViewBean member3 = TestHelper.newMemberViewBean(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         member3.setId(919L);
         members.add(member1);
         members.add(member2);
         members.add(member3);
-        when(memberRepository.findAll()).thenReturn(members);
+        when(memberRepository.findAllMembers()).thenReturn(members);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member1.getId()))).thenReturn(30.00D);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member2.getId()))).thenReturn(20.00D);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member3.getId()))).thenReturn(19.00D);
 
-        List<Member> allMembers = memberService.findAllMembers();
+        List<MemberViewBean> allMembers = memberService.findAllMembers();
 
-        verify(memberRepository, times(1)).findAll();
+        verify(memberRepository, times(1)).findAllMembers();
         verify(paymentRepository, times(3)).getTotalLotteryPaymentSince(any(Date.class), any(Long.class));
         assertEquals(3, allMembers.size());
         assertEquals(member1.getId(), allMembers.get(0).getId());
@@ -85,50 +86,47 @@ public class MemberServiceTest extends LifelineServiceTest {
 
     @Test
     public void findCurrentMembers() {
-        List<Member> members = new ArrayList<>();
-        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        List<MemberViewBean> members = new ArrayList<>();
+        MemberViewBean member1 = TestHelper.newMemberViewBean(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         member1.setId(81L);
-        Member member2 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        MemberViewBean member2 = TestHelper.newMemberViewBean(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         member2.setId(50L);
         members.add(member1);
         members.add(member2);
-        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
+        when(memberRepository.findCurrentMembers()).thenReturn(members);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member1.getId()))).thenReturn(20.00D);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member2.getId()))).thenReturn(19.99D);
 
-        List<Member> allMembers = memberService.findCurrentMembers();
+        List<MemberViewBean> currentMembers = memberService.findCurrentMembers();
 
-        verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Open");
+        verify(memberRepository, times(1)).findCurrentMembers();
         verify(paymentRepository, times(2)).getTotalLotteryPaymentSince(any(Date.class), any(Long.class));
-        assertEquals(2, allMembers.size());
-        assertEquals(member1.getId(), allMembers.get(0).getId());
-        assertTrue(allMembers.get(0).isEligibleForDraw());
-        assertEquals(member2.getId(), allMembers.get(1).getId());
-        assertFalse(allMembers.get(1).isEligibleForDraw());
+        assertEquals(2, currentMembers.size());
+        assertEquals(member1.getId(), currentMembers.get(0).getId());
+        assertTrue(currentMembers.get(0).isEligibleForDraw());
+        assertEquals(member2.getId(), currentMembers.get(1).getId());
+        assertFalse(currentMembers.get(1).isEligibleForDraw());
     }
 
     @Test
     public void findFormerMembers() {
-        List<Member> cancelledMembers = new ArrayList<>();
-        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        Member member2 = TestHelper.newMember(1237L, "Bob", "Zippo", "bz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        cancelledMembers.add(member1);
-        cancelledMembers.add(member2);
-        List<Member> closedMembers = new ArrayList<>();
-        Member member3 = TestHelper.newMember(1235L, "Dave", "Zippo", "dz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        closedMembers.add(member3);
-        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Cancelled")).thenReturn(cancelledMembers);
-        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Closed")).thenReturn(closedMembers);
+        List<MemberViewBean> formerMembers = new ArrayList<>();
+        MemberViewBean member1 = TestHelper.newMemberViewBean(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        MemberViewBean member2 = TestHelper.newMemberViewBean(1237L, "Bob", "Zippo", "bz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        MemberViewBean member3 = TestHelper.newMemberViewBean(1235L, "Dave", "Zippo", "dz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        formerMembers.add(member1);
+        formerMembers.add(member2);
+        formerMembers.add(member3);
+        when(memberRepository.findFormerMembers()).thenReturn(formerMembers);
 
-        List<Member> formerMembers = memberService.findFormerMembers();
+        List<MemberViewBean> foundFormerMembers = memberService.findFormerMembers();
 
-        verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Cancelled");
-        verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Closed");
+        verify(memberRepository, times(1)).findFormerMembers();
         verify(paymentRepository, never()).getTotalLotteryPaymentSince(any(Date.class), any(Long.class));
 
-        assertEquals(3, formerMembers.size());
-        assertFalse(formerMembers.get(0).isEligibleForDraw());
-        assertFalse(formerMembers.get(1).isEligibleForDraw());
+        assertEquals(3, foundFormerMembers.size());
+        assertFalse(foundFormerMembers.get(0).isEligibleForDraw());
+        assertFalse(foundFormerMembers.get(1).isEligibleForDraw());
     }
 
     @Test
@@ -202,23 +200,23 @@ public class MemberServiceTest extends LifelineServiceTest {
 
     @Test
     public void fetchLifelineMemberDrawEntries() {
-        Member lifelineMember1 = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Monthly", "Lifeline", "New member", "Open");
+        MemberViewBean lifelineMember1 = TestHelper.newMemberViewBean(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Monthly", "Lifeline", "New member", "Open");
         lifelineMember1.setId(66L);
-        Member lifelineMember2 = TestHelper.newMember(24L, "Jimmy", "Whiz", "jw@email.com", "0131991188", null, "Quarterly", "Lifeline", "New member", "Open");
+        MemberViewBean lifelineMember2 = TestHelper.newMemberViewBean(24L, "Jimmy", "Whiz", "jw@email.com", "0131991188", null, "Quarterly", "Lifeline", "New member", "Open");
         lifelineMember2.setId(404L);
-        Member underpaidMember = TestHelper.newMember(97L, "Jen", "Underwood", "under@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
+        MemberViewBean underpaidMember = TestHelper.newMemberViewBean(97L, "Jen", "Underwood", "under@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
         underpaidMember.setId(999L);
-        Member closedLifelineMember = TestHelper.newMember(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Closed");
-        Member cancelledLifelineMember = TestHelper.newMember(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Cancelled");
+        MemberViewBean closedLifelineMember = TestHelper.newMemberViewBean(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Closed");
+        MemberViewBean cancelledLifelineMember = TestHelper.newMemberViewBean(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Cancelled");
 
-        List<Member> allMembers = new ArrayList<>();
+        List<MemberViewBean> allMembers = new ArrayList<>();
         allMembers.add(lifelineMember1);
         allMembers.add(lifelineMember2);
         allMembers.add(underpaidMember);
         allMembers.add(closedLifelineMember);
         allMembers.add(cancelledLifelineMember);
-        when(memberRepository.findAll()).thenReturn(allMembers);
-        when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(allMembers);
+        when(memberRepository.findAllMembers()).thenReturn(allMembers);
+        when(memberRepository.findCurrentMembers()).thenReturn(allMembers);
         ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
@@ -226,7 +224,7 @@ public class MemberServiceTest extends LifelineServiceTest {
         when(paymentRepository.getTotalLotteryPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(404L))).thenReturn(60.00D);
         when(paymentRepository.getTotalLotteryPaymentSince(annualLastPaymentCutoffDate.capture(), eq(999L))).thenReturn(239.00D);
 
-        List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
+        List<MemberViewBean> memberDrawEntries = memberService.fetchMemberDrawEntries();
 
         DateTime now = new DateTime();
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
@@ -249,22 +247,22 @@ public class MemberServiceTest extends LifelineServiceTest {
 
     @Test
     public void fetchLegacyMemberDrawEntries() {
-        Member legacyMember1 = TestHelper.newMember(23L, "David", "Jones", "bw@email.com", "0131991188", null, "Monthly", "Legacy", "New member", "Open");
+        MemberViewBean legacyMember1 = TestHelper.newMemberViewBean(23L, "David", "Jones", "bw@email.com", "0131991188", null, "Monthly", "Legacy", "New member", "Open");
         legacyMember1.setId(87L);
-        Member premiumLegacyMember2 = TestHelper.newMember(24L, "Jimmy", "Jones", "jw@email.com", "0131991188", null, "Quarterly", "Premium Legacy", "New member", "Open");
+        MemberViewBean premiumLegacyMember2 = TestHelper.newMemberViewBean(24L, "Jimmy", "Jones", "jw@email.com", "0131991188", null, "Quarterly", "Premium Legacy", "New member", "Open");
         premiumLegacyMember2.setId(4L);
-        Member legacyMember3 = TestHelper.newMember(24L, "Ann", "Smith", "smithy@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Open");
+        MemberViewBean legacyMember3 = TestHelper.newMemberViewBean(24L, "Ann", "Smith", "smithy@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Open");
         legacyMember3.setId(89L);
-        Member closedLegacyMember = TestHelper.newMember(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Closed");
-        Member cancelledLegacyMember = TestHelper.newMember(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Cancelled");
+        MemberViewBean closedLegacyMember = TestHelper.newMemberViewBean(99L, "Boris", "Loser", "bl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Closed");
+        MemberViewBean cancelledLegacyMember = TestHelper.newMemberViewBean(98L, "Theresa", "Left", "tl@email.com", "0131991188", null, "Annual", "Legacy", "New member", "Cancelled");
 
-        List<Member> allMembers = new ArrayList<>();
+        List<MemberViewBean> allMembers = new ArrayList<>();
         allMembers.add(legacyMember1);
         allMembers.add(premiumLegacyMember2);
         allMembers.add(legacyMember3);
         allMembers.add(closedLegacyMember);
         allMembers.add(cancelledLegacyMember);
-        when(memberRepository.findAll()).thenReturn(allMembers);
+        when(memberRepository.findAllMembers()).thenReturn(allMembers);
         ArgumentCaptor<Date> monthlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> quarterlyLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
         ArgumentCaptor<Date> annualLastPaymentCutoffDate = ArgumentCaptor.forClass(Date.class);
@@ -272,7 +270,7 @@ public class MemberServiceTest extends LifelineServiceTest {
         when(paymentRepository.getTotalLotteryPaymentSince(quarterlyLastPaymentCutoffDate.capture(), eq(4L))).thenReturn(26.00D);
         when(paymentRepository.getTotalLotteryPaymentSince(annualLastPaymentCutoffDate.capture(), eq(89L))).thenReturn(103.00D);
 
-        List<Member> memberDrawEntries = memberService.fetchMemberDrawEntries();
+        List<MemberViewBean> memberDrawEntries = memberService.fetchMemberDrawEntries();
 
         DateTime now = new DateTime();
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy");
