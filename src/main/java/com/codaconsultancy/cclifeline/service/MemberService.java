@@ -14,6 +14,9 @@ import java.util.List;
 @Service
 public class MemberService extends LifelineService {
 
+    public static final String ANNUAL = "Annual";
+    public static final String QUARTERLY = "Quarterly";
+    public static final String LIFELINE = "Lifeline";
     @Autowired
     private MemberRepository memberRepository;
 
@@ -21,15 +24,27 @@ public class MemberService extends LifelineService {
     private PaymentRepository paymentRepository;
 
     public List<Member> findAllMembers() {
-        return memberRepository.findAll();
-    }
-
-    public List<Member> findAllMembersOrderedBySurname() {
-        return memberRepository.findAllByOrderBySurnameAscForenameAsc();
+        List<Member> members = memberRepository.findAll();
+        for (Member member : members) {
+            if (isEligibleForDraw(member)) {
+                member.setIsEligibleForDraw(true);
+            } else {
+                member.setIsEligibleForDraw(false);
+            }
+        }
+        return members;
     }
 
     public List<Member> findCurrentMembers() {
-        return memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open");
+        List<Member> members = memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open");
+        for (Member member : members) {
+            if (isEligibleForDraw(member)) {
+                member.setIsEligibleForDraw(true);
+            } else {
+                member.setIsEligibleForDraw(false);
+            }
+        }
+        return members;
     }
 
     public List<Member> findEligibleMembers() {
@@ -37,6 +52,7 @@ public class MemberService extends LifelineService {
         List<Member> eligibleMembers = new ArrayList<>();
         for (Member member : currentMembers) {
             if (isEligibleForDraw(member)) {
+                member.setIsEligibleForDraw(true);
                 eligibleMembers.add(member);
             }
         }
@@ -48,6 +64,7 @@ public class MemberService extends LifelineService {
         List<Member> ineligibleMembers = new ArrayList<>();
         for (Member member : currentMembers) {
             if (!isEligibleForDraw(member)) {
+                member.setIsEligibleForDraw(false);
                 ineligibleMembers.add(member);
             }
         }
@@ -58,7 +75,14 @@ public class MemberService extends LifelineService {
         List<Member> formerMembers = new ArrayList<>();
         formerMembers.addAll(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Cancelled"));
         formerMembers.addAll(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Closed"));
+        for (Member formerMember : formerMembers) {
+            formerMember.setIsEligibleForDraw(false);
+        }
         return formerMembers;
+    }
+
+    public List<Member> findAllMembersOrderedBySurname() {
+        return memberRepository.findAllByOrderBySurnameAscForenameAsc();
     }
 
     public Long countAllCurrentMembers() {
@@ -90,7 +114,7 @@ public class MemberService extends LifelineService {
         List<Member> memberDrawEntries = new ArrayList<>();
         List<Member> allMembers = findAllMembers();
         for (Member member : allMembers) {
-            if (isEligibleForDraw(member)) {
+            if (member.isEligibleForDraw()) {
                 if (isLifelineMember(member)) {
                     // 3 entries for lifeline members
                     memberDrawEntries.add(member);
@@ -107,7 +131,7 @@ public class MemberService extends LifelineService {
     }
 
     private boolean isLifelineMember(Member member) {
-        return member.getMembershipType().equalsIgnoreCase("Lifeline");
+        return member.getMembershipType().equalsIgnoreCase(LIFELINE);
     }
 
     public boolean isEligibleForDraw(Member member) {
@@ -131,18 +155,18 @@ public class MemberService extends LifelineService {
 
     private Double requiredPaymentFrom(String payerType, String membershipType) {
         Double requiredPayment;
-        if ("Lifeline".equals(membershipType)) {
-            if ("Annual".equals(payerType)) {
+        if (LIFELINE.equals(membershipType)) {
+            if (ANNUAL.equals(payerType)) {
                 requiredPayment = 240.00D;
-            } else if ("Quarterly".equals(payerType)) {
+            } else if (QUARTERLY.equals(payerType)) {
                 requiredPayment = 60.00D;
             } else {
                 requiredPayment = 20.00D;
             }
         } else {
-            if ("Annual".equals(payerType)) {
+            if (ANNUAL.equals(payerType)) {
                 requiredPayment = 104.00D;
-            } else if ("Quarterly".equals(payerType)) {
+            } else if (QUARTERLY.equals(payerType)) {
                 requiredPayment = 26.00D;
             } else {
                 requiredPayment = 8.66D;
@@ -153,9 +177,9 @@ public class MemberService extends LifelineService {
 
     DateTime getLastExpectedPaymentDate(DateTime fromDate, String payerType) {
         DateTime lastExpectedPaymentDate;
-        if ("Annual".equals(payerType)) {
+        if (ANNUAL.equals(payerType)) {
             lastExpectedPaymentDate = fromDate.minus(Period.years(1));
-        } else if ("Quarterly".equals(payerType)) {
+        } else if (QUARTERLY.equals(payerType)) {
             lastExpectedPaymentDate = fromDate.minus(Period.months(3));
         } else {
             lastExpectedPaymentDate = fromDate.minus(Period.months(1));

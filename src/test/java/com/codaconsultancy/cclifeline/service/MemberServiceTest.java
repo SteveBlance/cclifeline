@@ -40,17 +40,30 @@ public class MemberServiceTest extends LifelineServiceTest {
     public void findAllMembers() {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        member1.setId(69L);
         Member member2 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        member2.setId(88L);
         Member member3 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        member3.setId(919L);
         members.add(member1);
         members.add(member2);
         members.add(member3);
         when(memberRepository.findAll()).thenReturn(members);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member1.getId()))).thenReturn(30.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member2.getId()))).thenReturn(20.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member3.getId()))).thenReturn(19.00D);
 
         List<Member> allMembers = memberService.findAllMembers();
 
         verify(memberRepository, times(1)).findAll();
+        verify(paymentRepository, times(3)).getTotalLotteryPaymentSince(any(Date.class), any(Long.class));
         assertEquals(3, allMembers.size());
+        assertEquals(member1.getId(), allMembers.get(0).getId());
+        assertTrue(allMembers.get(0).isEligibleForDraw());
+        assertEquals(member2.getId(), allMembers.get(1).getId());
+        assertTrue(allMembers.get(1).isEligibleForDraw());
+        assertEquals(member3.getId(), allMembers.get(2).getId());
+        assertFalse(allMembers.get(2).isEligibleForDraw());
     }
 
     @Test
@@ -74,14 +87,24 @@ public class MemberServiceTest extends LifelineServiceTest {
     public void findCurrentMembers() {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        member1.setId(81L);
         Member member2 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        member2.setId(50L);
         members.add(member1);
         members.add(member2);
         when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member1.getId()))).thenReturn(20.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(member2.getId()))).thenReturn(19.99D);
 
         List<Member> allMembers = memberService.findCurrentMembers();
+
         verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Open");
+        verify(paymentRepository, times(2)).getTotalLotteryPaymentSince(any(Date.class), any(Long.class));
         assertEquals(2, allMembers.size());
+        assertEquals(member1.getId(), allMembers.get(0).getId());
+        assertTrue(allMembers.get(0).isEligibleForDraw());
+        assertEquals(member2.getId(), allMembers.get(1).getId());
+        assertFalse(allMembers.get(1).isEligibleForDraw());
     }
 
     @Test
@@ -101,7 +124,11 @@ public class MemberServiceTest extends LifelineServiceTest {
 
         verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Cancelled");
         verify(memberRepository, times(1)).findAllByStatusOrderBySurnameAscForenameAsc("Closed");
+        verify(paymentRepository, never()).getTotalLotteryPaymentSince(any(Date.class), any(Long.class));
+
         assertEquals(3, formerMembers.size());
+        assertFalse(formerMembers.get(0).isEligibleForDraw());
+        assertFalse(formerMembers.get(1).isEligibleForDraw());
     }
 
     @Test

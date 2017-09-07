@@ -95,13 +95,6 @@ public class MemberController extends LifelineController {
                 allTabStatus = DISABLED;
                 break;
         }
-        for (Member member : members) {
-            if (memberService.isEligibleForDraw(member)) {
-                member.setIsEligibleForDraw(true);
-            } else {
-                member.setIsEligibleForDraw(false);
-            }
-        }
         long count = members.size();
         return modelAndView("members").addObject("memberCount", count)
                 .addObject("members", members)

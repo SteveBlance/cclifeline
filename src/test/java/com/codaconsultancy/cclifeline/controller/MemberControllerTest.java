@@ -88,21 +88,16 @@ public class MemberControllerTest extends BaseTest {
         members.add(member2);
         when(memberService.countAllCurrentMembers()).thenReturn(22L);
         when(memberService.findAllMembers()).thenReturn(members);
-        when(memberService.isEligibleForDraw(member1)).thenReturn(true);
-        when(memberService.isEligibleForDraw(member2)).thenReturn(false);
 
         ModelAndView response = memberController.members("all");
 
         verify(memberService, times(1)).findAllMembers();
-        verify(memberService, times(2)).isEligibleForDraw(any(Member.class));
 
         assertEquals(2L, response.getModel().get("memberCount"));
         assertSame(members, response.getModel().get("members"));
         assertEquals("All members", response.getModel().get("title"));
         assertEquals("disabled", response.getModel().get("allTabStatus"));
         assertEquals("members", response.getViewName());
-        assertTrue(member1.isEligibleForDraw());
-        assertFalse(member2.isEligibleForDraw());
     }
 
     @Test
