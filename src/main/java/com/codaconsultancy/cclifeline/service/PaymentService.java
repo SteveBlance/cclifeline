@@ -111,7 +111,6 @@ public class PaymentService extends LifelineService {
         if (!paymentMatched) {
             tryMatchByFullPaymentReference(payment);
         }
-
     }
 
     private void tryMatchByFullPaymentReference(Payment payment) {
@@ -122,6 +121,7 @@ public class PaymentService extends LifelineService {
         for (PaymentReference paymentReference : allReferences) {
             if (reference.equalsIgnoreCase(paymentReference.getReference()) && name.equalsIgnoreCase(paymentReference.getName())) {
                 payment.setMember(paymentReference.getMember());
+                break;
             }
         }
     }

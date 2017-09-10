@@ -17,16 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -289,30 +284,6 @@ public class MemberControllerTest extends BaseTest {
     @Test
     public void navigateExportData() {
         assertEquals("export-data", memberController.navigateExportData().getViewName());
-    }
-
-    private HttpRequest getHttpRequest() {
-        return new HttpRequest() {
-            @Override
-            public HttpMethod getMethod() {
-                return HttpMethod.POST;
-            }
-
-            @Override
-            public URI getURI() {
-                try {
-                    return new URI("http://localhost:8080");
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            public HttpHeaders getHeaders() {
-                return new HttpHeaders();
-            }
-        };
     }
 
 }
