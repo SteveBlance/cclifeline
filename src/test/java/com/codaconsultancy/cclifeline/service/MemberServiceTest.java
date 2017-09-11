@@ -308,5 +308,40 @@ public class MemberServiceTest extends LifelineServiceTest {
         assertEquals(lastDate, lastExpectedPaymentDate);
     }
 
+    @Test
+    public void closeLapsedMemberships() {
+        List<MemberViewBean> members = new ArrayList<>();
+        MemberViewBean lapsedMember1 = TestHelper.newMemberViewBean(8888L, "Bob", "Lateman", "bl@email.com", null, null, "Monthly", "Lifeline", null, "Open");
+        lapsedMember1.setId(1L);
+        members.add(lapsedMember1);
+        MemberViewBean lapsedMember2 = TestHelper.newMemberViewBean(8999L, "Sally", "Lateman", "sl@email.com", null, null, "Monthly", "Lifeline", null, "Open");
+        lapsedMember2.setId(2L);
+        members.add(lapsedMember2);
+        MemberViewBean activeMember = TestHelper.newMemberViewBean(1111L, "Steve", "Timely", "steveT@email.com", null, null, "Monthly", "Lifeline", null, "Open");
+        activeMember.setId(3L);
+        members.add(activeMember);
+        when(memberRepository.findCurrentMembers()).thenReturn(members);
+        Member lapsed1 = lapsedMember1.toEntity();
+        when(memberRepository.findOne(lapsedMember1.getId())).thenReturn(lapsed1);
+        Member lapsed2 = lapsedMember2.toEntity();
+        when(memberRepository.findOne(lapsedMember2.getId())).thenReturn(lapsed2);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(lapsedMember1.getId()))).thenReturn(19.99D);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(lapsedMember2.getId()))).thenReturn(0.00D);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(activeMember.getId()))).thenReturn(20.00D);
+        assertEquals("Open", lapsedMember1.getStatus());
+        assertEquals("Open", lapsedMember2.getStatus());
+        assertEquals("Open", activeMember.getStatus());
+
+        int closedAccountCount = memberService.closeLapsedMemberships();
+
+        verify(memberRepository, times(2)).findOne(any(Long.class));
+        verify(memberRepository, times(2)).save(any(Member.class));
+        verify(memberRepository, times(1)).save(lapsed1);
+        verify(memberRepository, times(1)).save(lapsed2);
+        assertEquals("Closed", lapsed1.getStatus());
+        assertEquals("Closed", lapsed2.getStatus());
+        assertEquals(2, closedAccountCount);
+    }
+
 
 }

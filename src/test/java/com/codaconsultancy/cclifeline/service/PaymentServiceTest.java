@@ -58,6 +58,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,2,FPS CREDIT 338,HALLYBURTON ESQ,8.00676E+13,GBP\n" +
                     "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,800,CREDIT 000988,,,GBP";
 
+    private static final String EXAMPLE_STATEMENT__QUOTED =
+            "\"20170428\",\"\",\"82621900174982CA\",\"\",\"CR\",\"BGC\",\"Bank Giro Credit\",\"20\",\"BANK GIRO CREDIT 3830\",\"MRS MARGARET ANDERSON R\",\"8.26219E+13\",\"GBP\"";
+
     private static final String BAD_STATEMENT__INVALID_AMOUNT =
             "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,BAD,FPS CREDIT 4061,MR MATTHEW LAFFERT,4.0642E+13,GBP\n";
 
@@ -319,6 +322,28 @@ public class PaymentServiceTest extends LifelineServiceTest {
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
 
         assertEquals(24, payments.size());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        assertEquals("20170428", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
+        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
+        assertEquals("BANK GIRO CREDIT 3830", payments.get(0).getCreditReference());
+        assertEquals("MRS MARGARET ANDERSON R", payments.get(0).getName());
+        assertEquals(member2.getId(), payments.get(0).getMember().getId());
+    }
+
+    @Test
+    public void parsePayments_quoted_success() throws Exception {
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
+        members.add(member1);
+        members.add(member2);
+        when(memberRepository.findAll()).thenReturn(members);
+
+        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT__QUOTED, "test.csv");
+
+        assertEquals(1, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
         assertEquals("20170428", sdf.format(payments.get(0).getPaymentDate()));

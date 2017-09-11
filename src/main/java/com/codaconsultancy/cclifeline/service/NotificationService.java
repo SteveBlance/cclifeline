@@ -33,6 +33,12 @@ public class NotificationService extends LifelineService {
         saveNotification(lotteryDrawNotification);
     }
 
+    public void logMembershipsClosed(int numberClosed) {
+        String description = (numberClosed == 1) ? numberClosed + " Membership Closed" : numberClosed + " Memberships Closed";
+        Notification membershipClosedNotification = new Notification(DateTime.now().toDate(), "NewMember", description);
+        saveNotification(membershipClosedNotification);
+    }
+
     public void logPayment(int numberOfPayments) {
         String message = (numberOfPayments == 1) ? "Payment Entered Manually" : numberOfPayments + " Payments Imported";
         Notification paymentNotification = new Notification(DateTime.now().toDate(), "Payment", message);

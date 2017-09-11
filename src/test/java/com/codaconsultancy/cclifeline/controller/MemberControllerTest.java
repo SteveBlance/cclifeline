@@ -277,6 +277,17 @@ public class MemberControllerTest extends BaseTest {
     }
 
     @Test
+    public void closeLapsedMemberships() {
+        when(memberService.closeLapsedMemberships()).thenReturn(564);
+
+        ModelAndView modelAndView = memberController.closeLapsedMemberships();
+
+        verify(memberService, times(1)).closeLapsedMemberships();
+        verify(notificationService, times(1)).logMembershipsClosed(564);
+        assertEquals("members", modelAndView.getViewName());
+    }
+
+    @Test
     public void navigateToReports() {
         assertEquals("reports", memberController.navigateToReports().getViewName());
     }

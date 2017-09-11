@@ -189,6 +189,13 @@ public class MemberController extends LifelineController {
         return memberDetails(member.getMembershipNumber());
     }
 
+    @RequestMapping(value = "/close-lapsed-memberships", method = RequestMethod.POST)
+    public ModelAndView closeLapsedMemberships() {
+        int numberClosed = memberService.closeLapsedMemberships();
+        notificationService.logMembershipsClosed(numberClosed);
+        return members("current");
+    }
+
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView navigateToLogin() {
         return modelAndView(LOGIN_PAGE);

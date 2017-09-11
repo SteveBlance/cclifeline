@@ -16,12 +16,14 @@ import java.util.List;
 @Service
 public class MemberService extends LifelineService {
 
-    public static final String MONTHLY = "Monthly";
-    public static final String QUARTERLY = "Quarterly";
-    public static final String ANNUAL = "Annual";
-    public static final String LIFELINE = "Lifeline";
-    public static final int PAYMENT_GRACE_PERIOD_IN_DAYS = 30;
-    public static final String OPEN_STATUS = "Open";
+    private static final String MONTHLY = "Monthly";
+    private static final String QUARTERLY = "Quarterly";
+    private static final String ANNUAL = "Annual";
+    private static final String LIFELINE = "Lifeline";
+    private static final int PAYMENT_GRACE_PERIOD_IN_DAYS = 30;
+    private static final String TBC_STATUS = "TBC";
+    private static final String OPEN_STATUS = "Open";
+    private static final String CLOSED_STATUS = "Closed";
 
     @Autowired
     private MemberRepository memberRepository;
@@ -86,7 +88,7 @@ public class MemberService extends LifelineService {
     }
 
     public Long countAllCurrentMembers() {
-        return memberRepository.countByStatus("Open");
+        return memberRepository.countByStatus(OPEN_STATUS);
     }
 
     public Member findMemberByMembershipNumber(Long memberNumber) {
@@ -96,7 +98,7 @@ public class MemberService extends LifelineService {
     public Member saveMember(Member member) {
         Long nextMembershipNumber = memberRepository.nextMembershipNumber();
         member.setMembershipNumber(nextMembershipNumber);
-        member.setStatus("TBC");
+        member.setStatus(TBC_STATUS);
         member.setJoinDate(DateTime.now().toDate());
 
         return memberRepository.save(member);
@@ -128,6 +130,21 @@ public class MemberService extends LifelineService {
             }
         }
         return memberDrawEntries;
+    }
+
+    public int closeLapsedMemberships() {
+        int accountsClosed = 0;
+        List<MemberViewBean> currentMembers = memberRepository.findCurrentMembers();
+        Member member;
+        for (MemberViewBean currentMember : currentMembers) {
+            if (!paymentsAreUpToDate(currentMember, PAYMENT_GRACE_PERIOD_IN_DAYS)) {
+                member = memberRepository.findOne(currentMember.getId());
+                member.setStatus(CLOSED_STATUS);
+                updateMember(member);
+                accountsClosed++;
+            }
+        }
+        return accountsClosed;
     }
 
     private boolean isLifelineMember(MemberViewBean member) {
