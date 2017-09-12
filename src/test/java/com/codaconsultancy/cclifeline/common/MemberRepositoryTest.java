@@ -26,6 +26,7 @@ public class MemberRepositoryTest extends BaseTest {
     private Member member3;
     private Member member4;
     private Member member5;
+    private Member member6;
 
     @Before
     public void setUp() throws Exception {
@@ -34,11 +35,13 @@ public class MemberRepositoryTest extends BaseTest {
         member3 = TestHelper.newMember(1820L, "Bill", "Wilson", "billy@email.com", "01383999999", null, "Annual", "Legacy", "Old member", "Open");
         member4 = TestHelper.newMember(1821L, "Jimmy", "Jimmieson", "jj@email.com", "01383000111", null, "Monthly", "Legacy", "Old member", "Closed");
         member5 = TestHelper.newMember(1822L, "Bart", "Simpson", "bart@email.com", "01383000911", null, "Monthly", "Lifeline", "Old member", "Cancelled");
+        member6 = TestHelper.newMember(1823L, "Ace", "Simmonds", "ace@email.com", "01383000921", null, "Monthly", "Lifeline", "New member", "TBC");
         entityManager.persist(member1);
         entityManager.persist(member2);
         entityManager.persist(member3);
         entityManager.persist(member4);
         entityManager.persist(member5);
+        entityManager.persist(member6);
     }
 
 
@@ -49,12 +52,13 @@ public class MemberRepositoryTest extends BaseTest {
         entityManager.remove(member3);
         entityManager.remove(member4);
         entityManager.remove(member5);
+        entityManager.remove(member6);
     }
 
     @Test
     public void count() throws Exception {
         long membersInDatabase = memberRepository.count();
-        assertEquals(5L, membersInDatabase);
+        assertEquals(6L, membersInDatabase);
     }
 
     @Test
@@ -82,7 +86,7 @@ public class MemberRepositoryTest extends BaseTest {
     @Test
     public void nextMembershipNumber() {
         Long nextMemberShipNumber = memberRepository.nextMembershipNumber();
-        Long expectedNextNumber = member5.getMembershipNumber() + 1L;
+        Long expectedNextNumber = member6.getMembershipNumber() + 1L;
         assertEquals(expectedNextNumber, nextMemberShipNumber);
 
     }
@@ -96,7 +100,7 @@ public class MemberRepositoryTest extends BaseTest {
     @Test
     public void findAllMembers() {
         List<MemberViewBean> foundMembers = memberRepository.findAllMembers();
-        assertEquals(5, foundMembers.size());
+        assertEquals(6, foundMembers.size());
         assertEquals("Frank", foundMembers.get(0).getForename());
         assertEquals("Open", foundMembers.get(0).getStatus());
         assertEquals("Jane", foundMembers.get(1).getForename());
@@ -107,6 +111,8 @@ public class MemberRepositoryTest extends BaseTest {
         assertEquals("Closed", foundMembers.get(3).getStatus());
         assertEquals("Bart", foundMembers.get(4).getForename());
         assertEquals("Cancelled", foundMembers.get(4).getStatus());
+        assertEquals("Ace", foundMembers.get(5).getForename());
+        assertEquals("TBC", foundMembers.get(5).getStatus());
     }
 
     @Test
@@ -119,6 +125,13 @@ public class MemberRepositoryTest extends BaseTest {
         assertEquals("Open", foundMembers.get(0).getStatus());
         assertEquals("Open", foundMembers.get(1).getStatus());
         assertEquals("Open", foundMembers.get(2).getStatus());
+    }
+
+    @Test
+    public void findTBCMembers() {
+        List<MemberViewBean> foundMembers = memberRepository.findTBCMembers();
+        assertEquals(1, foundMembers.size());
+        assertEquals("Ace", foundMembers.get(0).getForename());
     }
 
     @Test
@@ -135,7 +148,7 @@ public class MemberRepositoryTest extends BaseTest {
     @Test
     public void findAllOrderBySurname() {
         List<Member> foundMembers = memberRepository.findAllByOrderBySurnameAscForenameAsc();
-        assertEquals(5, foundMembers.size());
+        assertEquals(6, foundMembers.size());
         assertEquals("Jimmieson", foundMembers.get(0).getSurname());
     }
 }

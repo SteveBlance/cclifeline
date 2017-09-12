@@ -76,6 +76,8 @@ public class MemberService extends LifelineService {
                 ineligibleMembers.add(member);
             }
         }
+        List<MemberViewBean> tbcMembers = memberRepository.findTBCMembers();
+        ineligibleMembers.addAll(tbcMembers);
         return ineligibleMembers;
     }
 
