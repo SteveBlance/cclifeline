@@ -1,6 +1,8 @@
 package com.codaconsultancy.cclifeline.controller;
 
+import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
+import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
@@ -90,24 +92,25 @@ public class LotteryDrawController extends LifelineController {
 
         for (Prize prize : prizes) {
             int index = ThreadLocalRandom.current().nextInt(membersDrawEntries.size());
-            MemberViewBean winner = membersDrawEntries.get(index);
-            prize.setWinner(winner.toEntity());
+            MemberViewBean winnerViewBean = membersDrawEntries.get(index);
+            Member winner = memberService.findMemberById(winnerViewBean.getId());
+            List<Address> addresses = winner.getAddresses();
+            prize.setWinner(winner);
             removeAllEntriesForWinner(winner.getId(), membersDrawEntries);
         }
-        lotteryDrawViewBean.setNumberOfPrizes(prizes.size());
 
-        lotteryDrawService.saveLotteryDraw(lotteryDrawViewBean.toEntity());
+        LotteryDraw savedDraw = lotteryDrawService.saveLotteryDraw(lotteryDrawViewBean.toEntity());
 
-        notificationService.logLotteryDraw(lotteryDrawViewBean.getName());
+        notificationService.logLotteryDraw(savedDraw.getName());
 
-        return navigateToViewDrawResult(lotteryDrawViewBean);
+        return navigateToViewDrawResult(lotteryDrawViewBean, prizes.size());
     }
 
     @RequestMapping(value = "/draw/{id}", method = RequestMethod.GET)
     public ModelAndView navigateToDrawDetails(@PathVariable Long id) {
-        LotteryDrawViewBean lotteryDraw = lotteryDrawService.fetchLotteryDraw(id).toViewBean();
-        lotteryDraw.setNumberOfPrizes(lotteryDraw.getPrizes().size());
-        return navigateToViewDrawResult(lotteryDraw);
+        LotteryDraw lotteryDraw = lotteryDrawService.fetchLotteryDraw(id);
+        LotteryDrawViewBean lotteryDrawViewBean = lotteryDraw.toViewBean();
+        return navigateToViewDrawResult(lotteryDrawViewBean, lotteryDraw.getPrizes().size());
     }
 
     private void removeAllEntriesForWinner(Long winnerId, List<MemberViewBean> membersDrawEntries) {
@@ -120,8 +123,8 @@ public class LotteryDrawController extends LifelineController {
         }
     }
 
-    private ModelAndView navigateToViewDrawResult(LotteryDrawViewBean lotteryDrawViewBean) {
-        return modelAndView(DRAW_RESULT_PAGE).addObject("lotteryDraw", lotteryDrawViewBean);
+    private ModelAndView navigateToViewDrawResult(LotteryDrawViewBean lotteryDrawViewBean, int numberOfPrizes) {
+        return modelAndView(DRAW_RESULT_PAGE).addObject("lotteryDraw", lotteryDrawViewBean).addObject("numberOfPrizes", numberOfPrizes);
     }
 
 }

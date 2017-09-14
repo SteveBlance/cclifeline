@@ -130,6 +130,9 @@ public class LotteryDrawControllerTest extends BaseTest {
         memberDrawEntries.add(member2);
         memberDrawEntries.add(member3);
         when(memberService.fetchMemberDrawEntries()).thenReturn(memberDrawEntries);
+        when(memberService.findMemberById(member1.getId())).thenReturn(member1.toEntity());
+        when(memberService.findMemberById(member2.getId())).thenReturn(member2.toEntity());
+        when(memberService.findMemberById(member3.getId())).thenReturn(member3.toEntity());
 
         ArgumentCaptor<LotteryDraw> lotteryDrawArgumentCaptor = ArgumentCaptor.forClass(LotteryDraw.class);
         when(lotteryDrawService.saveLotteryDraw(lotteryDrawArgumentCaptor.capture())).thenReturn(new LotteryDraw());
