@@ -19,7 +19,7 @@ public class MemberViewBean {
     public MemberViewBean() {
     }
 
-    public MemberViewBean(Long id, Long membershipNumber, String forename, String surname, String membershipType, String status, String payerType, Date joinDate, Date leaveDate, String email, String landlineNumber, String mobileNumber) {
+    public MemberViewBean(Long id, Long membershipNumber, String forename, String surname, String membershipType, String status, String payerType, Date joinDate, Date leaveDate, String email, String landlineNumber, String mobileNumber, boolean isEligibleForDrawStored) {
         this.id = id;
         this.membershipNumber = membershipNumber;
         this.forename = forename;
@@ -32,6 +32,7 @@ public class MemberViewBean {
         this.email = email;
         this.landlineNumber = landlineNumber;
         this.mobileNumber = mobileNumber;
+        this.isEligibleForDrawStored = isEligibleForDrawStored;
     }
 
     private Long id;
@@ -74,6 +75,8 @@ public class MemberViewBean {
 
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date welcomeLetterIssuedDate;
+
+    private boolean isEligibleForDrawStored;
 
     private List<AddressViewBean> addresses = new ArrayList<>();
     private List<Prize> prizeWins;
@@ -257,5 +260,13 @@ public class MemberViewBean {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         MapperFacade mapper = mapperFactory.getMapperFacade();
         return mapper.map(this, Member.class);
+    }
+
+    public boolean isEligibleForDrawStored() {
+        return isEligibleForDrawStored;
+    }
+
+    public void setEligibleForDrawStored(boolean isEligibleForDrawStored) {
+        this.isEligibleForDrawStored = isEligibleForDrawStored;
     }
 }

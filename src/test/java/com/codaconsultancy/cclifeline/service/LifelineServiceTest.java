@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.service;
 
+import com.codaconsultancy.cclifeline.repositories.ConfigurationRepository;
 import com.codaconsultancy.cclifeline.repositories.EventLogRepository;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -10,4 +11,7 @@ public class LifelineServiceTest {
 
     @MockBean
     protected EventLogRepository eventLogRepository;
+
+    @MockBean
+    protected ConfigurationRepository configurationRepository;
 }

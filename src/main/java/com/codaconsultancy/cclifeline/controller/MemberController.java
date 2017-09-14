@@ -61,6 +61,7 @@ public class MemberController extends LifelineController {
 
     @RequestMapping("/members/{filter}")
     public ModelAndView members(@PathVariable String filter) {
+        memberService.updateEligibilityStatuses();
         List<MemberViewBean> members;
         String title;
         String currentTabStatus = ENABLED;
@@ -104,6 +105,10 @@ public class MemberController extends LifelineController {
                 .addObject("eligibleTabStatus", eligibleTabStatus)
                 .addObject("ineligibleTabStatus", ineligibleTabStatus)
                 .addObject("allTabStatus", allTabStatus);
+    }
+
+    private boolean drawEligibilityStatusRefreshRequired() {
+        return memberService.lotteryEligibilityStatusRefreshRequired();
     }
 
     @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)

@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.service;
 
 import com.codaconsultancy.cclifeline.common.TestHelper;
+import com.codaconsultancy.cclifeline.domain.Configuration;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.domain.PaymentReference;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.codaconsultancy.cclifeline.service.LifelineService.ELIGIBILITY_REFRESH_REQUIRED;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -185,6 +187,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         Date paymentDate = sdf.parse("20170103 ");
         Payment payment = new Payment(paymentDate, 20.09F, "FPS CREDIT 0101 THOMAS", "83776900435093BZ", "BOB SMITH", true);
         when(paymentRepository.save(payment)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Payment savedPayment = paymentService.savePayment(payment);
 
@@ -204,6 +209,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payment.setMember(member);
         member.setStatus("Open");
         when(paymentRepository.save(payment)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Payment savedPayment = paymentService.savePayment(payment);
 
@@ -223,6 +231,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payment.setMember(member);
         member.setStatus("TBC");
         when(paymentRepository.save(payment)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Payment savedPayment = paymentService.savePayment(payment);
 
@@ -242,6 +253,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payment.setMember(member);
         member.setStatus("Open");
         when(paymentRepository.save(payment)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Payment savedPayment = paymentService.updatePayment(payment);
 
@@ -261,6 +275,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payment.setMember(member);
         member.setStatus("TBC");
         when(paymentRepository.save(payment)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Payment savedPayment = paymentService.updatePayment(payment);
 
@@ -289,6 +306,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payments.add(paymentWithLapsedMember);
 
         when(paymentRepository.save(payments)).thenReturn(payments);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         List<Payment> savedPayments = paymentService.savePayments(payments);
 
@@ -483,6 +503,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payment.setId(68L);
         payment.setLotteryPayment(true);
         when(paymentRepository.getOne(68L)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
         assertTrue(payment.isLotteryPayment());
 
         paymentService.markPaymentAsNonLottery(68L);
@@ -498,6 +521,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         payment.setId(68L);
         payment.setLotteryPayment(false);
         when(paymentRepository.getOne(68L)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
         assertFalse(payment.isLotteryPayment());
 
         paymentService.markPaymentForLottery(68L);

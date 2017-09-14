@@ -1,10 +1,12 @@
 package com.codaconsultancy.cclifeline.service;
 
+import com.codaconsultancy.cclifeline.domain.Configuration;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.Period;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -107,6 +109,7 @@ public class MemberService extends LifelineService {
     }
 
     public Member updateMember(Member member) {
+        forceDrawEligibilityRefresh();
         return memberRepository.save(member);
     }
 
@@ -222,5 +225,47 @@ public class MemberService extends LifelineService {
                 break;
         }
         return lastExpectedPaymentDate;
+    }
+
+    public void updateEligibilityStatuses() {
+        if (lotteryEligibilityStatusRefreshRequired()) {
+            List<MemberViewBean> members = memberRepository.findCurrentMembers();
+            boolean wasPreviouslyEligible;
+            boolean isNowEligible;
+            for (MemberViewBean member : members) {
+                wasPreviouslyEligible = member.isEligibleForDrawStored();
+                isNowEligible = isEligibleForDraw(member);
+                if (isNowEligible) {
+                    member.setEligibleForDrawStored(true);
+                    if (!wasPreviouslyEligible) {
+                        updateMember(member.toEntity());
+                    }
+
+                } else {
+                    wasPreviouslyEligible = member.isEligibleForDrawStored();
+                    member.setEligibleForDrawStored(false);
+                    if (wasPreviouslyEligible) {
+                        updateMember(member.toEntity());
+                    }
+                }
+            }
+            Configuration lastRefresh = configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE);
+            lastRefresh.setDateValue(DateTime.now().toDate());
+            Configuration refreshRequired = configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED);
+            refreshRequired.setBooleanValue(false);
+            configurationRepository.save(lastRefresh);
+            configurationRepository.save(refreshRequired);
+        }
+
+    }
+
+    public boolean lotteryEligibilityStatusRefreshRequired() {
+        Configuration byName = configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE);
+        Date lastRefresh = byName.getDateValue();
+        boolean isRefreshRequired = configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED).getBooleanValue();
+        DateTime now = DateTime.now();
+        DateTime lastRefreshDate = new DateTime(lastRefresh);
+        Duration durationSinceLastRefresh = new Duration(lastRefreshDate, now);
+        return (durationSinceLastRefresh.getStandardHours() > 24) || isRefreshRequired;
     }
 }

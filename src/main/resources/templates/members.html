@@ -58,6 +58,7 @@
                 <th>Phone No</th>
                 <th>Mobile No</th>
                 <th>Eligible For Draw</th>
+                <th>Eligible For Draw Stored</th>
             </tr>
             </thead>
             <tbody>
@@ -77,6 +78,10 @@
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
                 <td th:style="${member.isEligibleForDraw()}? 'color: green' : 'color: red'"
                     th:utext="${member.isEligibleForDraw()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">
+                    Eligible For Draw
+                </td>
+                <td th:style="${member.isEligibleForDrawStored()}? 'color: green' : 'color: red'"
+                    th:utext="${member.isEligibleForDrawStored()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">
                     Eligible For Draw
                 </td>
 

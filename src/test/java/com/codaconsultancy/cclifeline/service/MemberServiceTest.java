@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.service;
 
 import com.codaconsultancy.cclifeline.common.TestHelper;
+import com.codaconsultancy.cclifeline.domain.Configuration;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.codaconsultancy.cclifeline.service.LifelineService.ELIGIBILITY_REFRESH_REQUIRED;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -187,6 +189,9 @@ public class MemberServiceTest extends LifelineServiceTest {
         Member member = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
 
         when(memberRepository.save(member)).thenReturn(member);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Member newMember = memberService.updateMember(member);
 
@@ -328,6 +333,9 @@ public class MemberServiceTest extends LifelineServiceTest {
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(lapsedMember1.getId()))).thenReturn(19.99D);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(lapsedMember2.getId()))).thenReturn(0.00D);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(activeMember.getId()))).thenReturn(20.00D);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
         assertEquals("Open", lapsedMember1.getStatus());
         assertEquals("Open", lapsedMember2.getStatus());
         assertEquals("Open", activeMember.getStatus());

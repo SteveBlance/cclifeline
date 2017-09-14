@@ -46,6 +46,7 @@ public class MemberViewBeanTest {
         memberViewBean.setPayerType("Monthly");
         memberViewBean.setStatus("Closed");
         memberViewBean.setIsEligibleForDraw(true);
+        memberViewBean.setEligibleForDrawStored(true);
         List<AddressViewBean> addresses = new ArrayList<>();
         AddressViewBean address1 = new AddressViewBean();
         address1.setId(23L);

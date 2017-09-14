@@ -59,6 +59,7 @@ public class PaymentService extends LifelineService {
 
     public Payment savePayment(Payment payment) {
         reactivatePayerMembership(payment);
+        forceDrawEligibilityRefresh();
         return paymentRepository.save(payment);
     }
 
@@ -158,6 +159,7 @@ public class PaymentService extends LifelineService {
             reactivatePayerMembership(payment);
         }
         paymentRepository.save(payments);
+        forceDrawEligibilityRefresh();
         return payments;
     }
 
@@ -167,6 +169,7 @@ public class PaymentService extends LifelineService {
 
     public Payment updatePayment(Payment payment) {
         reactivatePayerMembership(payment);
+        forceDrawEligibilityRefresh();
         return paymentRepository.save(payment);
     }
 
@@ -218,12 +221,14 @@ public class PaymentService extends LifelineService {
     public void markPaymentAsNonLottery(Long id) {
         Payment payment = paymentRepository.getOne(id);
         payment.setLotteryPayment(false);
+        forceDrawEligibilityRefresh();
         paymentRepository.save(payment);
     }
 
     public void markPaymentForLottery(Long id) {
         Payment payment = paymentRepository.getOne(id);
         payment.setLotteryPayment(true);
+        forceDrawEligibilityRefresh();
         paymentRepository.save(payment);
     }
 }

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.codaconsultancy.cclifeline.controller.AdminController.CHANGE_PASSWORD_PAGE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -114,6 +115,49 @@ public class AdminControllerTest extends BaseTest {
         verify(securitySubjectService, never()).registerNewSecuritySubject(securitySubjectViewBean);
 
         assertEquals("add-administrator", modelAndView.getViewName());
+    }
+
+    @Test
+    public void navigateToChangePassword() {
+
+        SecuritySubject dave = new SecuritySubject();
+        dave.setForename("David");
+        when(securitySubjectService.findByUsername("dave")).thenReturn(dave);
+
+        ModelAndView modelAndView = adminController.navigateToChangePassword("dave");
+
+        SecuritySubjectViewBean user = (SecuritySubjectViewBean) modelAndView.getModel().get("user");
+        assertEquals("David", user.getForename());
+        assertEquals(CHANGE_PASSWORD_PAGE, modelAndView.getViewName());
+    }
+
+    @Test
+    public void changePassword_success() throws Exception {
+        BindingResult bindingResult = getBindingResult("user");
+        SecuritySubjectViewBean subjectViewBean = new SecuritySubjectViewBean();
+
+        ModelAndView modelAndView = adminController.changePassword(subjectViewBean, bindingResult);
+
+        verify(securitySubjectService, times(1)).updatePassword(subjectViewBean);
+
+        assertEquals("index", modelAndView.getViewName());
+    }
+
+    @Test
+    public void changePassword_failInvalidPassword() throws Exception {
+        BindingResult bindingResult = getBindingResult("user");
+        SecuritySubjectViewBean subjectViewBean = new SecuritySubjectViewBean();
+        subjectViewBean.setUsername("Dave");
+        doThrow(new SubjectPasswordIncorrectException("The New Password must not be the same as the Current Password")).when(securitySubjectService).updatePassword(subjectViewBean);
+        when(securitySubjectService.findByUsername("Dave")).thenReturn(subjectViewBean.toEntity());
+
+        ModelAndView modelAndView = adminController.changePassword(subjectViewBean, bindingResult);
+
+        verify(securitySubjectService, times(1)).updatePassword(subjectViewBean);
+
+        assertEquals("change-password", modelAndView.getViewName());
+        assertEquals("The New Password must not be the same as the Current Password", modelAndView.getModel().get("alertMessage"));
+        assertEquals("alert alert-danger", modelAndView.getModel().get("alertClass"));
     }
 
 //

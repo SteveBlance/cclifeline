@@ -15,24 +15,24 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Long nextMembershipNumber();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
                     "FROM Member m ")
     List<MemberViewBean> findAllMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
                     "FROM Member m " +
                     "WHERE m.status = 'Open' ")
     List<MemberViewBean> findCurrentMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
                     "FROM Member m " +
                     "WHERE m.status = 'TBC' ")
     List<MemberViewBean> findTBCMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
                     "FROM Member m " +
                     "WHERE m.status in ('Closed', 'Cancelled') ")
     List<MemberViewBean> findFormerMembers();

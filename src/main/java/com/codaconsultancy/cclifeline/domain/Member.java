@@ -85,6 +85,9 @@ public class Member {
     @OneToMany(mappedBy = "member")
     private List<PaymentReference> paymentReferences = new ArrayList<>();
 
+    @Column(name = "IS_ELIGIBLE_FOR_DRAW")
+    private boolean isEligibleForDrawStored;
+
     @Transient
     private boolean isEligibleForDraw;
 
@@ -242,6 +245,14 @@ public class Member {
 
     public void setEligibleForDraw(boolean isEligibleForDraw) {
         this.isEligibleForDraw = isEligibleForDraw;
+    }
+
+    public boolean isEligibleForDrawStored() {
+        return isEligibleForDrawStored;
+    }
+
+    public void setEligibleForDrawStored(boolean isEligibleForDrawStored) {
+        this.isEligibleForDrawStored = isEligibleForDrawStored;
     }
 
     public List<PaymentReference> getPaymentReferences() {

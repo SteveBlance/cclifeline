@@ -60,7 +60,7 @@ public class AdminController extends LifelineController {
     }
 
     @RequestMapping(value = "/change-password/{username}", method = RequestMethod.GET)
-    private ModelAndView navigateToChangePassword(@PathVariable String username) {
+    public ModelAndView navigateToChangePassword(@PathVariable String username) {
         SecuritySubject securitySubject = securitySubjectService.findByUsername(username);
         return modelAndView(CHANGE_PASSWORD_PAGE).addObject("user", securitySubject.toViewBean());
     }
