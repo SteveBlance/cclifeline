@@ -266,6 +266,6 @@ public class MemberService extends LifelineService {
         DateTime now = DateTime.now();
         DateTime lastRefreshDate = new DateTime(lastRefresh);
         Duration durationSinceLastRefresh = new Duration(lastRefreshDate, now);
-        return (durationSinceLastRefresh.getStandardHours() > 24) || isRefreshRequired;
+        return (durationSinceLastRefresh.getStandardHours() >= 24) || isRefreshRequired;
     }
 }
