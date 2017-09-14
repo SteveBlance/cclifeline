@@ -83,8 +83,11 @@ public class LotteryDrawViewBean {
         List<Prize> prizes = this.prizes;
         for (Prize prize : prizes) {
             Member winner = prize.getWinner();
-            prizeSummary.append(prize.getPrize()).append(": ").append(winner.getForename()).append(" ").append(winner.getSurname())
-                    .append(" (").append(winner.getMembershipNumber()).append("), ");
+            prizeSummary.append(prize.getPrize()).append(": ").append(winner.getForename()).append(" ").append(winner.getSurname());
+            if (null != winner.getAddresses().get(0).getTown() && !winner.getAddresses().get(0).getTown().isEmpty()) {
+                prizeSummary.append(", ").append(winner.getAddresses().get(0).getTown());
+            }
+            prizeSummary.append(" (").append(winner.getMembershipNumber()).append("), ");
         }
         prizeSummary.deleteCharAt(prizeSummary.length() - 1);
         prizeSummary.deleteCharAt(prizeSummary.length() - 1);

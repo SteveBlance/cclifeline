@@ -73,6 +73,7 @@
                         <th>Prize</th>
                         <th>Membership Number</th>
                         <th>Name</th>
+                        <th>Town</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Mobile</th>
@@ -84,6 +85,7 @@
                         <td th:text="${prize.prize}">Prize</td>
                         <td th:text="${prize.winner.membershipNumber}">Membership Number</td>
                         <td th:text="${prize.winner.forename + ' ' + prize.winner.surname}">Name</td>
+                        <td th:text="${prize.winner.getAddresses().get(0).town}">Town</td>
                         <td th:text="${prize.winner.email}">Email</td>
                         <td th:text="${prize.winner.landlineNumber}">Phone</td>
                         <td th:text="${prize.winner.landlineNumber}">Mobile</td>

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,6 +32,7 @@ public class LotteryDrawController extends LifelineController {
     public static final String PREPARE_DRAW_PAGE = "prepare-draw";
     public static final String MAKE_DRAW_PAGE = "make-draw";
     public static final String DRAW_RESULT_PAGE = "draw-result";
+
     @Autowired
     private LotteryDrawService lotteryDrawService;
 
@@ -99,6 +101,13 @@ public class LotteryDrawController extends LifelineController {
         notificationService.logLotteryDraw(lotteryDrawViewBean.getName());
 
         return navigateToViewDrawResult(lotteryDrawViewBean);
+    }
+
+    @RequestMapping(value = "/draw/{id}", method = RequestMethod.GET)
+    public ModelAndView navigateToDrawDetails(@PathVariable Long id) {
+        LotteryDrawViewBean lotteryDraw = lotteryDrawService.fetchLotteryDraw(id).toViewBean();
+        lotteryDraw.setNumberOfPrizes(lotteryDraw.getPrizes().size());
+        return navigateToViewDrawResult(lotteryDraw);
     }
 
     private void removeAllEntriesForWinner(Long winnerId, List<MemberViewBean> membersDrawEntries) {

@@ -44,7 +44,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="draw: ${lotteryDraws}">
+            <tr th:each="draw: ${lotteryDraws}"
+                style="cursor: pointer"
+                th:onclick="'javascript:rowClicked(\'' + ${draw.id} + '\');'">
                 <td th:text="${draw.drawDate} ? ${#dates.format(draw.drawDate, 'yyyy/MM/dd')}">Draw Date</td>
                 <td th:text="${draw.name}">Draw Name</td>
                 <td th:text="${draw.drawMaster}">Drawn By</td>
@@ -55,6 +57,11 @@
         </table>
 
         <script type="text/javascript" src="/js/jquery.dataTables.js"></script>
+        <script>
+            function rowClicked(value) {
+                location.href = "/draw/" + value;
+            }
+        </script>
         <script type="text/javascript" language="javascript" class="init">
             $(document).ready(function () {
                 $('#draws_tab').DataTable({

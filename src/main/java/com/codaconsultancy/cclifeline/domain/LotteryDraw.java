@@ -1,5 +1,9 @@
 package com.codaconsultancy.cclifeline.domain;
 
+import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
+import ma.glasnost.orika.MapperFacade;
+import ma.glasnost.orika.MapperFactory;
+import ma.glasnost.orika.impl.DefaultMapperFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -78,11 +82,22 @@ public class LotteryDraw {
         for (Prize prize : prizes) {
             Member winner = prize.getWinner();
             summary.append(prize.getPrize()).append(": ")
-                    .append(winner.getForename()).append(" ").append(winner.getSurname())
-                    .append(" (").append(winner.getMembershipNumber()).append("), ");
+                    .append(winner.getForename()).append(" ").append(winner.getSurname());
+            if (null != winner.getAddresses().get(0).getTown() && !winner.getAddresses().get(0).getTown().isEmpty()) {
+                summary.append(", ").append(winner.getAddresses().get(0).getTown());
+            }
+            summary.append(" (").append(winner.getMembershipNumber()).append("), ");
         }
         summary.deleteCharAt(summary.length() - 1);
         summary.deleteCharAt(summary.length() - 1);
         return summary.toString();
+    }
+
+    public LotteryDrawViewBean toViewBean() {
+        MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
+        mapperFactory.registerClassMap(mapperFactory.classMap(LotteryDraw.class, LotteryDrawViewBean.class)
+                .byDefault().toClassMap());
+        MapperFacade mapper = mapperFactory.getMapperFacade();
+        return mapper.map(this, LotteryDrawViewBean.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.view;
 
+import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import org.junit.Before;
@@ -30,13 +31,24 @@ public class LotteryDrawViewBeanTest {
         Prize prize1 = new Prize();
         prize1.setId(1L);
         prize1.setPrize("£250");
-        prize1.setWinner(newMember(9988L, "Jane", "Richardson"));
+        Member winner1 = newMember(9988L, "Jane", "Richardson");
+        List<Address> winner1Addresses = new ArrayList<>();
+        Address address1 = new Address();
+        address1.setTown("Dunfermline");
+        winner1Addresses.add(address1);
+        winner1.setAddresses(winner1Addresses);
+        prize1.setWinner(winner1);
         prizes.add(prize1);
 
         Prize prize2 = new Prize();
         prize2.setId(2L);
         prize2.setPrize("Hospitality package for 4 for Inverness Caledonian Thistle game");
-        prize2.setWinner(newMember(1010L, "Douglas", "McDonald"));
+        Member winner2 = newMember(1010L, "Douglas", "McDonald");
+        List<Address> winner2Addresses = new ArrayList<>();
+        Address address2 = new Address();
+        winner2Addresses.add(address2);
+        winner2.setAddresses(winner2Addresses);
+        prize2.setWinner(winner2);
         prizes.add(prize2);
         lotteryDraw.setNumberOfPrizes(prizes.size());
         lotteryDraw.setPrizes(prizes);
@@ -77,7 +89,7 @@ public class LotteryDrawViewBeanTest {
         assertEquals(2, lotteryDraw.getPrizes().size());
         assertEquals(1L, lotteryDraw.getPrizes().get(0).getId().longValue());
         assertEquals(2L, lotteryDraw.getPrizes().get(1).getId().longValue());
-        assertEquals("£250: Jane Richardson (9988), Hospitality package for 4 " +
+        assertEquals("£250: Jane Richardson, Dunfermline (9988), Hospitality package for 4 " +
                 "for Inverness Caledonian Thistle game: Douglas McDonald (1010)", lotteryDraw.showPrizesSummary());
 
     }
