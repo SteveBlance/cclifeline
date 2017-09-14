@@ -21,7 +21,7 @@ public class Configuration {
     private String stringValue;
 
     @Column(name = "BOOLEAN_VALUE")
-    private boolean booleanValue;
+    private Boolean booleanValue;
 
     @Column(name = "DATE_VALUE")
     private Date dateValue;
@@ -54,7 +54,7 @@ public class Configuration {
         return booleanValue;
     }
 
-    public void setBooleanValue(boolean booleanValue) {
+    public void setBooleanValue(Boolean booleanValue) {
         this.booleanValue = booleanValue;
     }
 
