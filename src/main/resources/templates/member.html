@@ -38,9 +38,10 @@
                        width="100%">
                     <thead></thead>
                     <tbody>
-                    <tr th:style="${member.isEligibleForDraw()}? 'background-color: #dff0d8' : 'background-color: #f2dede'">
+                    <tr th:style="${member.isEligibleForDrawStored()}? 'background-color: #dff0d8' : 'background-color: #f2dede'">
                         <td class="col-sm-3"><strong>Eligible For Draw</strong></td>
-                        <td class="col-sm-8" th:text="${member.isEligibleForDraw()}? Yes : No">Eligible For Draw</td>
+                        <td class="col-sm-8" th:text="${member.isEligibleForDrawStored()}? Yes : No">Eligible For Draw
+                        </td>
                     </tr>
                     <tr>
                         <td><strong>Last Payment Date</strong></td>

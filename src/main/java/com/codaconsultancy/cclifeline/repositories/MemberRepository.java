@@ -28,6 +28,21 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query(value =
             "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
                     "FROM Member m " +
+                    "WHERE m.status = 'Open' " +
+                    "AND m.isEligibleForDrawStored = TRUE")
+    List<MemberViewBean> findEligibleMembers();
+
+
+    @Query(value =
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
+                    "FROM Member m " +
+                    "WHERE m.status IN ('TBC', 'Open')" +
+                    "AND m.isEligibleForDrawStored = FALSE")
+    List<MemberViewBean> findIneligibleMembers();
+
+    @Query(value =
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
+                    "FROM Member m " +
                     "WHERE m.status = 'TBC' ")
     List<MemberViewBean> findTBCMembers();
 

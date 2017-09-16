@@ -100,16 +100,11 @@ public class MemberControllerTest extends BaseTest {
         long memberNumber = 1234L;
         Member member1234 = TestHelper.newMember(memberNumber, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
         when(memberService.findMemberByMembershipNumber(memberNumber)).thenReturn(member1234);
-        ArgumentCaptor<MemberViewBean> memberViewBeanArgumentCaptor = ArgumentCaptor.forClass(MemberViewBean.class);
-        when(memberService.isEligibleForDraw(memberViewBeanArgumentCaptor.capture())).thenReturn(true);
 
         ModelAndView response = memberController.memberDetails(memberNumber);
 
-        verify(memberService, times(1)).isEligibleForDraw(memberViewBeanArgumentCaptor.capture());
         verify(memberService, times(1)).findMemberByMembershipNumber(1234L);
-        assertEquals(1234L, memberViewBeanArgumentCaptor.getValue().getMembershipNumber().longValue());
         assertEquals("Bobby", ((MemberViewBean) response.getModel().get("member")).getForename());
-        assertTrue(((MemberViewBean) response.getModel().get("member")).isEligibleForDraw());
         assertEquals("member", response.getViewName());
 
     }

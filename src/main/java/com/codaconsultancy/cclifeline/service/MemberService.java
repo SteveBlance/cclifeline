@@ -34,53 +34,19 @@ public class MemberService extends LifelineService {
     private PaymentRepository paymentRepository;
 
     public List<MemberViewBean> findAllMembers() {
-        List<MemberViewBean> members = memberRepository.findAllMembers();
-        for (MemberViewBean member : members) {
-            if (isEligibleForDraw(member)) {
-                member.setIsEligibleForDraw(true);
-            } else {
-                member.setIsEligibleForDraw(false);
-            }
-        }
-        return members;
+        return memberRepository.findAllMembers();
     }
 
     public List<MemberViewBean> findCurrentMembers() {
-        List<MemberViewBean> members = memberRepository.findCurrentMembers();
-        for (MemberViewBean member : members) {
-            if (isEligibleForDraw(member)) {
-                member.setIsEligibleForDraw(true);
-            } else {
-                member.setIsEligibleForDraw(false);
-            }
-        }
-        return members;
+        return memberRepository.findCurrentMembers();
     }
 
     public List<MemberViewBean> findEligibleMembers() {
-        List<MemberViewBean> currentMembers = findCurrentMembers();
-        List<MemberViewBean> eligibleMembers = new ArrayList<>();
-        for (MemberViewBean member : currentMembers) {
-            if (isEligibleForDraw(member)) {
-                member.setIsEligibleForDraw(true);
-                eligibleMembers.add(member);
-            }
-        }
-        return eligibleMembers;
+        return memberRepository.findEligibleMembers();
     }
 
     public List<MemberViewBean> findIneligibleMembers() {
-        List<MemberViewBean> currentMembers = findCurrentMembers();
-        List<MemberViewBean> ineligibleMembers = new ArrayList<>();
-        for (MemberViewBean member : currentMembers) {
-            if (!isEligibleForDraw(member)) {
-                member.setIsEligibleForDraw(false);
-                ineligibleMembers.add(member);
-            }
-        }
-        List<MemberViewBean> tbcMembers = memberRepository.findTBCMembers();
-        ineligibleMembers.addAll(tbcMembers);
-        return ineligibleMembers;
+        return memberRepository.findIneligibleMembers();
     }
 
     public List<MemberViewBean> findFormerMembers() {
@@ -121,7 +87,7 @@ public class MemberService extends LifelineService {
         List<MemberViewBean> memberDrawEntries = new ArrayList<>();
         List<MemberViewBean> allMembers = findAllMembers();
         for (MemberViewBean member : allMembers) {
-            if (member.isEligibleForDraw()) {
+            if (member.isEligibleForDrawStored()) {
                 if (isLifelineMember(member)) {
                     // 3 entries for lifeline members
                     memberDrawEntries.add(member);

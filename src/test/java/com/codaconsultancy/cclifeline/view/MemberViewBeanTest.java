@@ -45,7 +45,6 @@ public class MemberViewBeanTest {
         memberViewBean.setMobileNumber("07766554433");
         memberViewBean.setPayerType("Monthly");
         memberViewBean.setStatus("Closed");
-        memberViewBean.setIsEligibleForDraw(true);
         memberViewBean.setEligibleForDrawStored(true);
         List<AddressViewBean> addresses = new ArrayList<>();
         AddressViewBean address1 = new AddressViewBean();
@@ -171,8 +170,8 @@ public class MemberViewBeanTest {
     }
 
     @Test
-    public void isEligibleForDraw() {
-        assertTrue(memberViewBean.isEligibleForDraw());
+    public void isEligibleForDrawStored() {
+        assertTrue(memberViewBean.isEligibleForDrawStored());
     }
 
     @Test

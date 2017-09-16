@@ -88,6 +88,7 @@ public class LotteryDrawController extends LifelineController {
             return navigateToPrepareDraw();
         }
         List<Prize> prizes = lotteryDrawViewBean.getPrizes();
+        memberService.updateEligibilityStatuses();
         List<MemberViewBean> membersDrawEntries = memberService.fetchMemberDrawEntries();
 
         for (Prize prize : prizes) {

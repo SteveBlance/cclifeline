@@ -88,9 +88,6 @@ public class Member {
     @Column(name = "IS_ELIGIBLE_FOR_DRAW")
     private boolean isEligibleForDrawStored;
 
-    @Transient
-    private boolean isEligibleForDraw;
-
     public Long getId() {
         return id;
     }
@@ -233,18 +230,6 @@ public class Member {
 
     public void setPrizeWins(List<Prize> prizeWins) {
         this.prizeWins = prizeWins;
-    }
-
-    public void setIsEligibleForDraw(boolean isEligibleForDraw) {
-        this.isEligibleForDraw = isEligibleForDraw;
-    }
-
-    public boolean isEligibleForDraw() {
-        return isEligibleForDraw;
-    }
-
-    public void setEligibleForDraw(boolean isEligibleForDraw) {
-        this.isEligibleForDraw = isEligibleForDraw;
     }
 
     public boolean isEligibleForDrawStored() {

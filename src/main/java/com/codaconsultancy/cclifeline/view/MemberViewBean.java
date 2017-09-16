@@ -81,7 +81,6 @@ public class MemberViewBean {
     private List<AddressViewBean> addresses = new ArrayList<>();
     private List<Prize> prizeWins;
     private Payment lastPayment;
-    private boolean isEligibleForDraw;
     private List<PaymentReference> paymentReferences;
 
     public Long getId() {
@@ -228,18 +227,6 @@ public class MemberViewBean {
         return prizeWins;
     }
 
-    public void setIsEligibleForDraw(boolean isEligibleForDraw) {
-        this.isEligibleForDraw = isEligibleForDraw;
-    }
-
-    public boolean isEligibleForDraw() {
-        return isEligibleForDraw;
-    }
-
-    public void setEligibleForDraw(boolean isEligibleForDraw) {
-        this.isEligibleForDraw = isEligibleForDraw;
-    }
-
     public List<PaymentReference> getPaymentReferences() {
         return paymentReferences;
     }
@@ -264,6 +251,10 @@ public class MemberViewBean {
 
     public boolean isEligibleForDrawStored() {
         return isEligibleForDrawStored;
+    }
+
+    public void setIsEligibleForDrawStored(boolean isEligibleForDrawStored) {
+        this.isEligibleForDrawStored = isEligibleForDrawStored;
     }
 
     public void setEligibleForDrawStored(boolean isEligibleForDrawStored) {

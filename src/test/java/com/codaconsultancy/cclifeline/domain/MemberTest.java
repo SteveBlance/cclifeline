@@ -41,7 +41,7 @@ public class MemberTest {
         member.setMobileNumber("07766554433");
         member.setPayerType("Monthly");
         member.setStatus("Closed");
-        member.setIsEligibleForDraw(true);
+        member.setEligibleForDrawStored(true);
         List<Address> addresses = new ArrayList<>();
         Address address1 = new Address();
         address1.setId(23L);
@@ -167,7 +167,7 @@ public class MemberTest {
     }
 
     @Test
-    public void isElegibleForDraw() {
-        assertTrue(member.isEligibleForDraw());
+    public void isElegibleForDrawStored() {
+        assertTrue(member.isEligibleForDrawStored());
     }
 }

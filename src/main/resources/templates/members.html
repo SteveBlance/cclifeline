@@ -58,11 +58,10 @@
                 <th>Phone No</th>
                 <th>Mobile No</th>
                 <th>Eligible For Draw</th>
-                <th>Eligible For Draw Stored</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:class="${member.isEligibleForDraw()}? success : danger" th:each="member: ${members}"
+            <tr th:class="${member.isEligibleForDrawStored()}? success : danger" th:each="member: ${members}"
                 style="cursor: pointer"
                 th:onclick="'javascript:rowClicked(\'' + ${member.membershipNumber} + '\');'">
                 <td th:text="${member.membershipNumber}">Membership No</td>
@@ -76,10 +75,6 @@
                 <td th:text="${member.email}">Email</td>
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
-                <td th:style="${member.isEligibleForDraw()}? 'color: green' : 'color: red'"
-                    th:utext="${member.isEligibleForDraw()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">
-                    Eligible For Draw
-                </td>
                 <td th:style="${member.isEligibleForDrawStored()}? 'color: green' : 'color: red'"
                     th:utext="${member.isEligibleForDrawStored()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">
                     Eligible For Draw
@@ -116,7 +111,6 @@
                     Lapsed Memberships
                 </button>
             </form>
-            <!--<a th:href="@{/close-lapsed-memberships}" class="btn btn-danger" role="button">Close Lapsed Memberships</a>-->
         </div>
     </div>
 </div>
