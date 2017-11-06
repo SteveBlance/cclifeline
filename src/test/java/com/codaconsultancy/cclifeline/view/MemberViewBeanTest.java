@@ -11,8 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MemberViewBeanTest {
     private MemberViewBean memberViewBean;
@@ -172,7 +171,10 @@ public class MemberViewBeanTest {
     @Test
     public void isEligibleForDrawStored() {
         assertTrue(memberViewBean.isEligibleForDrawStored());
+        memberViewBean.setIsEligibleForDrawStored(false);
+        assertFalse(memberViewBean.isEligibleForDrawStored());
     }
+
 
     @Test
     public void getLastPayment() {

@@ -32,6 +32,7 @@ public class PaymentViewBeanTest {
         paymentViewBean.setMemberId(member.getId());
         paymentViewBean.setLotteryPayment(true);
         paymentViewBean.setComments("Paid at meeting");
+        paymentViewBean.setMemberDisplayText("Joe Smith (1234)");
     }
 
     @Test
@@ -88,7 +89,12 @@ public class PaymentViewBeanTest {
     }
 
     @Test
-    public void comments() {
+    public void getMemberDisplayText() {
+        assertEquals("Joe Smith (1234)", paymentViewBean.getMemberDisplayText());
+    }
+
+    @Test
+    public void getComments() {
         assertEquals("Paid at meeting", paymentViewBean.getComments());
     }
 

@@ -20,6 +20,7 @@ public class SecuritySubjectViewBeanTest {
         securitySubjectViewBean.setConfirmPassword("passwirS");
         securitySubjectViewBean.setFailedLoginAttempts(3);
         securitySubjectViewBean.setAccountLocked(true);
+        securitySubjectViewBean.setPreviousPassword("p455w0rd");
     }
 
     @Test
@@ -55,6 +56,11 @@ public class SecuritySubjectViewBeanTest {
     @Test
     public void isAccountLocked() {
         assertTrue(securitySubjectViewBean.isAccountLocked());
+    }
+
+    @Test
+    public void getPreviousPassword() {
+        assertEquals("p455w0rd", securitySubjectViewBean.getPreviousPassword());
     }
 
 }

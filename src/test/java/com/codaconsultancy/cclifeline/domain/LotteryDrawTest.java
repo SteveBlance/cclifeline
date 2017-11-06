@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.domain;
 
+import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -88,6 +89,18 @@ public class LotteryDrawTest {
         assertEquals("£250: Jane Richardson, Dunfermline (9988), Hospitality package for 4 " +
                 "for Inverness Caledonian Thistle game: Douglas McDonald (1010)", lotteryDraw.showPrizesSummary());
 
+    }
+
+    @Test
+    public void toViewBean() {
+        LotteryDrawViewBean lotteryDrawViewBean = lotteryDraw.toViewBean();
+        assertEquals(98L, lotteryDrawViewBean.getId().longValue());
+        Date drawDate = lotteryDrawViewBean.getDrawDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+        assertEquals("01/05/2017", sdf.format(drawDate));
+        assertEquals("March Mayhem", lotteryDrawViewBean.getName());
+        assertEquals("Ross", lotteryDrawViewBean.getDrawMaster());
+        assertEquals(2, lotteryDrawViewBean.getPrizes().size());
     }
 
 }
