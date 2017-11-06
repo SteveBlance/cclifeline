@@ -95,8 +95,6 @@ public class LotteryDraw {
 
     public LotteryDrawViewBean toViewBean() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
-        mapperFactory.registerClassMap(mapperFactory.classMap(LotteryDraw.class, LotteryDrawViewBean.class)
-                .byDefault().toClassMap());
         MapperFacade mapper = mapperFactory.getMapperFacade();
         return mapper.map(this, LotteryDrawViewBean.class);
     }
