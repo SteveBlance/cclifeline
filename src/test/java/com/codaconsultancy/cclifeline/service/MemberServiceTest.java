@@ -126,6 +126,28 @@ public class MemberServiceTest extends LifelineServiceTest {
     }
 
     @Test
+    public void findEligibleMembers() {
+        List<MemberViewBean> eligibleMembers = new ArrayList<>();
+        when(memberRepository.findEligibleMembers()).thenReturn(eligibleMembers);
+
+        List<MemberViewBean> members = memberService.findEligibleMembers();
+
+        verify(memberRepository, times(1)).findEligibleMembers();
+        assertSame(members, eligibleMembers);
+    }
+
+    @Test
+    public void findIneligibleMembers() {
+        List<MemberViewBean> ineligibleMembers = new ArrayList<>();
+        when(memberRepository.findIneligibleMembers()).thenReturn(ineligibleMembers);
+
+        List<MemberViewBean> members = memberService.findIneligibleMembers();
+
+        verify(memberRepository, times(1)).findIneligibleMembers();
+        assertSame(members, ineligibleMembers);
+    }
+
+    @Test
     public void findMemberByMembershipNumber_success() {
         Member member = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
 
@@ -152,9 +174,10 @@ public class MemberServiceTest extends LifelineServiceTest {
     @Test
     public void saveMember() {
         Member member = TestHelper.newMember(0L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", null);
-
+        member.setJoinDate(null);
         when(memberRepository.nextMembershipNumber()).thenReturn(2566L);
         when(memberRepository.save(member)).thenReturn(member);
+        assertNull(member.getJoinDate());
 
         Member newMember = memberService.saveMember(member);
 
@@ -164,6 +187,7 @@ public class MemberServiceTest extends LifelineServiceTest {
         assertEquals("Billy", newMember.getForename());
         assertEquals("Whiz", newMember.getSurname());
         assertEquals("TBC", newMember.getStatus());
+        assertNotNull(member.getJoinDate());
         assertEquals(DateTime.now().getDayOfYear(), new DateTime(newMember.getJoinDate()).getDayOfYear());
 
     }
@@ -178,6 +202,10 @@ public class MemberServiceTest extends LifelineServiceTest {
         when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Member newMember = memberService.updateMember(member);
+
+        verify(configurationRepository, times(1)).findByName(ELIGIBILITY_REFRESH_REQUIRED);
+        assertTrue(refreshRequired.getBooleanValue());
+        verify(configurationRepository, times(1)).save(refreshRequired);
 
         verify(memberRepository, never()).nextMembershipNumber();
         verify(memberRepository, times(1)).save(member);
