@@ -11,12 +11,20 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.codaconsultancy.cclifeline.controller.AdminController.CHANGE_PASSWORD_PAGE;
@@ -160,6 +168,79 @@ public class AdminControllerTest extends BaseTest {
         assertEquals("alert alert-danger", modelAndView.getModel().get("alertClass"));
     }
 
+    @Test
+    public void changePassword_validationErrors() {
+        BindingResult bindingResult = getBindingResult("user");
+        bindingResult.addError(new ObjectError("user", "Problem"));
+
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+        securitySubjectViewBean.setUsername("Dave");
+        when(securitySubjectService.findByUsername("Dave")).thenReturn(securitySubjectViewBean.toEntity());
+
+        ModelAndView modelAndView = adminController.changePassword(securitySubjectViewBean, bindingResult);
+
+        assertEquals("change-password", modelAndView.getViewName());
+    }
+
+    @Test
+    public void authenticationSuccess() {
+        User user = new User("Bob", "", new ArrayList<>());
+        Authentication authentication = getMockAuthentication(user);
+        AuthenticationSuccessEvent authenticationSuccessEvent = new AuthenticationSuccessEvent(authentication);
+
+        adminController.authenticationSuccess(authenticationSuccessEvent);
+
+        verify(securitySubjectService, times(1)).registerSuccessfulLogin("Bob");
+    }
+
+    @Test
+    public void authenticationFailed() {
+        Authentication authentication = getMockAuthentication("Jim");
+        AuthenticationException exception = new BadCredentialsException("Bad credetials");
+        AuthenticationFailureBadCredentialsEvent authenticationFailedEvent = new AuthenticationFailureBadCredentialsEvent(authentication, exception);
+
+        adminController.authenticationFailed(authenticationFailedEvent);
+
+        verify(securitySubjectService, times(1)).registerFailedLoginAttempt("Jim");
+    }
+
+    private Authentication getMockAuthentication(final Object user) {
+        return new Authentication() {
+            @Override
+            public Collection<? extends GrantedAuthority> getAuthorities() {
+                return null;
+            }
+
+            @Override
+            public Object getCredentials() {
+                return null;
+            }
+
+            @Override
+            public Object getDetails() {
+                return null;
+            }
+
+            @Override
+            public Object getPrincipal() {
+                return user;
+            }
+
+            @Override
+            public boolean isAuthenticated() {
+                return false;
+            }
+
+            @Override
+            public void setAuthenticated(boolean b) throws IllegalArgumentException {
+            }
+
+            @Override
+            public String getName() {
+                return null;
+            }
+        };
+    }
 //
 //    @Test
 //    public void encryptPassword() {

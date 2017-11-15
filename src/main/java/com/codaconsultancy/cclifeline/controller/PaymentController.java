@@ -28,13 +28,14 @@ public class PaymentController extends LifelineController {
 
     private static final String ENABLED = "enabled";
     private static final String DISABLED = "disabled";
-    private static final String MEMBER_PAYMENTS_PAGE = "member-payments";
-    private static final String PAYMENT_DETAILS_PAGE = "payment";
-    private static final String ADD_PAYMENT_PAGE = "add-payment";
-    private static final String EDIT_PAYMENT_PAGE = "edit-payment";
-    private static final String PAYMENT_REFERENCES_PAGE = "payment-references";
-    private static final String ADD_PAYMENT_REFERENCE_PAGE = "add-payment-reference";
-    private static final String UPLOAD_PAYMENTS_PAGE = "upload-payments";
+    static final String PAYMENTS_PAGE = "payments";
+    static final String MEMBER_PAYMENTS_PAGE = "member-payments";
+    static final String PAYMENT_DETAILS_PAGE = "payment";
+    static final String ADD_PAYMENT_PAGE = "add-payment";
+    static final String EDIT_PAYMENT_PAGE = "edit-payment";
+    static final String PAYMENT_REFERENCES_PAGE = "payment-references";
+    static final String ADD_PAYMENT_REFERENCE_PAGE = "add-payment-reference";
+    static final String UPLOAD_PAYMENTS_PAGE = "upload-payments";
     private static final String CREDITED_ACCOUNT = "82621900174982CA";
 
     @Autowired
@@ -81,7 +82,7 @@ public class PaymentController extends LifelineController {
                 allTabStatus = DISABLED;
                 break;
         }
-        return modelAndView("payments").addObject("payments", payments)
+        return modelAndView(PAYMENTS_PAGE).addObject("payments", payments)
                 .addObject("title", title)
                 .addObject("recentTabStatus", recentTabStatus)
                 .addObject("matchedTabStatus", matchedTabStatus)
@@ -226,7 +227,7 @@ public class PaymentController extends LifelineController {
         } catch (IOException | NumberFormatException | ArrayIndexOutOfBoundsException e) {
             logger.error(e.getMessage());
             ModelAndView modelAndView = modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject(DISABLED, true);
-            return addAlertMessage(modelAndView, "danger", "Upload of payment failed. Please check bank statement file.");
+            return addAlertMessage(modelAndView, "danger", "Upload of payments failed. Please check bank statement file.");
         }
         notificationService.logPayment(parsedPayments.size());
         return modelAndView(PaymentController.UPLOAD_PAYMENTS_PAGE).addObject("payments", parsedPayments).addObject("filename", filename).addObject(DISABLED, false);

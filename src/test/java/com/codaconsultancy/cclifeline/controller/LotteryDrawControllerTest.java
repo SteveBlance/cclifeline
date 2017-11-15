@@ -172,4 +172,27 @@ public class LotteryDrawControllerTest extends BaseTest {
         assertEquals("prepare-draw", modelAndView.getViewName());
     }
 
+    @Test
+    public void navigateToDrawDetails() {
+        long drawId = 6789L;
+        LotteryDraw lotteryDraw = new LotteryDraw();
+        lotteryDraw.setId(drawId);
+        lotteryDraw.setDrawMaster("Jimmy");
+        lotteryDraw.setName("The Big One");
+        List<Prize> prizes = new ArrayList<>();
+        prizes.add(new Prize());
+        prizes.add(new Prize());
+        prizes.add(new Prize());
+        lotteryDraw.setPrizes(prizes);
+        when(lotteryDrawService.fetchLotteryDraw(drawId)).thenReturn(lotteryDraw);
+
+        ModelAndView modelAndView = lotteryDrawController.navigateToDrawDetails(drawId);
+
+        assertEquals(LotteryDrawController.DRAW_RESULT_PAGE, modelAndView.getViewName());
+        LotteryDrawViewBean lotteryDrawViewBean = (LotteryDrawViewBean) modelAndView.getModel().get("lotteryDraw");
+        assertEquals("Jimmy", lotteryDrawViewBean.getDrawMaster());
+        assertEquals("The Big One", lotteryDrawViewBean.getName());
+        assertEquals(3, modelAndView.getModel().get("numberOfPrizes"));
+    }
+
 }

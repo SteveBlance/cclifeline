@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -57,7 +60,15 @@ public class MemberControllerTest extends BaseTest {
     }
 
     @Test
-    public void home() throws Exception {
+    public void testUserNotYetLoggedIn() {
+        Authentication auth = new PreAuthenticatedAuthenticationToken("Bob", "password");
+        auth.setAuthenticated(false);
+        SecurityContextHolder.getContext().setAuthentication(auth);
+        assertEquals("Bob", memberController.loggedInUser());
+    }
+
+    @Test
+    public void navigateToHomePage() throws Exception {
         List<Notification> notifications = new ArrayList<>();
         when(memberService.countAllCurrentMembers()).thenReturn(22L);
         when(lotteryDrawService.countAllWinners()).thenReturn(18L);
@@ -75,24 +86,144 @@ public class MemberControllerTest extends BaseTest {
     }
 
     @Test
-    public void members() throws Exception {
-        List<MemberViewBean> members = new ArrayList<>();
-        MemberViewBean member1 = TestHelper.newMemberViewBean(123L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
-        MemberViewBean member2 = TestHelper.newMemberViewBean(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
-        members.add(member1);
-        members.add(member2);
+    public void navigateToHomePage_redirectToForcedPasswordChange() throws Exception {
+        SecuritySubject securitySubjectNeedingPasswordChanged = new SecuritySubject();
+        securitySubjectNeedingPasswordChanged.setPasswordToBeChanged(true);
+
+        when(securitySubjectService.findByUsername(any(String.class))).thenReturn(securitySubjectNeedingPasswordChanged);
+        List<Notification> notifications = new ArrayList<>();
+        when(memberService.countAllCurrentMembers()).thenReturn(22L);
+        when(lotteryDrawService.countAllWinners()).thenReturn(18L);
+        when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
+
+        ModelAndView response = memberController.home();
+
+        verify(memberService, times(1)).countAllCurrentMembers();
+        verify(lotteryDrawService, times(1)).countAllWinners();
+        assertEquals(22L, response.getModel().get("memberCount"));
+        assertEquals(18L, response.getModel().get("totalNumberOfWinners"));
+        assertEquals("alert alert-info", response.getModel().get("alertClass"));
+        assertEquals("Password must be between 8 and 100 characters and must contain uppercase characters, lowercase characters and numbers", response.getModel().get("alertMessage"));
+        assertEquals("change-password", response.getViewName());
+    }
+
+    @Test
+    public void navigateToMembers_all() throws Exception {
+        List<MemberViewBean> members = getMockMembers();
         when(memberService.countAllCurrentMembers()).thenReturn(22L);
         when(memberService.findAllMembers()).thenReturn(members);
 
         ModelAndView response = memberController.members("all");
 
         verify(memberService, times(1)).findAllMembers();
+        verify(memberService, times(1)).updateEligibilityStatuses();
 
         assertEquals(2L, response.getModel().get("memberCount"));
         assertSame(members, response.getModel().get("members"));
         assertEquals("All members", response.getModel().get("title"));
         assertEquals("disabled", response.getModel().get("allTabStatus"));
+        assertEquals("enabled", response.getModel().get("currentTabStatus"));
+        assertEquals("enabled", response.getModel().get("formerTabStatus"));
+        assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
         assertEquals("members", response.getViewName());
+    }
+
+    @Test
+    public void navigateToMembers_current() throws Exception {
+        List<MemberViewBean> members = getMockMembers();
+        when(memberService.countAllCurrentMembers()).thenReturn(2L);
+        when(memberService.findCurrentMembers()).thenReturn(members);
+
+        ModelAndView response = memberController.members("current");
+
+        verify(memberService, times(1)).findCurrentMembers();
+        verify(memberService, times(1)).updateEligibilityStatuses();
+
+        assertEquals(2L, response.getModel().get("memberCount"));
+        assertSame(members, response.getModel().get("members"));
+        assertEquals("Current members", response.getModel().get("title"));
+        assertEquals("disabled", response.getModel().get("currentTabStatus"));
+        assertEquals("enabled", response.getModel().get("allTabStatus"));
+        assertEquals("enabled", response.getModel().get("formerTabStatus"));
+        assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("members", response.getViewName());
+    }
+
+    @Test
+    public void navigateToMembers_former() throws Exception {
+        List<MemberViewBean> members = getMockMembers();
+        when(memberService.countAllCurrentMembers()).thenReturn(2L);
+        when(memberService.findFormerMembers()).thenReturn(members);
+
+        ModelAndView response = memberController.members("former");
+
+        verify(memberService, times(1)).findFormerMembers();
+        verify(memberService, times(1)).updateEligibilityStatuses();
+
+        assertEquals(2L, response.getModel().get("memberCount"));
+        assertSame(members, response.getModel().get("members"));
+        assertEquals("Former members", response.getModel().get("title"));
+        assertEquals("disabled", response.getModel().get("formerTabStatus"));
+        assertEquals("enabled", response.getModel().get("allTabStatus"));
+        assertEquals("enabled", response.getModel().get("currentTabStatus"));
+        assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("members", response.getViewName());
+    }
+
+    @Test
+    public void navigateToMembers_eligible() throws Exception {
+        List<MemberViewBean> members = getMockMembers();
+        when(memberService.countAllCurrentMembers()).thenReturn(2L);
+        when(memberService.findEligibleMembers()).thenReturn(members);
+
+        ModelAndView response = memberController.members("eligible");
+
+        verify(memberService, times(1)).findEligibleMembers();
+        verify(memberService, times(1)).updateEligibilityStatuses();
+
+        assertEquals(2L, response.getModel().get("memberCount"));
+        assertSame(members, response.getModel().get("members"));
+        assertEquals("Eligible for draw", response.getModel().get("title"));
+        assertEquals("disabled", response.getModel().get("eligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("formerTabStatus"));
+        assertEquals("enabled", response.getModel().get("allTabStatus"));
+        assertEquals("enabled", response.getModel().get("currentTabStatus"));
+        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("members", response.getViewName());
+    }
+
+    @Test
+    public void navigateToMembers_ineligible() throws Exception {
+        List<MemberViewBean> members = getMockMembers();
+        when(memberService.countAllCurrentMembers()).thenReturn(2L);
+        when(memberService.findIneligibleMembers()).thenReturn(members);
+
+        ModelAndView response = memberController.members("ineligible");
+
+        verify(memberService, times(1)).findIneligibleMembers();
+        verify(memberService, times(1)).updateEligibilityStatuses();
+
+        assertEquals(2L, response.getModel().get("memberCount"));
+        assertSame(members, response.getModel().get("members"));
+        assertEquals("Ineligible for draw", response.getModel().get("title"));
+        assertEquals("disabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("formerTabStatus"));
+        assertEquals("enabled", response.getModel().get("allTabStatus"));
+        assertEquals("enabled", response.getModel().get("currentTabStatus"));
+        assertEquals("members", response.getViewName());
+    }
+
+    private List<MemberViewBean> getMockMembers() {
+        List<MemberViewBean> members = new ArrayList<>();
+        MemberViewBean member1 = TestHelper.newMemberViewBean(123L, "Bobby", "Smith", "bs@email.com", "01383 776655", "077665544", "Monthly", "Lifeline", "", "Open");
+        MemberViewBean member2 = TestHelper.newMemberViewBean(124L, "Jane", "Wilkinson", "jw@email.com", "01383 414141", "077889900", "Monthly", "Lifeline", "", "Open");
+        members.add(member1);
+        members.add(member2);
+        return members;
     }
 
     @Test
@@ -290,6 +421,16 @@ public class MemberControllerTest extends BaseTest {
     @Test
     public void navigateExportData() {
         assertEquals("export-data", memberController.navigateExportData().getViewName());
+    }
+
+    @Test
+    public void navigateToLogin() {
+        assertEquals("login", memberController.navigateToLogin().getViewName());
+    }
+
+    @Test
+    public void navigateToLogout() {
+        assertEquals("logout", memberController.navigateToLogout().getViewName());
     }
 
 }

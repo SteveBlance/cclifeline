@@ -107,10 +107,6 @@ public class MemberController extends LifelineController {
                 .addObject("allTabStatus", allTabStatus);
     }
 
-    private boolean drawEligibilityStatusRefreshRequired() {
-        return memberService.lotteryEligibilityStatusRefreshRequired();
-    }
-
     @RequestMapping(value = "/member/{number}", method = RequestMethod.GET)
     public ModelAndView memberDetails(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);

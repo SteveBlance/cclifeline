@@ -16,11 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -61,7 +64,7 @@ public class PaymentControllerTest extends BaseTest {
 
         ModelAndView modelAndView = paymentController.navigateToPayments("recent");
 
-        assertEquals("payments", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENTS_PAGE, modelAndView.getViewName());
         List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
         assertEquals(3, foundPayments.size());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002F);
@@ -88,7 +91,7 @@ public class PaymentControllerTest extends BaseTest {
 
         ModelAndView modelAndView = paymentController.navigateToPayments("all");
 
-        assertEquals("payments", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENTS_PAGE, modelAndView.getViewName());
         List<Payment> foundPayments = (List<Payment>) modelAndView.getModel().get("payments");
         assertEquals(3, foundPayments.size());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002F);
@@ -116,7 +119,7 @@ public class PaymentControllerTest extends BaseTest {
 
         ModelAndView modelAndView = paymentController.navigateToPaymentsForMember(member.getMembershipNumber());
 
-        assertEquals("member-payments", modelAndView.getViewName());
+        assertEquals(PaymentController.MEMBER_PAYMENTS_PAGE, modelAndView.getViewName());
         assertEquals(1212L, ((Member) modelAndView.getModel().get("member")).getMembershipNumber().longValue());
         assertEquals(3, ((List) modelAndView.getModel().get("payments")).size());
     }
@@ -131,7 +134,7 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.navigateToPaymentDetails(paymentId);
 
         verify(paymentService, times(1)).findById(paymentId);
-        assertEquals("payment", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENT_DETAILS_PAGE, modelAndView.getViewName());
         assertSame(payment, modelAndView.getModel().get("payment"));
     }
 
@@ -144,7 +147,7 @@ public class PaymentControllerTest extends BaseTest {
 
         ModelAndView modelAndView = paymentController.navigateToPayments("matched");
 
-        assertEquals("payments", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENTS_PAGE, modelAndView.getViewName());
         List<PaymentViewBean> foundPayments = (List<PaymentViewBean>) modelAndView.getModel().get("payments");
         assertSame(notifications, modelAndView.getModel().get("notifications"));
         assertEquals(3, foundPayments.size());
@@ -166,7 +169,7 @@ public class PaymentControllerTest extends BaseTest {
 
         ModelAndView modelAndView = paymentController.navigateToPayments("unmatched");
 
-        assertEquals("payments", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENTS_PAGE, modelAndView.getViewName());
         List<PaymentViewBean> foundPayments = (List<PaymentViewBean>) modelAndView.getModel().get("payments");
         assertEquals(3, foundPayments.size());
         assertSame(notifications, modelAndView.getModel().get("notifications"));
@@ -187,7 +190,7 @@ public class PaymentControllerTest extends BaseTest {
 
         ModelAndView modelAndView = paymentController.navigateToPayments("non-lottery");
 
-        assertEquals("payments", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENTS_PAGE, modelAndView.getViewName());
         List<PaymentViewBean> foundPayments = (List<PaymentViewBean>) modelAndView.getModel().get("payments");
         assertEquals(3, foundPayments.size());
         assertSame(notifications, modelAndView.getModel().get("notifications"));
@@ -213,7 +216,7 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.navigateToAddPayment();
 
         verify(memberService, times(1)).findAllMembersOrderedBySurname();
-        assertEquals("add-payment", modelAndView.getViewName());
+        assertEquals(PaymentController.ADD_PAYMENT_PAGE, modelAndView.getViewName());
         assertEquals(3, ((List) modelAndView.getModel().get("members")).size());
         Object payment = modelAndView.getModel().get("payment");
         assertTrue(payment instanceof PaymentViewBean);
@@ -239,7 +242,7 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView response = paymentController.navigateToEditPayment(1234L);
 
         verify(memberService, times(1)).findAllMembersOrderedBySurname();
-        assertEquals("edit-payment", response.getViewName());
+        assertEquals(PaymentController.EDIT_PAYMENT_PAGE, response.getViewName());
         Object paymentViewBean = response.getModel().get("payment");
         assertTrue(paymentViewBean instanceof PaymentViewBean);
         assertEquals("GH 1234", ((PaymentViewBean) paymentViewBean).getCreditReference());
@@ -272,7 +275,7 @@ public class PaymentControllerTest extends BaseTest {
         assertEquals(12.23F, savedPayment.getPaymentAmount(), 0.002F);
         assertEquals("f@mail.com", savedPayment.getMember().getEmail());
         verify(notificationService, times(1)).logPayment(1);
-        assertEquals("payment", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENT_DETAILS_PAGE, modelAndView.getViewName());
     }
 
     public void addPaymentAndStoreReference_success() throws Exception {
@@ -490,7 +493,7 @@ public class PaymentControllerTest extends BaseTest {
     public void deletePayment() {
         ModelAndView modelAndView = paymentController.deletePayment(78L);
         verify(paymentService, times(1)).deletePayment(78L);
-        assertEquals("payments", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENTS_PAGE, modelAndView.getViewName());
         assertEquals("Unmatched payments", modelAndView.getModel().get("title"));
     }
 
@@ -501,7 +504,7 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.markPaymentAsNonLottery(paymentId);
 
         verify(paymentService, times(1)).markPaymentAsNonLottery(paymentId);
-        assertEquals("payment", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENT_DETAILS_PAGE, modelAndView.getViewName());
         assertEquals("Payment marked as non-lottery payment", modelAndView.getModel().get("alertMessage"));
         assertEquals("alert alert-success", modelAndView.getModel().get("alertClass"));
     }
@@ -513,9 +516,45 @@ public class PaymentControllerTest extends BaseTest {
         ModelAndView modelAndView = paymentController.markPaymentForLottery(paymentId);
 
         verify(paymentService, times(1)).markPaymentForLottery(paymentId);
-        assertEquals("payment", modelAndView.getViewName());
+        assertEquals(PaymentController.PAYMENT_DETAILS_PAGE, modelAndView.getViewName());
         assertEquals("alert alert-success", modelAndView.getModel().get("alertClass"));
         assertEquals("Payment marked as a lottery payment", modelAndView.getModel().get("alertMessage"));
+    }
+
+    @Test
+    public void uploadPayment() throws Exception {
+        byte[] content = new byte[10];
+        MultipartFile file = new MockMultipartFile("payments.csv", "payments.csv", "", content);
+        List<Payment> payments = getPayments();
+        when(paymentService.parsePayments(anyString(), eq("payments.csv"))).thenReturn(payments);
+
+        ModelAndView modelAndView = paymentController.handleFileUpload(file);
+
+        verify(paymentService, times(1)).parsePayments(anyString(), eq("payments.csv"));
+        verify(paymentService, times(1)).savePayments(payments);
+        verify(notificationService, times(1)).logPayment(3);
+        assertEquals(PaymentController.UPLOAD_PAYMENTS_PAGE, modelAndView.getViewName());
+        assertEquals("payments.csv", modelAndView.getModel().get("filename"));
+        assertFalse((boolean) modelAndView.getModel().get("disabled"));
+    }
+
+    @Test
+    public void uploadPayment_failure() throws Exception {
+        byte[] content = new byte[10];
+        MultipartFile file = new MockMultipartFile("payments.csv", "payments.csv", "", content);
+        List<Payment> payments = getPayments();
+        when(paymentService.parsePayments(anyString(), eq("payments.csv"))).thenThrow(new IOException("Invalid file"));
+
+        ModelAndView modelAndView = paymentController.handleFileUpload(file);
+
+        verify(paymentService, times(1)).parsePayments(anyString(), eq("payments.csv"));
+        verify(paymentService, never()).savePayments(payments);
+        verify(notificationService, never()).logPayment(3);
+        assertEquals(PaymentController.UPLOAD_PAYMENTS_PAGE, modelAndView.getViewName());
+        assertEquals("payments.csv", modelAndView.getModel().get("filename"));
+        assertTrue((boolean) modelAndView.getModel().get("disabled"));
+        assertEquals("alert alert-danger", modelAndView.getModel().get("alertClass"));
+        assertEquals("Upload of payments failed. Please check bank statement file.", modelAndView.getModel().get("alertMessage"));
     }
 
 
