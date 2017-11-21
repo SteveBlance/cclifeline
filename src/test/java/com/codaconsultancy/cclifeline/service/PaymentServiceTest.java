@@ -261,6 +261,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
         verify(paymentRepository, times(1)).save(payment);
         verify(memberRepository, never()).save(member);
+        ArgumentCaptor<Configuration> configurationArgumentCaptor = ArgumentCaptor.forClass(Configuration.class);
+        verify(configurationRepository, times(1)).findByName(ELIGIBILITY_REFRESH_REQUIRED);
+        verify(configurationRepository, times(1)).save(configurationArgumentCaptor.capture());
         assertEquals("Open", member.getStatus());
 
         assertSame(payment, savedPayment);
@@ -314,7 +317,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
         verify(paymentRepository, times(1)).save(payments);
         verify(memberRepository, times(1)).save(lapsedMember);
-        verify(memberRepository, never()).save(currentMember);
+        ArgumentCaptor<Configuration> configurationArgumentCaptor = ArgumentCaptor.forClass(Configuration.class);
+        verify(configurationRepository, times(1)).findByName(ELIGIBILITY_REFRESH_REQUIRED);
+        verify(configurationRepository, times(1)).save(configurationArgumentCaptor.capture());
         assertSame(payments, savedPayments);
         assertEquals("Open", lapsedMember.getStatus());
     }
@@ -375,14 +380,44 @@ public class PaymentServiceTest extends LifelineServiceTest {
     }
 
     @Test
-    public void parsePayments_successWIth3DigitMembershipNumber() throws Exception {
+    public void parsePayments_successWith3DigitMembershipNumber() throws Exception {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         Member member2 = TestHelper.newMember(379L, "Ross", "McKinlay", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
         members.add(member2);
         when(memberRepository.findAll()).thenReturn(members);
+
         List<Payment> payments = paymentService.parsePayments(MATCH__3_DIGIT_MEMBERSHIP_NUMBER, "test.csv");
+
+        assertEquals(1, payments.size());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        assertEquals("20170403", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
+        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
+        assertEquals("BANK GIRO CREDIT 379", payments.get(0).getCreditReference());
+        assertEquals("R F MCKINLAY", payments.get(0).getName());
+        assertEquals(member2.getId(), payments.get(0).getMember().getId());
+    }
+
+    @Test
+    public void parsePayments_successWithMatchingReference() throws Exception {
+        List<Member> members = new ArrayList<>();
+        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
+        Member member2 = TestHelper.newMember(9999L, "Ross", "McKinlay", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
+        members.add(member1);
+        PaymentReference paymentReference = new PaymentReference("BANK GIRO CREDIT 379", "R F MCKINLAY", true, null);
+        List<PaymentReference> references = new ArrayList<>();
+        references.add(paymentReference);
+        paymentReference.setMember(member2);
+        member2.setPaymentReferences(references);
+        members.add(member2);
+        when(memberRepository.findAll()).thenReturn(members);
+        when(paymentReferenceRepository.findAll()).thenReturn(references);
+
+        List<Payment> payments = paymentService.parsePayments(MATCH__3_DIGIT_MEMBERSHIP_NUMBER, "test.csv");
+
         assertEquals(1, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -402,7 +437,9 @@ public class PaymentServiceTest extends LifelineServiceTest {
         members.add(member1);
         members.add(member2);
         when(memberRepository.findAllByStatusOrderBySurnameAscForenameAsc("Open")).thenReturn(members);
+
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
+
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -412,6 +449,14 @@ public class PaymentServiceTest extends LifelineServiceTest {
         assertEquals("BANK GIRO CREDIT 3830", payments.get(0).getCreditReference());
         assertEquals("MRS MARGARET ANDERSON R", payments.get(0).getName());
         assertNull(payments.get(0).getMember());
+    }
+
+    @Test
+    public void parsePayments_nonCSVfile() throws Exception {
+        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.XYZ");
+        verify(memberRepository, never()).findAll();
+        verify(memberRepository, never()).findAllByStatusOrderBySurnameAscForenameAsc("Open");
+        assertEquals(0, payments.size());
     }
 
     @Test
@@ -498,12 +543,33 @@ public class PaymentServiceTest extends LifelineServiceTest {
     }
 
     @Test
-    public void markPaymentAsNonLottery() {
+    public void markPaymentAsNonLottery_success_withoutUpdatingEligibilityRefreshRequired() {
         Payment payment = new Payment();
         payment.setId(68L);
         payment.setLotteryPayment(true);
         when(paymentRepository.getOne(68L)).thenReturn(payment);
         Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(true);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
+        assertTrue(payment.isLotteryPayment());
+
+        paymentService.markPaymentAsNonLottery(68L);
+
+        verify(paymentRepository, times(1)).getOne(68L);
+        verify(configurationRepository, times(1)).findByName(ELIGIBILITY_REFRESH_REQUIRED);
+        verify(configurationRepository, never()).save(any(Configuration.class));
+        verify(paymentRepository, times(1)).save(payment);
+        assertFalse(payment.isLotteryPayment());
+    }
+
+    @Test
+    public void markPaymentAsNonLottery_success_updatingEligibilityRefreshRequired() {
+        Payment payment = new Payment();
+        payment.setId(68L);
+        payment.setLotteryPayment(true);
+        when(paymentRepository.getOne(68L)).thenReturn(payment);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setName(ELIGIBILITY_REFRESH_REQUIRED);
         refreshRequired.setBooleanValue(false);
         when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
         assertTrue(payment.isLotteryPayment());
@@ -512,7 +578,12 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
         verify(paymentRepository, times(1)).getOne(68L);
         verify(paymentRepository, times(1)).save(payment);
+        ArgumentCaptor<Configuration> configurationArgumentCaptor = ArgumentCaptor.forClass(Configuration.class);
+        verify(configurationRepository, times(1)).findByName(ELIGIBILITY_REFRESH_REQUIRED);
+        verify(configurationRepository, times(1)).save(configurationArgumentCaptor.capture());
         assertFalse(payment.isLotteryPayment());
+        assertEquals(ELIGIBILITY_REFRESH_REQUIRED, configurationArgumentCaptor.getValue().getName());
+        assertTrue(configurationArgumentCaptor.getValue().getBooleanValue());
     }
 
     @Test
