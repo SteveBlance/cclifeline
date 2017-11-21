@@ -211,4 +211,34 @@ public class SecuritySubjectServiceTest extends LifelineServiceTest {
         assertFalse(bobby.isAccountLocked());
     }
 
+    @Test
+    public void updatePassword_success() throws Exception {
+        Long subjectId = 567L;
+        String oldPassword = "pa55word";
+        String newPassword = "N3Wpa55word";
+        SecuritySubjectViewBean securitySubjectViewBean = new SecuritySubjectViewBean();
+        securitySubjectViewBean.setId(subjectId);
+        securitySubjectViewBean.setUsername("jimbo");
+        securitySubjectViewBean.setForename("Jim");
+        securitySubjectViewBean.setSurname("Bowen");
+        securitySubjectViewBean.setPreviousPassword(oldPassword);
+        securitySubjectViewBean.setPassword(newPassword);
+        securitySubjectViewBean.setConfirmPassword(newPassword);
+        SecuritySubject securitySubject = securitySubjectViewBean.toEntity();
+        securitySubject.setPasswordToBeChanged(true);
+        securitySubject.setPassword(oldPassword);
+        when(securitySubjectRepository.getOne(subjectId)).thenReturn(securitySubject);
+        when(passwordEncoder.matches(oldPassword, oldPassword)).thenReturn(true);
+        when(passwordEncoder.encode(newPassword)).thenReturn("YaSwReHt&t%$");
+        assertTrue(securitySubject.isPasswordToBeChanged());
+
+        securityService.updatePassword(securitySubjectViewBean);
+
+        verify(securitySubjectRepository, times(1)).getOne(subjectId);
+        verify(passwordEncoder, times(1)).matches(oldPassword, oldPassword);
+        verify(securitySubjectRepository, times(1)).save(securitySubject);
+        assertFalse(securitySubject.isPasswordToBeChanged());
+        assertEquals("YaSwReHt&t%$", securitySubject.getPassword());
+    }
+
 }
