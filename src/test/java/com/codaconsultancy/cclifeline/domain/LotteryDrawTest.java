@@ -21,7 +21,9 @@ public class LotteryDrawTest {
         lotteryDraw.setId(98L);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
         Date drawDate = sdf.parse("01/05/2017");
+        Date lotteryDate = sdf.parse("14/05/2017");
         lotteryDraw.setDrawDate(drawDate);
+        lotteryDraw.setLotteryDate(lotteryDate);
         lotteryDraw.setName("March Mayhem");
         lotteryDraw.setDrawMaster("Ross");
 
@@ -69,6 +71,13 @@ public class LotteryDrawTest {
         Date drawDate = lotteryDraw.getDrawDate();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
         assertEquals("01/05/2017", sdf.format(drawDate));
+    }
+
+    @Test
+    public void getLotteryDate() throws Exception {
+        Date drawDate = lotteryDraw.getLotteryDate();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy");
+        assertEquals("14/05/2017", sdf.format(drawDate));
     }
 
     @Test

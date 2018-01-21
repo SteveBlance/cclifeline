@@ -4,6 +4,15 @@
 <head th:replace="/fragments/common-header :: common-header"></head>
 
 <body>
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/jquery-ui.js}"></script>
+<script>
+    $(function () {
+        $(".datepicker").datepicker({
+            dateFormat: "dd/mm/yy"
+        });
+    });
+</script>
 <div id="wrapper">
 
     <div th:include="/fragments/navigation :: header-side-nav"></div>
@@ -36,24 +45,32 @@
 
         <form id="createPrizes" class="form-horizontal" role="form" action="#" th:action="@{/prepare-draw}"
               th:object="${lotteryDraw}" method="post">
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Draw date:</label>
-                <div class="col-sm-7">
-                    <input type="text" class="form-control" readonly="readonly" th:field="*{drawDate}"/>
-                </div>
-            </div>
+
             <div class="form-group">
                 <label class="col-sm-3 control-label">Draw Name:</label>
                 <div class="col-sm-7">
                     <input type="text" class="form-control" th:field="*{name}" placeholder="(Optional)"/>
                 </div>
             </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Lottery date:</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control datepicker" th:field="*{lotteryDate}"/>
+                </div>
+            </div>
+
 
             <div class="form-group">
                 <label class="col-sm-3 control-label">Drawn By:</label>
                 <div class="col-sm-7">
                     <input id="drawnBySubject" class="form-control" readonly="readonly" th:field="*{drawMaster}"
                            th:value="${loggedInUser}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Date drawn:</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" readonly="readonly" th:field="*{drawDate}"/>
                 </div>
             </div>
 

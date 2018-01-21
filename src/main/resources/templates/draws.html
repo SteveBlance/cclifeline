@@ -37,9 +37,10 @@
                width="100%">
             <thead>
             <tr>
-                <th>Draw Date</th>
+                <th>Lottery Date</th>
                 <th>Draw Name</th>
                 <th>Drawn By</th>
+                <th>Date Drawn</th>
                 <th>Winners</th>
             </tr>
             </thead>
@@ -47,9 +48,10 @@
             <tr th:each="draw: ${lotteryDraws}"
                 style="cursor: pointer"
                 th:onclick="'javascript:rowClicked(\'' + ${draw.id} + '\');'">
-                <td th:text="${draw.drawDate} ? ${#dates.format(draw.drawDate, 'yyyy/MM/dd')}">Draw Date</td>
+                <td th:text="${draw.lotteryDate} ? ${#dates.format(draw.lotteryDate, 'yyyy/MM/dd')}">Lottery Date</td>
                 <td th:text="${draw.name}">Draw Name</td>
                 <td th:text="${draw.drawMaster}">Drawn By</td>
+                <td th:text="${draw.drawDate} ? ${#dates.format(draw.drawDate, 'yyyy/MM/dd')}">Date Drawn</td>
                 <td th:text="${draw.showPrizesSummary()}">Winners</td>
 
             </tr>

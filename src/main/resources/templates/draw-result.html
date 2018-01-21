@@ -41,21 +41,33 @@
                        width="100%">
                     <thead></thead>
                     <tbody>
+
                     <tr>
-                        <td class="col-sm-3"><strong>Draw Date</strong></td>
+                        <td><strong>Draw Name</strong></td>
+                        <td th:text="${lotteryDraw.name}">Draw Name</td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-sm-3"><strong>Lottery Date</strong></td>
+                        <td class="col-sm-8"
+                            th:text="${lotteryDraw.lotteryDate} ? ${#dates.format(lotteryDraw.lotteryDate, 'dd/MM/yyyy')}">
+                            Lottery Date
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Drawn By</strong></td>
+                        <td th:text="${lotteryDraw.drawMaster}">Drawn By</td>
+                    </tr>
+
+                    <tr>
+                        <td class="col-sm-3"><strong>Date Drawn</strong></td>
                         <td class="col-sm-8"
                             th:text="${lotteryDraw.drawDate} ? ${#dates.format(lotteryDraw.drawDate, 'dd/MM/yyyy')}">
                             Draw Date
                         </td>
                     </tr>
-                    <tr>
-                        <td><strong>Draw Name</strong></td>
-                        <td th:text="${lotteryDraw.name}">Draw Name</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Drawn By</strong></td>
-                        <td th:text="${lotteryDraw.drawMaster}">Drawn By</td>
-                    </tr>
+
                     <tr>
                         <td><strong>Number of Prizes</strong></td>
                         <td th:text="${numberOfPrizes}">Number of Prizes</td>

@@ -25,6 +25,10 @@ public class LotteryDraw {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date drawDate;
 
+    @Column(name = "LOTTERY_DATE")
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date lotteryDate;
+
     @Column(name = "NAME")
     private String name;
 
@@ -49,6 +53,14 @@ public class LotteryDraw {
 
     public void setDrawDate(Date drawDate) {
         this.drawDate = drawDate;
+    }
+
+    public Date getLotteryDate() {
+        return lotteryDate;
+    }
+
+    public void setLotteryDate(Date lotteryDate) {
+        this.lotteryDate = lotteryDate;
     }
 
     public String getName() {

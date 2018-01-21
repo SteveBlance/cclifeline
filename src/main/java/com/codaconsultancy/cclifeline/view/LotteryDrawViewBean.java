@@ -21,6 +21,9 @@ public class LotteryDrawViewBean {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date drawDate;
 
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private Date lotteryDate;
+
     private String name;
 
     @NotNull
@@ -44,6 +47,14 @@ public class LotteryDrawViewBean {
 
     public void setDrawDate(Date drawDate) {
         this.drawDate = drawDate;
+    }
+
+    public Date getLotteryDate() {
+        return lotteryDate;
+    }
+
+    public void setLotteryDate(Date lotteryDate) {
+        this.lotteryDate = lotteryDate;
     }
 
     public String getName() {
