@@ -53,16 +53,11 @@
                             <div class="col-xs-3">
                                 <i class="fa fa-money fa-5x"></i>
                             </div>
-                            <!--<div class="col-xs-9 text-right">-->
-                            <!--<div class="huge">£245,940</div>-->
-                            <!--<div>Payments</div>-->
-                            <!--</div>-->
+
                             <div class="col-xs-9 text-right">
                                 <div class="huge"><i class="fa fa-gbp" aria-hidden="true"></i></div>
                                 <div>Payments</div>
                             </div>
-
-
                         </div>
                     </div>
                     <a th:href="@{payments/recent}">
@@ -143,9 +138,49 @@
         <!-- /.row -->
         <div class="row">
             <div class="col-lg-8">
-                <div th:include="/fragments/area-chart :: area-chart"></div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-9">
+                                <div class="large">Last Draw</div>
+                                <div><span th:text="${lastDraw.name}"></span> - <span
+                                        th:text="${#dates.format(lastDraw.lotteryDate, 'dd/MM/yyyy')}"></span>
+                                </div>
+                            </div>
+                            <div class="col-xs-3 text-right">
+                                <i class="fa fa-ticket fa-4x"></i>
+                            </div>
+                        </div>
+                    </div>
 
-                <div th:include="/fragments/bar-chart :: bar-chart"></div>
+                    <!-- /.panel-heading -->
+                    <div class="container-fluid">
+
+                        <div class="panel-body">
+
+                            <table id="winners_tab" class="table-condensed table-striped table-bordered"
+                                   cellspacing="0"
+                                   width="100%">
+                                <thead>
+                                <tr>
+                                    <th>Prize</th>
+                                    <th>Membership Number</th>
+                                    <th>Name</th>
+                                    <th>Town</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="prize: ${lastDraw.prizes}">
+                                    <td th:text="${prize.prize}">Prize</td>
+                                    <td th:text="${prize.winner.membershipNumber}">Membership Number</td>
+                                    <td th:text="${prize.winner.forename + ' ' + prize.winner.surname}">Name</td>
+                                    <td th:text="${prize.winner.getAddresses().get(0).town}">Town</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
 
             </div>
             <!-- /.col-lg-8 -->
@@ -169,8 +204,6 @@
                     <!-- /.panel-body -->
                 </div>
 
-                <div th:include="/fragments/pie-chart :: pie-chart"></div>
-
             </div>
             <!-- /.col-lg-4 -->
         </div>
@@ -180,10 +213,6 @@
 
 </div>
 <!-- /#wrapper -->
-<script type="text/javascript" src="/vendor/raphael/raphael.min.js"></script>
-<script type="text/javascript" src="/vendor/morrisjs/morris.min.js"></script>
-<script type="text/javascript" src="/data/morris-data.js"></script>
-
 </body>
 
 </html>

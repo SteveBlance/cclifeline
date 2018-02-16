@@ -64,6 +64,17 @@ public class LotteryDrawServiceTest extends LifelineServiceTest {
     }
 
     @Test
+    public void fetchLastDraw() {
+        LotteryDraw lotteryDraw = new LotteryDraw();
+        when(lotteryDrawRepository.findLastDraw()).thenReturn(lotteryDraw);
+
+        LotteryDraw draw = lotteryDrawService.fetchLastDraw();
+
+        verify(lotteryDrawRepository, times(1)).findLastDraw();
+        assertSame(lotteryDraw, draw);
+    }
+
+    @Test
     public void saveLotteryDraw() throws Exception {
         LotteryDraw lotteryDraw = new LotteryDraw();
         List<Prize> prizes = new ArrayList<>();

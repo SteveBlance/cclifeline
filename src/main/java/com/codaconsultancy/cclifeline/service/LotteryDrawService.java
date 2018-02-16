@@ -26,6 +26,10 @@ public class LotteryDrawService extends LifelineService {
         return lotteryDrawRepository.findOne(id);
     }
 
+    public LotteryDraw fetchLastDraw() {
+        return lotteryDrawRepository.findLastDraw();
+    }
+
     public LotteryDraw saveLotteryDraw(LotteryDraw lotteryDraw) {
         LotteryDraw draw = lotteryDrawRepository.save(lotteryDraw);
         List<Prize> prizes = draw.getPrizes();

@@ -1,9 +1,12 @@
 package com.codaconsultancy.cclifeline.common;
 
+import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
+import org.joda.time.DateTime;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class TestHelper {
 
@@ -37,5 +40,14 @@ public class TestHelper {
         memberViewBean.setComments(comments);
         memberViewBean.setStatus(status);
         return memberViewBean;
+    }
+
+    public static LotteryDraw newLotteryDraw(String name, Date lotteryDate, String drawMaster) {
+        LotteryDraw lotteryDraw = new LotteryDraw();
+        lotteryDraw.setName(name);
+        lotteryDraw.setLotteryDate(lotteryDate);
+        lotteryDraw.setDrawDate(DateTime.now().toDate());
+        lotteryDraw.setDrawMaster(drawMaster);
+        return lotteryDraw;
     }
 }

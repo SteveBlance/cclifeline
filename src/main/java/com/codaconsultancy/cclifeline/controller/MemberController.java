@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.Address;
+import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.service.AddressService;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
@@ -54,9 +55,11 @@ public class MemberController extends LifelineController {
     public ModelAndView home() {
         long count = memberService.countAllCurrentMembers();
         Long totalNumberOfWinners = lotteryDrawService.countAllWinners();
+        LotteryDraw lastDraw = lotteryDrawService.fetchLastDraw();
         return modelAndView("index")
                 .addObject("memberCount", count)
-                .addObject("totalNumberOfWinners", totalNumberOfWinners);
+                .addObject("totalNumberOfWinners", totalNumberOfWinners)
+                .addObject("lastDraw", lastDraw);
     }
 
     @RequestMapping("/members/{filter}")

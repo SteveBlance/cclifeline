@@ -1,10 +1,7 @@
 package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.common.TestHelper;
-import com.codaconsultancy.cclifeline.domain.Address;
-import com.codaconsultancy.cclifeline.domain.Member;
-import com.codaconsultancy.cclifeline.domain.Notification;
-import com.codaconsultancy.cclifeline.domain.SecuritySubject;
+import com.codaconsultancy.cclifeline.domain.*;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.*;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
@@ -70,18 +67,22 @@ public class MemberControllerTest extends BaseTest {
     @Test
     public void navigateToHomePage() throws Exception {
         List<Notification> notifications = new ArrayList<>();
+        LotteryDraw lastDraw = new LotteryDraw();
         when(memberService.countAllCurrentMembers()).thenReturn(22L);
         when(lotteryDrawService.countAllWinners()).thenReturn(18L);
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
+        when(lotteryDrawService.fetchLastDraw()).thenReturn(lastDraw);
 
         ModelAndView response = memberController.home();
 
         verify(memberService, times(1)).countAllCurrentMembers();
         verify(lotteryDrawService, times(1)).countAllWinners();
+        verify(lotteryDrawService, times(1)).fetchLastDraw();
         assertEquals(22L, response.getModel().get("memberCount"));
         assertEquals(18L, response.getModel().get("totalNumberOfWinners"));
         assertEquals("Bob", response.getModel().get("loggedInUser"));
         assertSame(notifications, response.getModel().get("notifications"));
+        assertSame(lastDraw, response.getModel().get("lastDraw"));
         assertEquals("index", response.getViewName());
     }
 
