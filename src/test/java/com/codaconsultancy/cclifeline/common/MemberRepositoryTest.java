@@ -12,8 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 @SpringBootTest(classes = Member.class)
 public class MemberRepositoryTest extends BaseTest {
@@ -143,6 +142,13 @@ public class MemberRepositoryTest extends BaseTest {
         assertEquals("Closed", foundMembers.get(0).getStatus());
         assertEquals("Cancelled", foundMembers.get(1).getStatus());
 
+    }
+
+    @Test
+    public void findLapsedMembers() {
+        List<MemberViewBean> foundMembers = memberRepository.findLapsedMembers();
+        assertEquals(3, foundMembers.size());
+        assertFalse(foundMembers.get(0).isEligibleForDrawStored());
     }
 
     @Test

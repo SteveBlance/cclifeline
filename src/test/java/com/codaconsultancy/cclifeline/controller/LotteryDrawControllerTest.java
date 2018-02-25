@@ -7,6 +7,7 @@ import com.codaconsultancy.cclifeline.repositories.BaseTest;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
+import com.codaconsultancy.cclifeline.service.ReportsService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
@@ -45,6 +46,9 @@ public class LotteryDrawControllerTest extends BaseTest {
 
     @MockBean
     private NotificationService notificationService;
+
+    @MockBean
+    private ReportsService reportsService;
 
     @Before
     public void setup() {
@@ -147,6 +151,7 @@ public class LotteryDrawControllerTest extends BaseTest {
         verify(memberService, times(1)).fetchMemberDrawEntries();
         verify(lotteryDrawService, times(1)).saveLotteryDraw(lotteryDrawArgumentCaptor.capture());
         verify(notificationService, times(1)).logLotteryDraw(lotteryDrawViewBean.getName());
+        verify(reportsService, times(1)).captureStats();
 
         assertEquals(3, lotteryDrawArgumentCaptor.getValue().getPrizes().size());
         assertEquals("draw-result", modelAndView.getViewName());

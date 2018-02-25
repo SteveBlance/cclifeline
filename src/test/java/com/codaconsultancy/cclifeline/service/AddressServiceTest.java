@@ -1,8 +1,6 @@
 package com.codaconsultancy.cclifeline.service;
 
-import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.Address;
-import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.AddressRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,8 +26,6 @@ public class AddressServiceTest extends LifelineServiceTest {
     public void saveAddress() throws Exception {
 
         Address address = new Address();
-        Member member = TestHelper.newMember(1234L, "Bob", "Beth", "bb@email.com", null, null, "Monthly", "Lifeline", null, "Open");
-//        address.setMember(member);
         address.setAddressLine1("24 High Street, Saline");
         address.setAddressLine2("Flat 6");
         address.setAddressLine3("Upper");

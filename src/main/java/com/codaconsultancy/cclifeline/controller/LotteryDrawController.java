@@ -6,6 +6,7 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.service.ReportsService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
@@ -40,6 +41,9 @@ public class LotteryDrawController extends LifelineController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private ReportsService reportsService;
 
     private Logger logger = LoggerFactory.getLogger(LotteryDrawController.class);
 
@@ -103,6 +107,7 @@ public class LotteryDrawController extends LifelineController {
         LotteryDraw savedDraw = lotteryDrawService.saveLotteryDraw(lotteryDrawViewBean.toEntity());
 
         notificationService.logLotteryDraw(savedDraw.getName());
+        reportsService.captureStats();
 
         return navigateToViewDrawResult(lotteryDrawViewBean, prizes.size());
     }
