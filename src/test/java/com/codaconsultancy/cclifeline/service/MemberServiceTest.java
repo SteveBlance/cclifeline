@@ -148,6 +148,28 @@ public class MemberServiceTest extends LifelineServiceTest {
     }
 
     @Test
+    public void findPendingMembers() {
+        List<MemberViewBean> pendingMembers = new ArrayList<>();
+        when(memberRepository.findPendingMembers()).thenReturn(pendingMembers);
+
+        List<MemberViewBean> members = memberService.findPendingMembers();
+
+        verify(memberRepository, times(1)).findPendingMembers();
+        assertSame(members, pendingMembers);
+    }
+
+    @Test
+    public void findLapsedMembers() {
+        List<MemberViewBean> lapsedMembers = new ArrayList<>();
+        when(memberRepository.findLapsedMembers()).thenReturn(lapsedMembers);
+
+        List<MemberViewBean> members = memberService.findRecentlyLapsedMembers();
+
+        verify(memberRepository, times(1)).findLapsedMembers();
+        assertSame(members, lapsedMembers);
+    }
+
+    @Test
     public void findMemberByMembershipNumber_success() {
         Member member = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
 

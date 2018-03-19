@@ -49,8 +49,16 @@ public class MemberService extends LifelineService {
         return memberRepository.findIneligibleMembers();
     }
 
+    public List<MemberViewBean> findPendingMembers() {
+        return memberRepository.findPendingMembers();
+    }
+
     public List<MemberViewBean> findFormerMembers() {
         return memberRepository.findFormerMembers();
+    }
+
+    public List<MemberViewBean> findRecentlyLapsedMembers() {
+        return memberRepository.findLapsedMembers();
     }
 
     public List<Member> findAllMembersOrderedBySurname() {

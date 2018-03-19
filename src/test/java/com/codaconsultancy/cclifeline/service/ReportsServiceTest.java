@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.domain.MemberTypeTotal;
 import com.codaconsultancy.cclifeline.domain.Report;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.ReportRepository;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
@@ -16,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ReportsService.class)
@@ -41,6 +41,10 @@ public class ReportsServiceTest extends LifelineServiceTest {
 
     @Test
     public void captureStats() {
+        Report previousReport = new Report();
+        previousReport.setReportDate(DateTime.now().minusWeeks(2).toDate());
+        when(reportRepository.findTopByOrderByReportDateDesc()).thenReturn(previousReport);
+
         reportsService.captureStats();
         verify(memberRepository, times(1)).findEligibleMembers();
         verify(memberRepository, times(1)).findLapsedMembers();

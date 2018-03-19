@@ -35,9 +35,10 @@
         <ul class="nav nav-tabs">
             <li role="presentation" th:class="${currentTabStatus}"><a th:href="@{/members/current}">Current</a></li>
             <li role="presentation" th:class="${eligibleTabStatus}"><a th:href="@{/members/eligible}">Eligible</a></li>
-            <li role="presentation" th:class="${ineligibleTabStatus}"><a th:href="@{/members/ineligible}">Ineligible</a>
+            <li role="presentation" th:class="${recentlyLapsedTabStatus}"><a th:href="@{/members/recently-lapsed}">Lapsed</a>
             </li>
             <li role="presentation" th:class="${formerTabStatus}"><a th:href="@{/members/former}">Former</a></li>
+            <li role="presentation" th:class="${pendingTabStatus}"><a th:href="@{/members/pending}">Pending</a></li>
             <li role="presentation" th:class="${allTabStatus}"><a th:href="@{/members/all}">All</a></li>
         </ul>
         <br/>
@@ -107,9 +108,6 @@
             <form action="#" th:action="@{/close-lapsed-memberships}" method="post">
                 <a th:href="@{/}" class="btn btn-default active" role="button">Back</a>
                 <a th:href="@{/add-member}" class="btn btn-success" role="button">Add New Member</a>
-                <button class="btn btn-success" type="submit" name="action" value="Close Lapsed Memberships">Close
-                    Lapsed Memberships
-                </button>
             </form>
         </div>
     </div>

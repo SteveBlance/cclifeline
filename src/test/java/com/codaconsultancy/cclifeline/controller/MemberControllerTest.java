@@ -126,7 +126,8 @@ public class MemberControllerTest extends BaseTest {
         assertEquals("enabled", response.getModel().get("currentTabStatus"));
         assertEquals("enabled", response.getModel().get("formerTabStatus"));
         assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
-        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("pendingTabStatus"));
+        assertEquals("enabled", response.getModel().get("recentlyLapsedTabStatus"));
         assertEquals("members", response.getViewName());
     }
 
@@ -148,7 +149,8 @@ public class MemberControllerTest extends BaseTest {
         assertEquals("enabled", response.getModel().get("allTabStatus"));
         assertEquals("enabled", response.getModel().get("formerTabStatus"));
         assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
-        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("pendingTabStatus"));
+        assertEquals("enabled", response.getModel().get("recentlyLapsedTabStatus"));
         assertEquals("members", response.getViewName());
     }
 
@@ -170,7 +172,8 @@ public class MemberControllerTest extends BaseTest {
         assertEquals("enabled", response.getModel().get("allTabStatus"));
         assertEquals("enabled", response.getModel().get("currentTabStatus"));
         assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
-        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("pendingTabStatus"));
+        assertEquals("enabled", response.getModel().get("recentlyLapsedTabStatus"));
         assertEquals("members", response.getViewName());
     }
 
@@ -192,29 +195,54 @@ public class MemberControllerTest extends BaseTest {
         assertEquals("enabled", response.getModel().get("formerTabStatus"));
         assertEquals("enabled", response.getModel().get("allTabStatus"));
         assertEquals("enabled", response.getModel().get("currentTabStatus"));
-        assertEquals("enabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("pendingTabStatus"));
+        assertEquals("enabled", response.getModel().get("recentlyLapsedTabStatus"));
         assertEquals("members", response.getViewName());
     }
 
     @Test
-    public void navigateToMembers_ineligible() throws Exception {
+    public void navigateToMembers_pending() throws Exception {
         List<MemberViewBean> members = getMockMembers();
         when(memberService.countAllCurrentMembers()).thenReturn(2L);
-        when(memberService.findIneligibleMembers()).thenReturn(members);
+        when(memberService.findPendingMembers()).thenReturn(members);
 
-        ModelAndView response = memberController.members("ineligible");
+        ModelAndView response = memberController.members("pending");
 
-        verify(memberService, times(1)).findIneligibleMembers();
+        verify(memberService, times(1)).findPendingMembers();
         verify(memberService, times(1)).updateEligibilityStatuses();
 
         assertEquals(2L, response.getModel().get("memberCount"));
         assertSame(members, response.getModel().get("members"));
-        assertEquals("Ineligible for draw", response.getModel().get("title"));
-        assertEquals("disabled", response.getModel().get("ineligibleTabStatus"));
+        assertEquals("Membership not confirmed", response.getModel().get("title"));
+        assertEquals("disabled", response.getModel().get("pendingTabStatus"));
         assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
         assertEquals("enabled", response.getModel().get("formerTabStatus"));
         assertEquals("enabled", response.getModel().get("allTabStatus"));
         assertEquals("enabled", response.getModel().get("currentTabStatus"));
+        assertEquals("enabled", response.getModel().get("recentlyLapsedTabStatus"));
+        assertEquals("members", response.getViewName());
+    }
+
+    @Test
+    public void navigateToMembers_lapsed() throws Exception {
+        List<MemberViewBean> members = getMockMembers();
+        when(memberService.countAllCurrentMembers()).thenReturn(2L);
+        when(memberService.findRecentlyLapsedMembers()).thenReturn(members);
+
+        ModelAndView response = memberController.members("recently-lapsed");
+
+        verify(memberService, times(1)).findRecentlyLapsedMembers();
+        verify(memberService, times(1)).updateEligibilityStatuses();
+
+        assertEquals(2L, response.getModel().get("memberCount"));
+        assertSame(members, response.getModel().get("members"));
+        assertEquals("Recently lapsed members", response.getModel().get("title"));
+        assertEquals("enabled", response.getModel().get("pendingTabStatus"));
+        assertEquals("enabled", response.getModel().get("eligibleTabStatus"));
+        assertEquals("enabled", response.getModel().get("formerTabStatus"));
+        assertEquals("enabled", response.getModel().get("allTabStatus"));
+        assertEquals("enabled", response.getModel().get("currentTabStatus"));
+        assertEquals("disabled", response.getModel().get("recentlyLapsedTabStatus"));
         assertEquals("members", response.getViewName());
     }
 

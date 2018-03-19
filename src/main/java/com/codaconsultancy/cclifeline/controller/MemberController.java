@@ -71,7 +71,8 @@ public class MemberController extends LifelineController {
         String formerTabStatus = ENABLED;
         String allTabStatus = ENABLED;
         String eligibleTabStatus = ENABLED;
-        String ineligibleTabStatus = ENABLED;
+        String pendingTabStatus = ENABLED;
+        String recentlyLapsedTabStatus = ENABLED;
         switch (filter) {
             case "current":
                 members = memberService.findCurrentMembers();
@@ -88,10 +89,15 @@ public class MemberController extends LifelineController {
                 title = "Eligible for draw";
                 eligibleTabStatus = DISABLED;
                 break;
-            case "ineligible":
-                members = memberService.findIneligibleMembers();
-                title = "Ineligible for draw";
-                ineligibleTabStatus = DISABLED;
+            case "pending":
+                members = memberService.findPendingMembers();
+                title = "Membership not confirmed";
+                pendingTabStatus = DISABLED;
+                break;
+            case "recently-lapsed":
+                members = memberService.findRecentlyLapsedMembers();
+                title = "Recently lapsed members";
+                recentlyLapsedTabStatus = DISABLED;
                 break;
             default:
                 members = memberService.findAllMembers();
@@ -106,7 +112,8 @@ public class MemberController extends LifelineController {
                 .addObject("currentTabStatus", currentTabStatus)
                 .addObject("formerTabStatus", formerTabStatus)
                 .addObject("eligibleTabStatus", eligibleTabStatus)
-                .addObject("ineligibleTabStatus", ineligibleTabStatus)
+                .addObject("pendingTabStatus", pendingTabStatus)
+                .addObject("recentlyLapsedTabStatus", recentlyLapsedTabStatus)
                 .addObject("allTabStatus", allTabStatus);
     }
 

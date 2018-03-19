@@ -29,11 +29,17 @@ public class ReportsService extends LifelineService {
         int numberOfEligibleMembers = memberRepository.findEligibleMembers().size();
         int numberOfLapsedMembers = memberRepository.findLapsedMembers().size();
         int numberOfCancelledMembers = memberRepository.findFormerMembers().size();
-        Date date = DateTime.now().monthOfYear().getDateTime().toDate();
 
-        saveReport(Report.NUMBER_OF_ELIGIBLE_MEMBERS, numberOfEligibleMembers, date);
-        saveReport(Report.NUMBER_OF_LAPSED_MEMBERS, numberOfLapsedMembers, date);
-        saveReport(Report.NUMBER_OF_CANCELLED_MEMBERS, numberOfCancelledMembers, date);
+        Report lastReport = reportRepository.findTopByOrderByReportDateDesc();
+        DateTime previousReportDate = new DateTime(lastReport.getReportDate());
+
+        if (previousReportDate.plusWeeks(1).isBeforeNow()) {
+
+            Date date = DateTime.now().toDate();
+            saveReport(Report.NUMBER_OF_ELIGIBLE_MEMBERS, numberOfEligibleMembers, date);
+            saveReport(Report.NUMBER_OF_LAPSED_MEMBERS, numberOfLapsedMembers, date);
+            saveReport(Report.NUMBER_OF_CANCELLED_MEMBERS, numberOfCancelledMembers, date);
+        }
 
         // todo: payments total v last month
     }

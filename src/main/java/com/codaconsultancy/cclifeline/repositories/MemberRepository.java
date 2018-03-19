@@ -51,7 +51,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +
                     "FROM Member m " +
                     "WHERE m.status = 'TBC' ")
-    List<MemberViewBean> findTBCMembers();
+    List<MemberViewBean> findPendingMembers();
 
     @Query(value =
             "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored) " +

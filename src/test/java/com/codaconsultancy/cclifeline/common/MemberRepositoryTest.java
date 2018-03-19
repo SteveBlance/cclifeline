@@ -128,7 +128,7 @@ public class MemberRepositoryTest extends BaseTest {
 
     @Test
     public void findTBCMembers() {
-        List<MemberViewBean> foundMembers = memberRepository.findTBCMembers();
+        List<MemberViewBean> foundMembers = memberRepository.findPendingMembers();
         assertEquals(1, foundMembers.size());
         assertEquals("Ace", foundMembers.get(0).getForename());
     }
