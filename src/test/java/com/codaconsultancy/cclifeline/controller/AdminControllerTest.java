@@ -33,6 +33,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AdminController.class)
 public class AdminControllerTest extends BaseTest {

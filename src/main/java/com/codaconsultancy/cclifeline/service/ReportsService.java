@@ -26,14 +26,17 @@ public class ReportsService extends LifelineService {
     }
 
     public void captureStats() {
-        int numberOfEligibleMembers = memberRepository.findEligibleMembers().size();
-        int numberOfLapsedMembers = memberRepository.findLapsedMembers().size();
-        int numberOfCancelledMembers = memberRepository.findFormerMembers().size();
-
         Report lastReport = reportRepository.findTopByOrderByReportDateDesc();
-        DateTime previousReportDate = new DateTime(lastReport.getReportDate());
+        DateTime previousReportDate = null;
+        if (null != lastReport) {
+            previousReportDate = new DateTime(lastReport.getReportDate());
+        }
 
-        if (previousReportDate.plusWeeks(1).isBeforeNow()) {
+        if (previousReportDate == null || previousReportDate.plusWeeks(1).isBeforeNow()) {
+
+            int numberOfEligibleMembers = memberRepository.findEligibleMembers().size();
+            int numberOfLapsedMembers = memberRepository.findLapsedMembers().size();
+            int numberOfCancelledMembers = memberRepository.findFormerMembers().size();
 
             Date date = DateTime.now().toDate();
             saveReport(Report.NUMBER_OF_ELIGIBLE_MEMBERS, numberOfEligibleMembers, date);

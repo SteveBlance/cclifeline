@@ -53,4 +53,18 @@ public class ReportsServiceTest extends LifelineServiceTest {
         verify(reportRepository, times(3)).save(Matchers.any(Report.class));
     }
 
+    @Test
+    public void captureStats_noPreviousStats() {
+        Report previousReport = new Report();
+        previousReport.setReportDate(DateTime.now().minusWeeks(2).toDate());
+        when(reportRepository.findTopByOrderByReportDateDesc()).thenReturn(null);
+
+        reportsService.captureStats();
+        verify(memberRepository, times(1)).findEligibleMembers();
+        verify(memberRepository, times(1)).findLapsedMembers();
+        verify(memberRepository, times(1)).findFormerMembers();
+
+        verify(reportRepository, times(3)).save(Matchers.any(Report.class));
+    }
+
 }
