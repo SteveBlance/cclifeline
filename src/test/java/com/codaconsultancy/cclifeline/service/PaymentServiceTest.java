@@ -34,40 +34,36 @@ import static org.mockito.Mockito.*;
 public class PaymentServiceTest extends LifelineServiceTest {
 
     private static final String EXAMPLE_STATEMENT =
-            "20170428,,82621900174982CA,,DR,CHQ,Cheque,200,CHEQUE 003033,,,GBP\n" +
-                    "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3830,MRS MARGARET ANDERSON R,8.26219E+13,GBP\n" +
-                    "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3791,MR ANDREW LENNIE,8.26518E+13,GBP\n" +
-                    "20170428,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT POTY  SYME MURDOCH,I Syme,8.77054E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT MEM NO 3959,PETER KELVIN SMITH,8.26725E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 3176,HENRY FULTON NISBE,8.26726E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 0093,R F MCKINLAY,8.26725E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 4175,GORDON JOHN SCOTLA,8.26726E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT PARS CENTENARY CLB,DIARMID BLYTH,8.26825E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT ID 4577,MR DIARMID MCDIARM,8.26825E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 2406,CAMPBELL J,8.26831E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT MEMBERSID 3884,MR C MARTIN,8.26915E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 2013,MR & MRS DUFFY,8.27019E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 2010,MR & MRS DUFFY,8.27019E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT 4061,MR MATTHEW LAFFERT,4.0642E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT ID - 2592,MR FRASER DRYBURGH,4.0642E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT 4367,HOGG W & J/CA,8.333E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT 2823 STEPHENGORDON,GORDON STEPHEN/ROY,8.333E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT 4319,J TIMMONS ESQ,8.00885E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,FPS CREDIT ID4340,C ADDISON,8.04567E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,8.66,FPS CREDIT 00192,JOHN SYME,9.01287E+12,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,8.66,FPS CREDIT 600,DAVID PHILLIPS,9.01284E+12,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,8.66,FPS CREDIT 0379,BRUCE DRUMMOND,9.01278E+12,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,2,FPS CREDIT 338,HALLYBURTON ESQ,8.00676E+13,GBP\n" +
-                    "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,800,CREDIT 000988,,,GBP";
-
-    private static final String EXAMPLE_STATEMENT__QUOTED =
-            "\"20170428\",\"\",\"82621900174982CA\",\"\",\"CR\",\"BGC\",\"Bank Giro Credit\",\"20\",\"BANK GIRO CREDIT 3830\",\"MRS MARGARET ANDERSON R\",\"8.26219E+13\",\"GBP\"";
+            "20191101, , 82621900174982CA, , CR, , , 20.00,\"Transfer FPS, Teed G T4E F, 4550\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 2,\"Giro 025\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 2,\"Giro 0090\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Combe G F, 988\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, J Harris, 579\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Huggs Sa&Fj B A/C, 617\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Keen I B/J Ba  Sg, 213\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, David Jack, 600\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, John Voit, 00192\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Karlie Yvonne/I, 0229\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Hunt B & L M, 0018\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Peters Kidd G/Ro, 0111 PETERS\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Grey M/Mrs D, 282\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Alyn Lowe, 585\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Thom Knight\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Miss Kaye P Crisp, 0066\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Bisk B & Mrs S, 711\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, D Dee, 0103 DEE\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, A & B Bev, 0110 BARR\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Shaws, 88\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Will, 530\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Kitchin F Fug F, 1177\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Giro 0263\", , , GBP\n" +
+                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Giro 0567\", , , GBP";
 
     private static final String BAD_STATEMENT__INVALID_AMOUNT =
             "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,BAD,FPS CREDIT 4061,MR MATTHEW LAFFERT,4.0642E+13,GBP\n";
 
     private static final String MATCH__3_DIGIT_MEMBERSHIP_NUMBER =
-            "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,20,BANK GIRO CREDIT 379,R F MCKINLAY,8.26725E+13,GBP\n";
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, R F MCKINLAY, 379\", , , GBP\n";
 
     @Autowired
     private PaymentService paymentService;
@@ -339,7 +335,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void parsePayments_success() throws Exception {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
+        Member member2 = TestHelper.newMember(550L, "Margaret", "Teed", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
         members.add(member1);
         members.add(member2);
         when(memberRepository.findAll()).thenReturn(members);
@@ -349,34 +345,12 @@ public class PaymentServiceTest extends LifelineServiceTest {
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-        assertEquals("20170428", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("20191101", sdf.format(payments.get(0).getPaymentDate()));
         assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
-        assertEquals("BANK GIRO CREDIT 3830", payments.get(0).getCreditReference());
-        assertEquals("MRS MARGARET ANDERSON R", payments.get(0).getName());
-        assertEquals(member2.getId(), payments.get(0).getMember().getId());
-    }
-
-    @Test
-    public void parsePayments_quoted_success() throws Exception {
-        List<Member> members = new ArrayList<>();
-        Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        Member member2 = TestHelper.newMember(3830L, "Margaret", "Anderson", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
-        members.add(member1);
-        members.add(member2);
-        when(memberRepository.findAll()).thenReturn(members);
-
-        List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT__QUOTED, "test.csv");
-
-        assertEquals(1, payments.size());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-
-        assertEquals("20170428", sdf.format(payments.get(0).getPaymentDate()));
-        assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
-        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
-        assertEquals("BANK GIRO CREDIT 3830", payments.get(0).getCreditReference());
-        assertEquals("MRS MARGARET ANDERSON R", payments.get(0).getName());
-        assertEquals(member2.getId(), payments.get(0).getMember().getId());
+        assertEquals("Transfer FPS, Teed G T4E F, 4550", payments.get(0).getCreditReference());
+        assertEquals("Teed G T4E F", payments.get(0).getName());
+        assertEquals(member2.getMembershipNumber(), payments.get(0).getMember().getMembershipNumber());
     }
 
     @Test
@@ -393,12 +367,12 @@ public class PaymentServiceTest extends LifelineServiceTest {
         assertEquals(1, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-        assertEquals("20170403", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("20191101", sdf.format(payments.get(0).getPaymentDate()));
         assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
-        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
-        assertEquals("BANK GIRO CREDIT 379", payments.get(0).getCreditReference());
+        assertEquals(8.66F, payments.get(0).getPaymentAmount(), 0.002);
+        assertEquals("Transfer FPS, R F MCKINLAY, 379", payments.get(0).getCreditReference());
         assertEquals("R F MCKINLAY", payments.get(0).getName());
-        assertEquals(member2.getId(), payments.get(0).getMember().getId());
+        assertEquals(member2.getMembershipNumber(), payments.get(0).getMember().getMembershipNumber());
     }
 
     @Test
@@ -407,7 +381,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         Member member2 = TestHelper.newMember(9999L, "Ross", "McKinlay", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "Open");
         members.add(member1);
-        PaymentReference paymentReference = new PaymentReference("BANK GIRO CREDIT 379", "R F MCKINLAY", true, null);
+        PaymentReference paymentReference = new PaymentReference("Transfer FPS, R F MCKINLAY, 379", "R F MCKINLAY", true, null);
         List<PaymentReference> references = new ArrayList<>();
         references.add(paymentReference);
         paymentReference.setMember(member2);
@@ -421,10 +395,10 @@ public class PaymentServiceTest extends LifelineServiceTest {
         assertEquals(1, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-        assertEquals("20170403", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("20191101", sdf.format(payments.get(0).getPaymentDate()));
         assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
-        assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
-        assertEquals("BANK GIRO CREDIT 379", payments.get(0).getCreditReference());
+        assertEquals(8.66F, payments.get(0).getPaymentAmount(), 0.002);
+        assertEquals("Transfer FPS, R F MCKINLAY, 379", payments.get(0).getCreditReference());
         assertEquals("R F MCKINLAY", payments.get(0).getName());
         assertEquals(member2.getId(), payments.get(0).getMember().getId());
     }
@@ -443,11 +417,11 @@ public class PaymentServiceTest extends LifelineServiceTest {
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-        assertEquals("20170428", sdf.format(payments.get(0).getPaymentDate()));
+        assertEquals("20191101", sdf.format(payments.get(0).getPaymentDate()));
         assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
-        assertEquals("BANK GIRO CREDIT 3830", payments.get(0).getCreditReference());
-        assertEquals("MRS MARGARET ANDERSON R", payments.get(0).getName());
+        assertEquals("Transfer FPS, Teed G T4E F, 4550", payments.get(0).getCreditReference());
+        assertEquals("Teed G T4E F", payments.get(0).getName());
         assertNull(payments.get(0).getMember());
     }
 

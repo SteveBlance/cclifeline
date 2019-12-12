@@ -79,7 +79,7 @@ public class PaymentService extends LifelineService {
     private List<Payment> getPaymentsFromCsvFile(String contents) throws IOException, ArrayIndexOutOfBoundsException {
         List<Payment> payments = new ArrayList<>();
         DateTimeFormatter fmt = DateTimeFormat.forPattern("yyyyMMdd");
-        CSVFormat format = CSVFormat.DEFAULT;
+        CSVFormat format = CSVFormat.DEFAULT.withAllowMissingColumnNames(true);
         CSVParser parser = CSVParser.parse(contents, format);
         String paymentDateText;
         Date date;
@@ -90,13 +90,19 @@ public class PaymentService extends LifelineService {
         String name;
         Float creditAmount;
         for (CSVRecord record : parser) {
-            paymentDateText = record.get(0);
+            paymentDateText = record.get(0).trim();
             date = DateTime.parse(paymentDateText, fmt).toDate();
-            accountNumber = record.get(2);
-            transactionType = record.get(4);
-            creditAmountText = record.get(7);
-            description = record.get(8);
-            name = record.get(9);
+            accountNumber = record.get(2).trim();
+            transactionType = record.get(4).trim();
+            creditAmountText = record.get(7).trim();
+            description = record.get(8).trim();
+            name="";
+
+            if (commaCount(description) == 2) {
+                String[] descArray = toArray(description);
+                name = descArray[1].trim();
+            }
+
             if (transactionType.equalsIgnoreCase("CR") && (!creditAmountText.isEmpty())) {
                 creditAmount = Float.parseFloat(creditAmountText);
                 Payment payment = new Payment(date, creditAmount, description, accountNumber, name, true);
@@ -105,6 +111,21 @@ public class PaymentService extends LifelineService {
             }
         }
         return payments;
+    }
+
+    private String[] toArray(String s) {
+        String[] arrOfStr = s.split(",");
+        return arrOfStr;
+    }
+
+    private int commaCount(String s){
+        int commaCount = 0;
+        for(int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ',') {
+                commaCount++;
+            }
+        }
+        return  commaCount;
     }
 
     private void matchWithMember(Payment payment) {
@@ -134,7 +155,9 @@ public class PaymentService extends LifelineService {
         String fullDescription = (reference + name).toUpperCase();
         List<Member> allMembers = memberRepository.findAll();
         for (Member member : allMembers) {
-            if (member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) && (fullDescription.contains(member.getSurname().toUpperCase()) || fullDescription.contains(member.getForename().toUpperCase()))) {
+            if (reference.equals("Giro " + member.getMembershipNumber()) ||
+                    member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) &&
+                    (fullDescription.contains(member.getSurname().toUpperCase()) || fullDescription.contains(member.getForename().toUpperCase()))) {
                 payment.setMember(member);
                 isMatched = true;
                 break;
