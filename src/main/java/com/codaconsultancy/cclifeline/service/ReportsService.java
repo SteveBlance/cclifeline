@@ -5,7 +5,6 @@ import com.codaconsultancy.cclifeline.domain.Report;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.ReportRepository;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,11 +14,14 @@ import java.util.List;
 @Service
 public class ReportsService extends LifelineService {
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    private ReportRepository reportRepository;
+    private final ReportRepository reportRepository;
+
+    public ReportsService(MemberRepository memberRepository, ReportRepository reportRepository) {
+        this.memberRepository = memberRepository;
+        this.reportRepository = reportRepository;
+    }
 
     public List<MemberTypeTotal> getMemberTypeTotals() {
         return new ArrayList<>();

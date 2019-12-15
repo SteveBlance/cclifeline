@@ -4,15 +4,12 @@ import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Prize;
-import com.codaconsultancy.cclifeline.service.LotteryDrawService;
-import com.codaconsultancy.cclifeline.service.MemberService;
-import com.codaconsultancy.cclifeline.service.ReportsService;
+import com.codaconsultancy.cclifeline.service.*;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,16 +33,20 @@ public class LotteryDrawController extends LifelineController {
     public static final String MAKE_DRAW_PAGE = "make-draw";
     public static final String DRAW_RESULT_PAGE = "draw-result";
 
-    @Autowired
-    private LotteryDrawService lotteryDrawService;
+    private final LotteryDrawService lotteryDrawService;
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @Autowired
-    private ReportsService reportsService;
+    private final ReportsService reportsService;
 
     private Logger logger = LoggerFactory.getLogger(LotteryDrawController.class);
+
+    public LotteryDrawController(SecuritySubjectService securitySubjectService, NotificationService notificationService, LotteryDrawService lotteryDrawService, MemberService memberService, ReportsService reportsService) {
+        super(securitySubjectService, notificationService);
+        this.lotteryDrawService = lotteryDrawService;
+        this.memberService = memberService;
+        this.reportsService = reportsService;
+    }
 
 
     @RequestMapping(value = "/draws", method = RequestMethod.GET)

@@ -28,11 +28,19 @@ public class SecuritySubjectService extends LifelineService implements UserDetai
     private static final String PASSWORD_AND_CONFIRMATION_MISMATCH_MESSAGE = "Password and Confirmation don't match";
     private static final String PASSWORD_MUST_CHANGE_MESSAGE = "The New Password must not be the same as the Current Password";
 
-    @Autowired
     private SecuritySubjectRepository securitySubjectRepository;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public void setSecuritySubjectRepository(SecuritySubjectRepository securitySubjectRepository) {
+        this.securitySubjectRepository = securitySubjectRepository;
+    }
+
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public List<SecuritySubject> findAllSecuritySubjects() {
         return securitySubjectRepository.findAll();

@@ -3,7 +3,6 @@ package com.codaconsultancy.cclifeline.service;
 import com.codaconsultancy.cclifeline.domain.Notification;
 import com.codaconsultancy.cclifeline.repositories.NotificationRepository;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.List;
 @Service
 public class NotificationService extends LifelineService {
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+    private final NotificationRepository notificationRepository;
+
+    public NotificationService(NotificationRepository notificationRepository) {
+        this.notificationRepository = notificationRepository;
+    }
 
     public Notification saveNotification(Notification notification) {
         return notificationRepository.save(notification);

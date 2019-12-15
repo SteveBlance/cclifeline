@@ -3,6 +3,7 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectPasswordIncorrectException;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
+import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
 import org.slf4j.Logger;
@@ -28,6 +29,10 @@ public class AdminController extends LifelineController {
     public static final String ADD_ADMINISTRATOR_PAGE = "add-administrator";
     public static final String CHANGE_PASSWORD_PAGE = "change-password";
     private Logger logger = LoggerFactory.getLogger(AdminController.class);
+
+    public AdminController(SecuritySubjectService securitySubjectService, NotificationService notificationService) {
+        super(securitySubjectService, notificationService);
+    }
 
 
     @RequestMapping(value = "/administrators", method = RequestMethod.GET)

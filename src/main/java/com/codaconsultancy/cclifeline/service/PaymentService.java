@@ -13,7 +13,6 @@ import org.apache.commons.csv.CSVRecord;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,14 +26,17 @@ import java.util.regex.Pattern;
 @Service
 public class PaymentService extends LifelineService {
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
-    @Autowired
-    private PaymentReferenceRepository paymentReferenceRepository;
+    private final PaymentReferenceRepository paymentReferenceRepository;
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
+
+    public PaymentService(PaymentRepository paymentRepository, PaymentReferenceRepository paymentReferenceRepository, MemberRepository memberRepository) {
+        this.paymentRepository = paymentRepository;
+        this.paymentReferenceRepository = paymentReferenceRepository;
+        this.memberRepository = memberRepository;
+    }
 
     public List<PaymentViewBean> findAllPayments() {
         return paymentRepository.findAllPayments();

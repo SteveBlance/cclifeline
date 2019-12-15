@@ -4,7 +4,6 @@ import com.codaconsultancy.cclifeline.domain.Notification;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -15,11 +14,15 @@ import java.util.List;
 @Controller
 class LifelineController {
 
-    @Autowired
-    protected SecuritySubjectService securitySubjectService;
+    protected final SecuritySubjectService securitySubjectService;
 
-    @Autowired
+    final
     NotificationService notificationService;
+
+    public LifelineController(SecuritySubjectService securitySubjectService, NotificationService notificationService) {
+        this.securitySubjectService = securitySubjectService;
+        this.notificationService = notificationService;
+    }
 
     String loggedInUser() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

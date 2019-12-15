@@ -3,15 +3,11 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.Address;
 import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Member;
-import com.codaconsultancy.cclifeline.service.AddressService;
-import com.codaconsultancy.cclifeline.service.LotteryDrawService;
-import com.codaconsultancy.cclifeline.service.MemberService;
-import com.codaconsultancy.cclifeline.service.PaymentService;
+import com.codaconsultancy.cclifeline.service.*;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -37,19 +33,23 @@ public class MemberController extends LifelineController {
     public static final String LOGOUT_PAGE = "logout";
     public static final String EXPORT_DATA_PAGE = "export-data";
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
-    @Autowired
-    private AddressService addressService;
+    private final AddressService addressService;
 
-    @Autowired
-    private LotteryDrawService lotteryDrawService;
+    private final LotteryDrawService lotteryDrawService;
 
     private Logger logger = LoggerFactory.getLogger(MemberController.class);
+
+    public MemberController(SecuritySubjectService securitySubjectService, NotificationService notificationService, MemberService memberService, PaymentService paymentService, AddressService addressService, LotteryDrawService lotteryDrawService) {
+        super(securitySubjectService, notificationService);
+        this.memberService = memberService;
+        this.paymentService = paymentService;
+        this.addressService = addressService;
+        this.lotteryDrawService = lotteryDrawService;
+    }
 
     @RequestMapping("/")
     public ModelAndView home() {

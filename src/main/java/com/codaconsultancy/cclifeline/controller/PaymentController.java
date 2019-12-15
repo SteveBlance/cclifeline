@@ -4,13 +4,14 @@ import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.domain.PaymentReference;
 import com.codaconsultancy.cclifeline.service.MemberService;
+import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.PaymentService;
+import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import com.codaconsultancy.cclifeline.view.PaymentReferenceViewBean;
 import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -38,13 +39,17 @@ public class PaymentController extends LifelineController {
     static final String UPLOAD_PAYMENTS_PAGE = "upload-payments";
     private static final String CREDITED_ACCOUNT = "82621900174982CA";
 
-    @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
     private Logger logger = LoggerFactory.getLogger(PaymentController.class);
+
+    public PaymentController(SecuritySubjectService securitySubjectService, NotificationService notificationService, PaymentService paymentService, MemberService memberService) {
+        super(securitySubjectService, notificationService);
+        this.paymentService = paymentService;
+        this.memberService = memberService;
+    }
 
     @RequestMapping(value = "/payments/{filter}", method = RequestMethod.GET)
     public ModelAndView navigateToPayments(@PathVariable String filter) {

@@ -13,11 +13,19 @@ public class LifelineService {
     public static final String LAST_ELIGIBILITY_REFRESH_DATE = "LAST_ELIGIBILITY_REFRESH_DATE";
     public static final String ELIGIBILITY_REFRESH_REQUIRED = "ELIGIBILITY_REFRESH_REQUIRED";
 
-    @Autowired
     private EventLogRepository eventLogRepository;
 
-    @Autowired
     ConfigurationRepository configurationRepository;
+
+    @Autowired
+    public void setEventLogRepository(EventLogRepository eventLogRepository) {
+        this.eventLogRepository = eventLogRepository;
+    }
+
+    @Autowired
+    public void setConfigurationRepository(ConfigurationRepository configurationRepository) {
+        this.configurationRepository = configurationRepository;
+    }
 
     public void logMessage(String message) {
         eventLogRepository.save(new EventLog(message));

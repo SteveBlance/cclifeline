@@ -4,7 +4,6 @@ import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.repositories.LotteryDrawRepository;
 import com.codaconsultancy.cclifeline.repositories.PrizeRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,11 +11,14 @@ import java.util.List;
 @Service
 public class LotteryDrawService extends LifelineService {
 
-    @Autowired
-    private LotteryDrawRepository lotteryDrawRepository;
+    private final LotteryDrawRepository lotteryDrawRepository;
 
-    @Autowired
-    private PrizeRepository prizeRepository;
+    private final PrizeRepository prizeRepository;
+
+    public LotteryDrawService(LotteryDrawRepository lotteryDrawRepository, PrizeRepository prizeRepository) {
+        this.lotteryDrawRepository = lotteryDrawRepository;
+        this.prizeRepository = prizeRepository;
+    }
 
     public List<LotteryDraw> fetchAllLotteryDraws() {
         return lotteryDrawRepository.findAll();

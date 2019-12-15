@@ -8,7 +8,6 @@ import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Period;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,11 +26,14 @@ public class MemberService extends LifelineService {
     private static final String OPEN_STATUS = "Open";
     private static final String CLOSED_STATUS = "Closed";
 
-    @Autowired
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    private PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
+
+    public MemberService(MemberRepository memberRepository, PaymentRepository paymentRepository) {
+        this.memberRepository = memberRepository;
+        this.paymentRepository = paymentRepository;
+    }
 
     public List<MemberViewBean> findAllMembers() {
         return memberRepository.findAllMembers();
