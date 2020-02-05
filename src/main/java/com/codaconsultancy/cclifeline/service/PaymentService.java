@@ -102,7 +102,7 @@ public class PaymentService extends LifelineService {
 
             if (commaCount(description) == 2) {
                 String[] descArray = toArray(description);
-                name = descArray[1].trim();
+                name = descArray[1].replaceAll("\\d","").trim();
             }
 
             if (transactionType.equalsIgnoreCase("CR") && (!creditAmountText.isEmpty())) {

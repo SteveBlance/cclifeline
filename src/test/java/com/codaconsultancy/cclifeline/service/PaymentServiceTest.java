@@ -335,7 +335,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void parsePayments_success() throws Exception {
         List<Member> members = new ArrayList<>();
         Member member1 = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
-        Member member2 = TestHelper.newMember(550L, "Margaret", "Teed", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
+        Member member2 = TestHelper.newMember(4550L, "Margaret", "Teed", "ma@email.com", "0131999877", null, "Monthly", "Lifeline", null, "TBC");
         members.add(member1);
         members.add(member2);
         when(memberRepository.findAll()).thenReturn(members);
@@ -349,7 +349,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
         assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
         assertEquals("Transfer FPS, Teed G T4E F, 4550", payments.get(0).getCreditReference());
-        assertEquals("Teed G T4E F", payments.get(0).getName());
+        assertEquals("Teed G TE F", payments.get(0).getName());
         assertEquals(member2.getMembershipNumber(), payments.get(0).getMember().getMembershipNumber());
     }
 
@@ -414,6 +414,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
         List<Payment> payments = paymentService.parsePayments(EXAMPLE_STATEMENT, "test.csv");
 
+
         assertEquals(24, payments.size());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -421,7 +422,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
         assertEquals("82621900174982CA", payments.get(0).getCreditedAccount());
         assertEquals(20.00F, payments.get(0).getPaymentAmount(), 0.002);
         assertEquals("Transfer FPS, Teed G T4E F, 4550", payments.get(0).getCreditReference());
-        assertEquals("Teed G T4E F", payments.get(0).getName());
+        assertEquals("Teed G TE F", payments.get(0).getName());
         assertNull(payments.get(0).getMember());
     }
 
