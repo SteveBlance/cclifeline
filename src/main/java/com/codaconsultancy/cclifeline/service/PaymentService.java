@@ -131,6 +131,10 @@ public class PaymentService extends LifelineService {
     }
 
     private void matchWithMember(Payment payment) {
+        if (payment.getCreditReference().equals("Charges ADDITIONAL LIST")) {
+            payment.setLotteryPayment(false);
+            return;
+        }
         boolean paymentMatched = tryMatchByMembershipNumberAndName(payment);
         if (!paymentMatched) {
             tryMatchByFullPaymentReference(payment);
