@@ -39,12 +39,6 @@ public class LotteryDrawControllerTest extends BaseTest {
     private LotteryDrawController lotteryDrawController;
 
     @MockBean
-    private LotteryDrawService lotteryDrawService;
-
-    @MockBean
-    private MemberService memberService;
-
-    @MockBean
     private NotificationService notificationService;
 
     @MockBean

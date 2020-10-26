@@ -33,18 +33,12 @@ public class LotteryDrawController extends LifelineController {
     public static final String MAKE_DRAW_PAGE = "make-draw";
     public static final String DRAW_RESULT_PAGE = "draw-result";
 
-    private final LotteryDrawService lotteryDrawService;
-
-    private final MemberService memberService;
-
     private final ReportsService reportsService;
 
     private Logger logger = LoggerFactory.getLogger(LotteryDrawController.class);
 
     public LotteryDrawController(SecuritySubjectService securitySubjectService, NotificationService notificationService, LotteryDrawService lotteryDrawService, MemberService memberService, ReportsService reportsService) {
-        super(securitySubjectService, notificationService);
-        this.lotteryDrawService = lotteryDrawService;
-        this.memberService = memberService;
+        super(securitySubjectService, notificationService, memberService, lotteryDrawService);
         this.reportsService = reportsService;
     }
 

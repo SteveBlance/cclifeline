@@ -3,6 +3,8 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.exceptions.SubjectPasswordIncorrectException;
 import com.codaconsultancy.cclifeline.exceptions.SubjectUsernameExistsException;
+import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import com.codaconsultancy.cclifeline.view.SecuritySubjectViewBean;
@@ -30,8 +32,8 @@ public class AdminController extends LifelineController {
     public static final String CHANGE_PASSWORD_PAGE = "change-password";
     private Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public AdminController(SecuritySubjectService securitySubjectService, NotificationService notificationService) {
-        super(securitySubjectService, notificationService);
+    public AdminController(SecuritySubjectService securitySubjectService, NotificationService notificationService, MemberService memberService, LotteryDrawService lotteryDrawService) {
+        super(securitySubjectService, notificationService, memberService, lotteryDrawService);
     }
 
 
@@ -82,7 +84,7 @@ public class AdminController extends LifelineController {
             return addAlertMessage(navigateToChangePassword(securitySubjectViewBean.getUsername()), "danger", e.getMessage());
         }
 
-        return modelAndView("index");
+        return modelAndView("index").addObject("lastDraw" , lotteryDrawService.fetchLastDraw());
     }
 
     @EventListener

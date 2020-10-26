@@ -33,22 +33,16 @@ public class MemberController extends LifelineController {
     public static final String LOGOUT_PAGE = "logout";
     public static final String EXPORT_DATA_PAGE = "export-data";
 
-    private final MemberService memberService;
-
     private final PaymentService paymentService;
 
     private final AddressService addressService;
 
-    private final LotteryDrawService lotteryDrawService;
-
     private Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(SecuritySubjectService securitySubjectService, NotificationService notificationService, MemberService memberService, PaymentService paymentService, AddressService addressService, LotteryDrawService lotteryDrawService) {
-        super(securitySubjectService, notificationService);
-        this.memberService = memberService;
+        super(securitySubjectService, notificationService, memberService, lotteryDrawService);
         this.paymentService = paymentService;
         this.addressService = addressService;
-        this.lotteryDrawService = lotteryDrawService;
     }
 
     @RequestMapping("/")
@@ -214,11 +208,6 @@ public class MemberController extends LifelineController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public ModelAndView navigateToLogout() {
         return modelAndView(LOGOUT_PAGE);
-    }
-
-    @RequestMapping(value = "/reports", method = RequestMethod.GET)
-    public ModelAndView navigateToReports() {
-        return modelAndView("reports");
     }
 
     @RequestMapping(value = "/export-data", method = RequestMethod.GET)

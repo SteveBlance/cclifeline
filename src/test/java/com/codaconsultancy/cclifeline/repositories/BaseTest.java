@@ -1,5 +1,7 @@
 package com.codaconsultancy.cclifeline.repositories;
 
+import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -28,6 +30,10 @@ public abstract class BaseTest {
 
     @MockBean
     protected SecuritySubjectService securitySubjectService;
+    @MockBean
+    protected MemberService memberService;
+    @MockBean
+    protected LotteryDrawService lotteryDrawService;
 
     @Before
     public void onSetUp() {

@@ -3,10 +3,7 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.domain.Payment;
 import com.codaconsultancy.cclifeline.domain.PaymentReference;
-import com.codaconsultancy.cclifeline.service.MemberService;
-import com.codaconsultancy.cclifeline.service.NotificationService;
-import com.codaconsultancy.cclifeline.service.PaymentService;
-import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
+import com.codaconsultancy.cclifeline.service.*;
 import com.codaconsultancy.cclifeline.view.PaymentReferenceViewBean;
 import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import org.apache.commons.io.IOUtils;
@@ -41,14 +38,11 @@ public class PaymentController extends LifelineController {
 
     private final PaymentService paymentService;
 
-    private final MemberService memberService;
-
     private Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
-    public PaymentController(SecuritySubjectService securitySubjectService, NotificationService notificationService, PaymentService paymentService, MemberService memberService) {
-        super(securitySubjectService, notificationService);
+    public PaymentController(SecuritySubjectService securitySubjectService, NotificationService notificationService, PaymentService paymentService, MemberService memberService, LotteryDrawService lotteryDrawService) {
+        super(securitySubjectService, notificationService, memberService, lotteryDrawService);
         this.paymentService = paymentService;
-        this.memberService = memberService;
     }
 
     @RequestMapping(value = "/payments/{filter}", method = RequestMethod.GET)

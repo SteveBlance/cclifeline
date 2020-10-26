@@ -2,6 +2,8 @@ package com.codaconsultancy.cclifeline.controller;
 
 import com.codaconsultancy.cclifeline.domain.Notification;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
+import com.codaconsultancy.cclifeline.service.LotteryDrawService;
+import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,13 +17,17 @@ import java.util.List;
 class LifelineController {
 
     protected final SecuritySubjectService securitySubjectService;
+    protected final MemberService memberService;
+    protected final LotteryDrawService lotteryDrawService;
 
     final
     NotificationService notificationService;
 
-    public LifelineController(SecuritySubjectService securitySubjectService, NotificationService notificationService) {
+    public LifelineController(SecuritySubjectService securitySubjectService, NotificationService notificationService, MemberService memberService, LotteryDrawService lotteryDrawService) {
         this.securitySubjectService = securitySubjectService;
         this.notificationService = notificationService;
+        this.memberService = memberService;
+        this.lotteryDrawService = lotteryDrawService;
     }
 
     String loggedInUser() {

@@ -33,14 +33,8 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = MemberController.class)
 public class MemberControllerTest extends BaseTest {
 
-    @MockBean
-    private LotteryDrawService lotteryDrawService;
-
     @Autowired
     MemberController memberController;
-
-    @MockBean
-    MemberService memberService;
 
     @MockBean
     PaymentService paymentService;
@@ -440,11 +434,6 @@ public class MemberControllerTest extends BaseTest {
         verify(memberService, times(1)).closeLapsedMemberships();
         verify(notificationService, times(1)).logMembershipsClosed(564);
         assertEquals("members", modelAndView.getViewName());
-    }
-
-    @Test
-    public void navigateToReports() {
-        assertEquals("reports", memberController.navigateToReports().getViewName());
     }
 
     @Test

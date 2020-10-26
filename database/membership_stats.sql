@@ -1,24 +1,43 @@
--- All registered members past and present
-select count(1) from members;  -- 1439
+select * from ineligible_for_draw_vw;
 
--- Current members
-select count(1) from members where status = 'Open';   -- 977
+-- VIEW LAPSED 
+select * from ineligible_for_draw_vw
+where LAST_PAYMENT like '2020-07-%';
 
--- Current members eligible for draw
-select count(1) from members where status = 'Open' and is_eligible_for_draw = 1;   -- 948
 
--- Current members ineligible for draw due to lapsed payments
-select count(1) from members where status = 'Open' and is_eligible_for_draw = 0;  -- 29
+-- UPDATE LAPSED TO CLOSED
+update members set STATUS = 'Closed' where id in (
+select member_id from ineligible_for_draw_vw
+where LAST_PAYMENT like '2020-07-%');
+
+-- Current Legacy memberships
+select count(1) from members  where status = 'Open' and MEMBERSHIP_TYPE = 'Legacy'; 
+
+-- Current Lifeline memberships
+select count(1) from members  where status = 'Open' and MEMBERSHIP_TYPE = 'Lifeline';
+
+-- Closed/Cancelled memberships
+select count(1) from members  where status in ('Closed', 'Cancelled');
+
+
+update members set status = 'TBC' where JOIN_DATE > DATE_SUB(NOW(), INTERVAL 30 DAY)
+and not exists (select 1 from payments where MEMBER_ID = members.id);
 
 -- Members ineligible for draw having not started payments
 select count(1) from members where status = 'TBC';  -- 30
 
--- Current Legacy memberships
-select count(1) from members  where status = 'Open' and MEMBERSHIP_TYPE = 'Legacy';  -- 149
+-- Members who have joined during the month (check emails - join date in DB is when I add the member
+select * from members
+where join_date like '2020-08%';
 
--- Current Lifeline memberships
-select count(1) from members  where status = 'Open' and MEMBERSHIP_TYPE = 'Lifeline'; -- 828
+-- Didn't pay in month
+select * from ineligible_for_draw_vw;
 
--- New members registered (change mask date to previus meeting)
-select count(1) from members where JOIN_DATE between DATE_FORMAT(NOW() ,'%2017-%11-09') AND NOW();
-
+-- Closed in month
+SELECT m.id member_id, m.MEMBERSHIP_NUMBER, m.FORENAME, m.SURNAME, m.email, m.LANDLINE_NUMBER, m.MOBILE_NUMBER, m.PAYER_TYPE, m.JOIN_DATE, p.PAYMENT_AMOUNT, MAX(p.PAYMENT_DATE) LAST_PAYMENT, m.STATUS
+FROM members m, payments p
+WHERE status in ('Closed', 'Cancelled')
+AND IS_ELIGIBLE_FOR_DRAW = FALSE
+AND p.member_id = m.id
+GROUP BY m.id, m.MEMBERSHIP_NUMBER, m.FORENAME, m.SURNAME, m.email, m.LANDLINE_NUMBER, m.MOBILE_NUMBER, m.PAYER_TYPE, m.JOIN_DATE, p.PAYMENT_AMOUNT
+ORDER BY MAX(p.PAYMENT_DATE) DESC;

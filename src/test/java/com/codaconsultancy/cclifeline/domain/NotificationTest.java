@@ -32,7 +32,7 @@ public class NotificationTest {
     public void getEventDate() throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
         assertEquals("2011-05-13", sdf.format(notification.getEventDate()));
-        assertEquals("9 years ago", notification.getPrettyTime());
+        assertEquals("10 years ago", notification.getPrettyTime());
         notification.setEventDate(new Date());
         assertEquals("Today", notification.getPrettyTime());
     }

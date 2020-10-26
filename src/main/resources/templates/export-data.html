@@ -32,17 +32,12 @@
         </div>
     </div>
     <br/>
-    <form id="exportDataForm" class="form-horizontal text-left" role="form" action="#" method="post">
+    <form id="exportDataForm" class="form-horizontal text-left" role="form" action="#" th:action="@{/export-report}" method="post">
         <div class="form-group">
             <label class="col-sm-3 control-label">Report to export:</label>
             <div class="col-sm-7">
                 <select class="form-control">
-                    <option th:value="AllMembers">All Members</option>
-                    <option th:value="CurrentMembers">Current Members</option>
-                    <option th:value="FormerMembers">Former Members</option>
-                    <option th:value="AllPayments">All Payments</option>
-                    <option th:value="Draws">Draws</option>
-                    <option th:value="AllWinners">All Winners</option>
+                    <option th:value="members">All Members</option>
                 </select>
             </div>
         </div>
@@ -50,9 +45,7 @@
             <label class="col-sm-3 control-label">File format:</label>
             <div class="col-sm-7">
                 <select class="form-control">
-                    <option th:value="csv" selected="selected">Comma separated values (.csv)</option>
-                    <option th:value="xml">Extensible Markup Language (.xml)</option>
-                    <option th:value="json">JavaScript Object Notation (.json)</option>
+                    <option selected="selected">Comma separated values (.csv)</option>
                 </select>
             </div>
         </div>

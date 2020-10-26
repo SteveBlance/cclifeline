@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 import static org.mockito.Mockito.*;
 
@@ -36,6 +37,11 @@ public class ReportsControllerTest extends BaseTest {
 
     @Before
     public void setUp() throws Exception {
+    }
+
+    @Test
+    public void navigateToReports() {
+        assertEquals("reports", reportsController.navigateToReports().getViewName());
     }
 
     @Test

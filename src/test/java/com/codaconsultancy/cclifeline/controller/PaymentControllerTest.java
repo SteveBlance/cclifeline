@@ -45,9 +45,6 @@ public class PaymentControllerTest extends BaseTest {
     PaymentService paymentService;
 
     @MockBean
-    MemberService memberService;
-
-    @MockBean
     NotificationService notificationService;
 
     @Before

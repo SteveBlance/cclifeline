@@ -8,7 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@EnableAutoConfiguration
 @ComponentScan({"com.codaconsultancy"})
 @EntityScan("com.codaconsultancy.cclifeline.domain")
 @EnableJpaRepositories("com.codaconsultancy.cclifeline.repositories")
