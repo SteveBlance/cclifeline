@@ -56,7 +56,7 @@ public class PaymentController extends LifelineController {
         String allTabStatus = ENABLED;
         switch (filter) {
             case "recent":
-                payments = paymentService.findPaymentsForLastMonth();
+                payments = paymentService.findRecentPayments();
                 title = "Recent payments";
                 recentTabStatus = DISABLED;
                 break;

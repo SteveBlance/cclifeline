@@ -104,18 +104,18 @@ public class PaymentServiceTest extends LifelineServiceTest {
         List<PaymentViewBean> payments = new ArrayList<>();
         when(paymentRepository.findAllPaymentsAfter(any(Date.class))).thenReturn(payments);
 
-        List<PaymentViewBean> recentPayments = paymentService.findPaymentsForLastMonth();
+        List<PaymentViewBean> recentPayments = paymentService.findRecentPayments();
 
         ArgumentCaptor<Date> dateArgumentCaptor = ArgumentCaptor.forClass(Date.class);
         verify(paymentRepository, times(1)).findAllPaymentsAfter(dateArgumentCaptor.capture());
         assertSame(payments, recentPayments);
         Date now = DateTime.now().toDate();
         Date threeWeeksAgo = DateTime.now().minusWeeks(3).toDate();
-        Date fiveWeeksAgo = DateTime.now().minusWeeks(5).toDate();
+        Date nineWeeksAgo = DateTime.now().minusWeeks(9).toDate();
         Date dateFrom = dateArgumentCaptor.getValue();
         assertTrue(now.after(dateFrom));
         assertTrue(threeWeeksAgo.after(dateFrom));
-        assertFalse(fiveWeeksAgo.after(dateFrom));
+        assertFalse(nineWeeksAgo.after(dateFrom));
     }
 
     @Test

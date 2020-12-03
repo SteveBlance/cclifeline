@@ -46,9 +46,9 @@ public class PaymentService extends LifelineService {
         return paymentRepository.findUnmatchedLotteryPayments();
     }
 
-    public List<PaymentViewBean> findPaymentsForLastMonth() {
-        DateTime oneMonthAgo = DateTime.now().minusMonths(1);
-        return paymentRepository.findAllPaymentsAfter(oneMonthAgo.toDate());
+    public List<PaymentViewBean> findRecentPayments() {
+        DateTime twoMonthsAgo = DateTime.now().minusMonths(2);
+        return paymentRepository.findAllPaymentsAfter(twoMonthsAgo.toDate());
     }
 
     public List<PaymentViewBean> findAllMatchedLotteryPayments() {

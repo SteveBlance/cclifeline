@@ -3,7 +3,6 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.*;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
-import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.PaymentService;
 import com.codaconsultancy.cclifeline.view.PaymentReferenceViewBean;
@@ -55,7 +54,7 @@ public class PaymentControllerTest extends BaseTest {
     @Test
     public void navigateToRecentPayments() throws Exception {
         List<PaymentViewBean> payments = getPaymentsAsViewBeans();
-        when(paymentService.findPaymentsForLastMonth()).thenReturn(payments);
+        when(paymentService.findRecentPayments()).thenReturn(payments);
         List<Notification> notifications = new ArrayList<>();
         when(notificationService.fetchLatestNotifications()).thenReturn(notifications);
 

@@ -195,15 +195,13 @@ public class MemberServiceTest extends LifelineServiceTest {
 
     @Test
     public void saveMember() {
-        Member member = TestHelper.newMember(0L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", null);
+        Member member = TestHelper.newMember(2566L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", null);
         member.setJoinDate(null);
-        when(memberRepository.nextMembershipNumber()).thenReturn(2566L);
         when(memberRepository.save(member)).thenReturn(member);
         assertNull(member.getJoinDate());
 
         Member newMember = memberService.saveMember(member);
 
-        verify(memberRepository, times(1)).nextMembershipNumber();
         verify(memberRepository, times(1)).save(member);
         assertEquals(2566L, newMember.getMembershipNumber().longValue());
         assertEquals("Billy", newMember.getForename());
@@ -212,6 +210,13 @@ public class MemberServiceTest extends LifelineServiceTest {
         assertNotNull(member.getJoinDate());
         assertEquals(DateTime.now().getDayOfYear(), new DateTime(newMember.getJoinDate()).getDayOfYear());
 
+    }
+
+    @Test
+    public void getNextMembershipNumber() {
+        when(memberRepository.nextMembershipNumber()).thenReturn(144L);
+        long nextNumber = memberService.getNextMembershipNumber();
+        assertEquals(144L, nextNumber);
     }
 
     @Test

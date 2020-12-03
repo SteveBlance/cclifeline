@@ -76,12 +76,14 @@ public class MemberService extends LifelineService {
     }
 
     public Member saveMember(Member member) {
-        Long nextMembershipNumber = memberRepository.nextMembershipNumber();
-        member.setMembershipNumber(nextMembershipNumber);
         member.setStatus(TBC_STATUS);
         member.setJoinDate(DateTime.now().toDate());
 
         return memberRepository.save(member);
+    }
+
+    public Long getNextMembershipNumber() {
+        return memberRepository.nextMembershipNumber();
     }
 
     public Member updateMember(Member member) {

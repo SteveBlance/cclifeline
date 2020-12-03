@@ -33,13 +33,13 @@
             </div>
         </div>
         <ul class="nav nav-tabs">
+            <li role="presentation" th:class="${allTabStatus}"><a th:href="@{/members/all}">All</a></li>
             <li role="presentation" th:class="${currentTabStatus}"><a th:href="@{/members/current}">Current</a></li>
             <li role="presentation" th:class="${eligibleTabStatus}"><a th:href="@{/members/eligible}">Eligible</a></li>
             <li role="presentation" th:class="${recentlyLapsedTabStatus}"><a th:href="@{/members/recently-lapsed}">Lapsed</a>
             </li>
             <li role="presentation" th:class="${formerTabStatus}"><a th:href="@{/members/former}">Former</a></li>
             <li role="presentation" th:class="${pendingTabStatus}"><a th:href="@{/members/pending}">Pending</a></li>
-            <li role="presentation" th:class="${allTabStatus}"><a th:href="@{/members/all}">All</a></li>
         </ul>
         <br/>
 
@@ -54,7 +54,6 @@
                 <th>Status</th>
                 <th>Payer Type</th>
                 <th>Join Date</th>
-                <th>Leave Date</th>
                 <th>Email</th>
                 <th>Phone No</th>
                 <th>Mobile No</th>
@@ -72,7 +71,6 @@
                 <td th:text="${member.status}">Status</td>
                 <td th:text="${member.payerType}">Payer Type</td>
                 <td th:text="${member.joinDate} ? ${#dates.format(member.joinDate, 'yyyy/MM/dd')}">Join Date</td>
-                <td th:text="${member.leaveDate} ? ${#dates.format(member.leaveDate, 'yyyy/MM/dd')}">Leave Date</td>
                 <td th:text="${member.email}">Email</td>
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>
@@ -105,10 +103,10 @@
 
         <br/>
         <div class="row">
-            <form action="#" th:action="@{/close-lapsed-memberships}" method="post">
-                <a th:href="@{/}" class="btn btn-default active" role="button">Back</a>
-                <a th:href="@{/add-member}" class="btn btn-success" role="button">Add New Member</a>
-            </form>
+<!--            <form action="#" th:action="@{/close-lapsed-memberships}" method="post">-->
+            <a th:href="@{/}" class="btn btn-default active" role="button">Back</a>
+            <a th:href="@{/add-member}" class="btn btn-success" role="button">Add New Member</a>
+<!--            </form>-->
         </div>
     </div>
 </div>

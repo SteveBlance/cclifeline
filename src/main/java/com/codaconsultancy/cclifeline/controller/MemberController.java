@@ -123,6 +123,8 @@ public class MemberController extends LifelineController {
     @RequestMapping(value = "/add-member", method = RequestMethod.GET)
     public ModelAndView navigateToAddMember() {
         MemberViewBean member = new MemberViewBean();
+        Long nextMembershipNumber = memberService.getNextMembershipNumber();
+        member.setMembershipNumber(nextMembershipNumber);
         return modelAndView(ADD_MEMBER_PAGE).addObject("member", member);
     }
 
