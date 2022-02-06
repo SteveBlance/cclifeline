@@ -173,7 +173,7 @@ public class PaymentService extends LifelineService {
     }
 
     private Long findMembershipNumberInReference(String paymentReference) {
-        Pattern pattern = Pattern.compile("(\\s\\d{2,5}($|\\s|-|\\/))");
+        Pattern pattern = Pattern.compile("(\\d{2,5}($|\\s|-|\\/))");
         Matcher matcher = pattern.matcher(paymentReference);
         String membershipNumberText = "";
         if (matcher.find()) {

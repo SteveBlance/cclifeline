@@ -6,7 +6,7 @@
 
     <groupId>com.codaconsultancy</groupId>
     <artifactId>cclifeline</artifactId>
-    <version>1.26-SNAPSHOT</version>
+    <version>1.27-SNAPSHOT</version>
     <!--When packaging for aws-->
     <!--<packaging>war</packaging>-->
 
