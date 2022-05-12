@@ -8,6 +8,7 @@ import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.joda.time.Period;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -205,8 +206,15 @@ public class MemberService extends LifelineService {
         return lastExpectedPaymentDate;
     }
 
+    // Every hour
+    @Scheduled(cron = "0 0 * * * *")
+    public void scheduledUpdateEligibilityCall() {
+        updateEligibilityStatuses();
+    }
+
     public void updateEligibilityStatuses() {
         if (lotteryEligibilityStatusRefreshRequired()) {
+            logMessage("Updating Eligibility Statuses");
             List<MemberViewBean> members = memberRepository.findCurrentMembers();
             boolean wasPreviouslyEligible;
             boolean isNowEligible;
@@ -234,7 +242,6 @@ public class MemberService extends LifelineService {
             configurationRepository.save(lastRefresh);
             configurationRepository.save(refreshRequired);
         }
-
     }
 
     public boolean lotteryEligibilityStatusRefreshRequired() {

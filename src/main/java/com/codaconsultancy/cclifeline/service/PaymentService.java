@@ -91,6 +91,7 @@ public class PaymentService extends LifelineService {
         String description;
         String name;
         Float creditAmount;
+        List<Member> allMembers = memberRepository.findAll();
         for (CSVRecord record : parser) {
             paymentDateText = record.get(0).trim();
             date = DateTime.parse(paymentDateText, fmt).toDate();
@@ -108,7 +109,7 @@ public class PaymentService extends LifelineService {
             if (transactionType.equalsIgnoreCase("CR") && (!creditAmountText.isEmpty())) {
                 creditAmount = Float.parseFloat(creditAmountText);
                 Payment payment = new Payment(date, creditAmount, description, accountNumber, name, true);
-                matchWithMember(payment);
+                matchWithMember(payment, allMembers);
                 payments.add(payment);
             }
         }
@@ -130,12 +131,12 @@ public class PaymentService extends LifelineService {
         return  commaCount;
     }
 
-    private void matchWithMember(Payment payment) {
-        if (payment.getCreditReference().equals("Charges ADDITIONAL LIST")) {
+    private void matchWithMember(Payment payment, List<Member> allMembers) {
+        if (payment.getCreditReference().contains("ADDITIONAL LIST")) {
             payment.setLotteryPayment(false);
             return;
         }
-        boolean paymentMatched = tryMatchByMembershipNumberAndName(payment);
+        boolean paymentMatched = tryMatchByMembershipNumberAndName(payment, allMembers);
         if (!paymentMatched) {
             tryMatchByFullPaymentReference(payment);
         }
@@ -154,12 +155,11 @@ public class PaymentService extends LifelineService {
         }
     }
 
-    private boolean tryMatchByMembershipNumberAndName(Payment payment) {
+    private boolean tryMatchByMembershipNumberAndName(Payment payment, List<Member> allMembers) {
         boolean isMatched = false;
         String reference = payment.getCreditReference();
         String name = payment.getName();
         String fullDescription = (reference + name).toUpperCase();
-        List<Member> allMembers = memberRepository.findAll();
         for (Member member : allMembers) {
             if (reference.equals("Giro " + member.getMembershipNumber()) ||
                     member.getMembershipNumber().equals(findMembershipNumberInReference(reference)) &&

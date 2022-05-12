@@ -8,11 +8,13 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @ComponentScan({"com.codaconsultancy"})
 @EntityScan("com.codaconsultancy.cclifeline.domain")
 @EnableJpaRepositories("com.codaconsultancy.cclifeline.repositories")
+@EnableScheduling
 public class SpringBootThymeleafApplicationWar extends SpringBootServletInitializer {
 
     @Override
