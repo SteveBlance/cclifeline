@@ -304,14 +304,14 @@ public class PaymentServiceTest extends LifelineServiceTest {
         paymentWithLapsedMember.setMember(lapsedMember);
         payments.add(paymentWithLapsedMember);
 
-        when(paymentRepository.save(payments)).thenReturn(payments);
+        when(paymentRepository.saveAll(payments)).thenReturn(payments);
         Configuration refreshRequired = new Configuration();
         refreshRequired.setBooleanValue(false);
         when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         List<Payment> savedPayments = paymentService.savePayments(payments);
 
-        verify(paymentRepository, times(1)).save(payments);
+        verify(paymentRepository, times(1)).saveAll(payments);
         verify(memberRepository, times(1)).save(lapsedMember);
         ArgumentCaptor<Configuration> configurationArgumentCaptor = ArgumentCaptor.forClass(Configuration.class);
         verify(configurationRepository, times(1)).findByName(ELIGIBILITY_REFRESH_REQUIRED);
@@ -445,11 +445,11 @@ public class PaymentServiceTest extends LifelineServiceTest {
     public void findById() {
         Payment payment = new Payment();
         payment.setId(2865L);
-        when(paymentRepository.findOne(payment.getId())).thenReturn(payment);
+        when(paymentRepository.getOne(payment.getId())).thenReturn(payment);
 
         Payment foundPayment = paymentService.findById(payment.getId());
 
-        verify(paymentRepository, times(1)).findOne(payment.getId());
+        verify(paymentRepository, times(1)).getOne(payment.getId());
         assertEquals(payment.getId(), foundPayment.getId());
     }
 
@@ -514,7 +514,7 @@ public class PaymentServiceTest extends LifelineServiceTest {
     @Test
     public void deletePayment() {
         paymentService.deletePayment(69L);
-        verify(paymentRepository, times(1)).delete(69L);
+        verify(paymentRepository, times(1)).deleteById(69L);
     }
 
     @Test

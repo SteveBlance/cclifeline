@@ -2,13 +2,13 @@ select * from ineligible_for_draw_vw;
 
 -- VIEW LAPSED 
 select * from ineligible_for_draw_vw
-where LAST_PAYMENT like '2022-02-%';
+where LAST_PAYMENT like '2022-06-%';
 
 
 -- UPDATE LAPSED TO CLOSED
 update members set STATUS = 'Closed' where id in (
 select member_id from ineligible_for_draw_vw
-where LAST_PAYMENT like '2022-02-%');
+where LAST_PAYMENT like '2022-05-%');
 
 -- Current Legacy memberships
 select count(1) from members  where status = 'Open' and MEMBERSHIP_TYPE = 'Legacy'; 
@@ -28,7 +28,7 @@ select count(1) from members where status = 'TBC';
 
 -- Members who have joined during the month (check emails - join date in DB is when I add the member
 select * from members
-where join_date like '2022-04%';
+where join_date like '2022-07%';
 
 -- Didn't pay in month
 select * from ineligible_for_draw_vw;

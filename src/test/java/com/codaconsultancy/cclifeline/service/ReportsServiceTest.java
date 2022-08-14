@@ -7,7 +7,6 @@ import com.codaconsultancy.cclifeline.repositories.ReportRepository;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -50,7 +49,7 @@ public class ReportsServiceTest extends LifelineServiceTest {
         verify(memberRepository, times(1)).findLapsedMembers();
         verify(memberRepository, times(1)).findFormerMembers();
 
-        verify(reportRepository, times(3)).save(Matchers.any(Report.class));
+        verify(reportRepository, times(3)).save(any(Report.class));
     }
 
     @Test
@@ -64,7 +63,7 @@ public class ReportsServiceTest extends LifelineServiceTest {
         verify(memberRepository, times(1)).findLapsedMembers();
         verify(memberRepository, times(1)).findFormerMembers();
 
-        verify(reportRepository, times(3)).save(Matchers.any(Report.class));
+        verify(reportRepository, times(3)).save(any(Report.class));
     }
 
 }

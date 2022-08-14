@@ -185,11 +185,11 @@ public class MemberServiceTest extends LifelineServiceTest {
     public void findMemberById_success() {
         Member member = TestHelper.newMember(1234L, "Frank", "Zippo", "fz@email.com", "0131999888", null, "Monthly", "Lifeline", "New member", "Open");
         member.setId(564L);
-        when(memberRepository.findOne(564L)).thenReturn(member);
+        when(memberRepository.getOne(564L)).thenReturn(member);
 
         Member foundMember = memberService.findMemberById(564L);
 
-        verify(memberRepository, times(1)).findOne(564L);
+        verify(memberRepository, times(1)).getOne(564L);
         assertEquals("fz@email.com", foundMember.getEmail());
     }
 
@@ -341,9 +341,9 @@ public class MemberServiceTest extends LifelineServiceTest {
         members.add(activeMember);
         when(memberRepository.findCurrentMembers()).thenReturn(members);
         Member lapsed1 = lapsedMember1.toEntity();
-        when(memberRepository.findOne(lapsedMember1.getId())).thenReturn(lapsed1);
+        when(memberRepository.getOne(lapsedMember1.getId())).thenReturn(lapsed1);
         Member lapsed2 = lapsedMember2.toEntity();
-        when(memberRepository.findOne(lapsedMember2.getId())).thenReturn(lapsed2);
+        when(memberRepository.getOne(lapsedMember2.getId())).thenReturn(lapsed2);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(lapsedMember1.getId()))).thenReturn(19.99D);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(lapsedMember2.getId()))).thenReturn(0.00D);
         when(paymentRepository.getTotalLotteryPaymentSince(any(Date.class), eq(activeMember.getId()))).thenReturn(20.00D);
@@ -356,7 +356,7 @@ public class MemberServiceTest extends LifelineServiceTest {
 
         int closedAccountCount = memberService.closeLapsedMemberships();
 
-        verify(memberRepository, times(2)).findOne(any(Long.class));
+        verify(memberRepository, times(2)).getOne(any(Long.class));
         verify(memberRepository, times(2)).save(any(Member.class));
         verify(memberRepository, times(1)).save(lapsed1);
         verify(memberRepository, times(1)).save(lapsed2);
