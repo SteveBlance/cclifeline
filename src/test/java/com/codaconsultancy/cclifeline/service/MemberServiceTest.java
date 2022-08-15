@@ -19,8 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 import static com.codaconsultancy.cclifeline.service.LifelineService.ELIGIBILITY_REFRESH_REQUIRED;
+import static com.codaconsultancy.cclifeline.service.LifelineService.LAST_ELIGIBILITY_REFRESH_DATE;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.ExpectedCount.once;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MemberService.class)
@@ -365,5 +367,99 @@ public class MemberServiceTest extends LifelineServiceTest {
         assertEquals(2, closedAccountCount);
     }
 
+    @Test
+    public void lotteryEligibilityStatusRefreshRequired_false() {
+        Configuration lastRefreshConfig = new Configuration();
+        lastRefreshConfig.setDateValue(DateTime.now().toDate());
+        when(configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE)).thenReturn(lastRefreshConfig);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
+
+        assertFalse(memberService.lotteryEligibilityStatusRefreshRequired());
+    }
+
+    @Test
+    public void lotteryEligibilityStatusRefreshRequired_trueByDate() {
+        Configuration lastRefreshConfig = new Configuration();
+        lastRefreshConfig.setDateValue(DateTime.now().minusHours(25).toDate());
+        when(configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE)).thenReturn(lastRefreshConfig);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
+
+        assertTrue(memberService.lotteryEligibilityStatusRefreshRequired());
+    }
+
+    @Test
+    public void lotteryEligibilityStatusRefreshRequired_trueByDateEquals() {
+        Configuration lastRefreshConfig = new Configuration();
+        lastRefreshConfig.setDateValue(DateTime.now().minusHours(24).toDate());
+        when(configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE)).thenReturn(lastRefreshConfig);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
+
+        assertTrue(memberService.lotteryEligibilityStatusRefreshRequired());
+    }
+
+    @Test
+    public void lotteryEligibilityStatusRefreshRequired_trueDataChange() {
+        Configuration lastRefreshConfig = new Configuration();
+        lastRefreshConfig.setDateValue(DateTime.now().toDate());
+        when(configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE)).thenReturn(lastRefreshConfig);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(true);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
+
+        assertTrue(memberService.lotteryEligibilityStatusRefreshRequired());
+    }
+
+    @Test
+    public void updateEligibilityStatuses_notRequired() {
+        Configuration lastRefreshConfig = new Configuration();
+        lastRefreshConfig.setDateValue(DateTime.now().toDate());
+        when(configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE)).thenReturn(lastRefreshConfig);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(false);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
+
+        memberService.scheduledUpdateEligibilityCall();
+
+        verify(memberRepository, never()).findCurrentMembers();
+        verify(configurationRepository, never()).save(any(Configuration.class));
+    }
+
+    @Test
+    public void updateEligibilityStatuses() {
+        Configuration lastRefreshConfig = new Configuration();
+        lastRefreshConfig.setDateValue(DateTime.now().toDate());
+        when(configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE)).thenReturn(lastRefreshConfig);
+        Configuration refreshRequired = new Configuration();
+        refreshRequired.setBooleanValue(true);
+        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
+        List<MemberViewBean> members = new ArrayList<>();
+        MemberViewBean joe = new MemberViewBean();
+        MemberViewBean jess = new MemberViewBean();
+        joe.setEligibleForDrawStored(false);
+        joe.setStatus("Open");
+        joe.setPayerType("Monthly");
+        joe.setMembershipType("Lifeline");
+        jess.setEligibleForDrawStored(true);
+        jess.setStatus("Open");
+        jess.setPayerType("Monthly");
+        jess.setMembershipType("Lifeline");
+        members.add(joe);
+        members.add(jess);
+        when(memberRepository.findCurrentMembers()).thenReturn(members);
+        when(paymentRepository.getTotalLotteryPaymentSince(any(), any())).thenReturn(20.00);
+
+        memberService.scheduledUpdateEligibilityCall();
+
+        verify(memberRepository, times(1)).findCurrentMembers();
+        verify(configurationRepository, times(2)).save(any(Configuration.class));
+        assertTrue(joe.isEligibleForDrawStored());
+        assertTrue(jess.isEligibleForDrawStored());
+    }
 
 }
