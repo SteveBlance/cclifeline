@@ -187,13 +187,13 @@ public class PaymentService extends LifelineService {
         for (Payment payment : payments) {
             reactivatePayerMembership(payment);
         }
-        paymentRepository.saveAll(payments);
+        paymentRepository.save(payments);
         forceDrawEligibilityRefresh();
         return payments;
     }
 
     public Payment findById(Long id) {
-        return paymentRepository.getOne(id);
+        return paymentRepository.findOne(id);
     }
 
     public Payment updatePayment(Payment payment) {
@@ -235,7 +235,7 @@ public class PaymentService extends LifelineService {
     }
 
     public void deletePayment(Long id) {
-        paymentRepository.deleteById(id);
+        paymentRepository.delete(id);
     }
 
 

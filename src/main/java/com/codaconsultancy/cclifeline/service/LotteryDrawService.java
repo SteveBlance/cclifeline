@@ -25,7 +25,7 @@ public class LotteryDrawService extends LifelineService {
     }
 
     public LotteryDraw fetchLotteryDraw(Long id) {
-        return lotteryDrawRepository.getOne(id);
+        return lotteryDrawRepository.findOne(id);
     }
 
     public LotteryDraw fetchLastDraw() {
@@ -38,7 +38,7 @@ public class LotteryDrawService extends LifelineService {
         for (Prize prize : prizes) {
             prize.setLotteryDraw(draw);
         }
-        prizeRepository.saveAll(prizes);
+        prizeRepository.save(prizes);
         return draw;
     }
 

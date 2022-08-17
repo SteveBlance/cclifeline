@@ -55,11 +55,11 @@ public class LotteryDrawServiceTest extends LifelineServiceTest {
         LotteryDraw testDraw = new LotteryDraw();
         long drawId = 87L;
         testDraw.setId(drawId);
-        when(lotteryDrawRepository.getOne(drawId)).thenReturn(testDraw);
+        when(lotteryDrawRepository.findOne(drawId)).thenReturn(testDraw);
 
         LotteryDraw draw = lotteryDrawService.fetchLotteryDraw(drawId);
 
-        verify(lotteryDrawRepository, times(1)).getOne(drawId);
+        verify(lotteryDrawRepository, times(1)).findOne(drawId);
         assertSame(testDraw, draw);
     }
 
@@ -92,7 +92,7 @@ public class LotteryDrawServiceTest extends LifelineServiceTest {
         assertSame(saveDraw, prize1.getLotteryDraw());
 
         verify(lotteryDrawRepository, times(1)).save(lotteryDraw);
-        verify((prizeRepository), times(1)).saveAll(prizes);
+        verify((prizeRepository), times(1)).save(prizes);
     }
 
     @Test

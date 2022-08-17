@@ -93,7 +93,7 @@ public class MemberService extends LifelineService {
     }
 
     public Member findMemberById(Long memberId) {
-        return memberRepository.getOne(memberId);
+        return memberRepository.findOne(memberId);
     }
 
     public List<MemberViewBean> fetchMemberDrawEntries() {
@@ -122,7 +122,7 @@ public class MemberService extends LifelineService {
         Member member;
         for (MemberViewBean currentMember : currentMembers) {
             if (!paymentsAreUpToDate(currentMember, PAYMENT_GRACE_PERIOD_IN_DAYS)) {
-                member = memberRepository.getOne(currentMember.getId());
+                member = memberRepository.findOne(currentMember.getId());
                 member.setStatus(CLOSED_STATUS);
                 updateMember(member);
                 accountsClosed++;

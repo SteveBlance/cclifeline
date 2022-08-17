@@ -1,5 +1,6 @@
 package com.codaconsultancy.cclifeline.repositories;
 
+import com.codaconsultancy.cclifeline.app.SpringBootThymeleafApplication;
 import com.codaconsultancy.cclifeline.service.LotteryDrawService;
 import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.SecuritySubjectService;
@@ -14,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.AbstractBindingResult;
 import org.springframework.validation.BindingResult;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@ContextConfiguration(classes = {SpringBootThymeleafApplication.class})
 @EntityScan("com.codaconsultancy.cclifeline.domain")
 public abstract class BaseTest {
 

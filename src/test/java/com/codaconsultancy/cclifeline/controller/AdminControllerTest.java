@@ -30,7 +30,10 @@ import java.util.List;
 import static com.codaconsultancy.cclifeline.controller.AdminController.CHANGE_PASSWORD_PAGE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AdminController.class)
