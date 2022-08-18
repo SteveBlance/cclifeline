@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 public class SecuritySubject {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull

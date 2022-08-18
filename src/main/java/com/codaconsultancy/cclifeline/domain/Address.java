@@ -14,7 +14,7 @@ public class Address {
 
     public static final String BR_TAG = "<br/>";
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
