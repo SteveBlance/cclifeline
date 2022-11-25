@@ -6,7 +6,7 @@
 
     <groupId>com.codaconsultancy</groupId>
     <artifactId>cclifeline</artifactId>
-    <version>1.29</version>
+    <version>1.30</version>
     <!--When packaging for aws-->
     <!--<packaging>war</packaging>-->
 
@@ -175,7 +175,6 @@
                             </targetTests>
                             <excludedClasses>
                                 <param>com.codaconsultancy.cclifeline.config.AppConfig</param>
-                                <param>com.codaconsultancy.cclifeline.config.RepositoryConfig</param>
                                 <param>com.codaconsultancy.cclifeline.config.SecurityConfig</param>
                                 <param>com.codaconsultancy.cclifeline.app.*</param>
                             </excludedClasses>
