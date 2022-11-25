@@ -35,6 +35,10 @@ public class PaymentViewBean {
         this.memberDisplayText = memberDisplayText;
     }
 
+    public PaymentViewBean(Long id, Date paymentDate, Float paymentAmount, String creditReference, String creditedAccount, String name, boolean isLotteryPayment, String memberDisplayText) {
+        this(id, paymentDate, paymentAmount, creditReference, creditedAccount, name, isLotteryPayment, 0L, memberDisplayText);
+    }
+
     private Long id;
 
     @NotNull

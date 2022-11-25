@@ -115,7 +115,6 @@ public class MemberController extends LifelineController {
     public ModelAndView memberDetails(@PathVariable Long number) {
         Member member = memberService.findMemberByMembershipNumber(number);
         MemberViewBean memberViewBean = member.toViewBean();
-        ;
         memberViewBean.setLastPayment(paymentService.findLatestLotteryPayment(member));
         return modelAndView(MEMBER_PAGE).addObject("member", memberViewBean);
     }
