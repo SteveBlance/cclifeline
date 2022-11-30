@@ -3,7 +3,9 @@ package com.codaconsultancy.cclifeline.controller;
 import com.codaconsultancy.cclifeline.common.TestHelper;
 import com.codaconsultancy.cclifeline.domain.*;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
-import com.codaconsultancy.cclifeline.service.*;
+import com.codaconsultancy.cclifeline.service.AddressService;
+import com.codaconsultancy.cclifeline.service.NotificationService;
+import com.codaconsultancy.cclifeline.service.PaymentService;
 import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.junit.Before;
@@ -13,7 +15,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
@@ -29,7 +30,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@EnableJpaRepositories(basePackages = {"com.codaconsultancy.cclifeline.repositories"})
 @SpringBootTest(classes = MemberController.class)
 public class MemberControllerTest extends BaseTest {
 
@@ -408,6 +408,7 @@ public class MemberControllerTest extends BaseTest {
         ModelAndView modelAndView = memberController.editMember(member, bindingResult);
 
         verify(memberService, times(1)).updateMember(any(Member.class));
+        verify(memberService, times(1)).updateEligibilityStatus(any(MemberViewBean.class));
 
         assertEquals("edit-address", modelAndView.getViewName());
     }

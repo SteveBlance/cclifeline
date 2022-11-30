@@ -111,6 +111,10 @@
                         <td><strong>Comments</strong></td>
                         <td th:text="${member.comments}">Comments</td>
                     </tr>
+                    <tr>
+                        <td><strong>Contact preference</strong></td>
+                        <td th:text="${member.emailOptOut} ? 'No - does not wish to be contacted' : 'Yes - happy to be contacted' ">Contact preference</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>

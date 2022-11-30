@@ -224,15 +224,8 @@ public class MemberServiceTest extends LifelineServiceTest {
         Member member = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
 
         when(memberRepository.save(member)).thenReturn(member);
-        Configuration refreshRequired = new Configuration();
-        refreshRequired.setBooleanValue(false);
-        when(configurationRepository.findByName(ELIGIBILITY_REFRESH_REQUIRED)).thenReturn(refreshRequired);
 
         Member newMember = memberService.updateMember(member);
-
-        verify(configurationRepository, times(1)).findByName(ELIGIBILITY_REFRESH_REQUIRED);
-        assertTrue(refreshRequired.getBooleanValue());
-        verify(configurationRepository, times(1)).save(refreshRequired);
 
         verify(memberRepository, never()).nextMembershipNumber();
         verify(memberRepository, times(1)).save(member);
@@ -263,7 +256,6 @@ public class MemberServiceTest extends LifelineServiceTest {
         allMembers.add(underpaidMember);
         allMembers.add(closedLifelineMember);
         allMembers.add(cancelledLifelineMember);
-        when(memberRepository.findAllMembers()).thenReturn(allMembers);
         when(memberRepository.findCurrentMembers()).thenReturn(allMembers);
 
         List<MemberViewBean> memberDrawEntries = memberService.fetchMemberDrawEntries();
@@ -295,7 +287,7 @@ public class MemberServiceTest extends LifelineServiceTest {
         allMembers.add(legacyMember3);
         allMembers.add(closedLegacyMember);
         allMembers.add(cancelledLegacyMember);
-        when(memberRepository.findAllMembers()).thenReturn(allMembers);
+        when(memberRepository.findCurrentMembers()).thenReturn(allMembers);
 
         List<MemberViewBean> memberDrawEntries = memberService.fetchMemberDrawEntries();
 

@@ -50,13 +50,13 @@ public class MemberTest {
         addresses.add(address1);
         addresses.add(address2);
         member.setAddresses(addresses);
+        member.setEmailOptOut(true);
     }
 
     @Test
     public void getId() {
         assertEquals(27L, member.getId().longValue());
         assertEquals(27L, member.toViewBean().getId().longValue());
-
     }
 
     @Test
@@ -169,5 +169,10 @@ public class MemberTest {
     @Test
     public void isElegibleForDrawStored() {
         assertTrue(member.isEligibleForDrawStored());
+    }
+
+    @Test
+    public void testEmailOptOut() {
+        assertTrue(member.isEmailOptOut());
     }
 }

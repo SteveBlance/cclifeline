@@ -6,9 +6,9 @@
 
     <groupId>com.codaconsultancy</groupId>
     <artifactId>cclifeline</artifactId>
-    <version>1.30</version>
+    <version>1.32</version>
     <!--When packaging for aws-->
-    <!--<packaging>war</packaging>-->
+<!--    <packaging>war</packaging>-->
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -18,11 +18,11 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <skip.pit.test>false</skip.pit.test>
+        <skip.pit.test>true</skip.pit.test>
         <pit.mutation.threshold>70</pit.mutation.threshold>
         <start-class>com.codaconsultancy.cclifeline.app.SpringBootThymeleafApplication</start-class>
         <!--When packaging for aws-->
-        <!--<start-class>com.codaconsultancy.cclifeline.app.SpringBootThymeleafApplicationWar</start-class>-->
+<!--        <start-class>com.codaconsultancy.cclifeline.app.SpringBootThymeleafApplicationWar</start-class>-->
     </properties>
 
     <dependencies>
@@ -47,7 +47,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <!--When packaging for aws-->
-            <!--<scope>provided</scope>-->
+<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
@@ -74,9 +74,8 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-csv</artifactId>
-            <version>1.3</version>
+            <version>1.9.0</version>
         </dependency>
-
 
         <!-- DataSource (HikariCP) -->
         <dependency>
@@ -88,6 +87,12 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
         </dependency>
 
         <!-- Need this to compile JSP -->
@@ -106,19 +111,19 @@
         <dependency>
            <groupId>ma.glasnost.orika</groupId>
            <artifactId>orika-core</artifactId>
-           <version>1.4.2</version>
+           <version>1.5.4</version>
         </dependency>
 
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.9.9</version>
+            <version>2.12.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.ocpsoft.prettytime</groupId>
             <artifactId>prettytime</artifactId>
-            <version>3.2.7.Final</version>
+            <version>5.0.6.Final</version>
         </dependency>
 
         <dependency>
@@ -130,7 +135,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.6.2</version>
+            <version>2.8.9</version>
         </dependency>
 
         <dependency>
@@ -139,7 +144,6 @@
             <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
-
 
     </dependencies>
 
@@ -196,6 +200,5 @@
             </plugin>
         </plugins>
     </build>
-
 
 </project>

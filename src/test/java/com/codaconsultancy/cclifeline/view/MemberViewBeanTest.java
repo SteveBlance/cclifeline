@@ -26,6 +26,7 @@ public class MemberViewBeanTest {
         memberViewBean.setComments("Migrated memberViewBean");
         memberViewBean.setEmail("hp@email.com");
         memberViewBean.setMembershipType("Lifeline");
+        memberViewBean.setEmailOptOut(true);
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         Date joinDate = sdf.parse("31-08-2014");
         Date leaveDate = sdf.parse("31-08-2015");
@@ -175,13 +176,17 @@ public class MemberViewBeanTest {
         assertFalse(memberViewBean.isEligibleForDrawStored());
     }
 
-
     @Test
     public void getLastPayment() {
         Payment lastPayment = memberViewBean.getLastPayment();
         assertEquals(20.00F, lastPayment.getPaymentAmount(), 0.00F);
         assertEquals("PETRIE", lastPayment.getName());
         assertEquals("BL123", lastPayment.getCreditReference());
+    }
+
+    @Test
+    public void emailOptOut() {
+        assertTrue(memberViewBean.isEmailOptOut());
     }
 
 }

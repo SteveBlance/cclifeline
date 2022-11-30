@@ -88,6 +88,9 @@ public class Member {
     @Column(name = "IS_ELIGIBLE_FOR_DRAW")
     private boolean isEligibleForDrawStored;
 
+    @Column(name = "EMAIL_OPT_OUT")
+    private boolean emailOptOut;
+
     public Long getId() {
         return id;
     }
@@ -246,6 +249,14 @@ public class Member {
 
     public void setPaymentReferences(List<PaymentReference> paymentReferences) {
         this.paymentReferences = paymentReferences;
+    }
+
+    public boolean isEmailOptOut() {
+        return emailOptOut;
+    }
+
+    public void setEmailOptOut(boolean emailOptOut) {
+        this.emailOptOut = emailOptOut;
     }
 
     public MemberViewBean toViewBean() {

@@ -4,8 +4,6 @@ import com.codaconsultancy.cclifeline.domain.LotteryDraw;
 import com.codaconsultancy.cclifeline.domain.Prize;
 import com.codaconsultancy.cclifeline.domain.SecuritySubject;
 import com.codaconsultancy.cclifeline.repositories.BaseTest;
-import com.codaconsultancy.cclifeline.service.LotteryDrawService;
-import com.codaconsultancy.cclifeline.service.MemberService;
 import com.codaconsultancy.cclifeline.service.NotificationService;
 import com.codaconsultancy.cclifeline.service.ReportsService;
 import com.codaconsultancy.cclifeline.view.LotteryDrawViewBean;
@@ -18,7 +16,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
@@ -31,7 +28,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@EnableJpaRepositories(basePackages = {"com.codaconsultancy.cclifeline.repositories"})
 @SpringBootTest(classes = LotteryDrawController.class)
 public class LotteryDrawControllerTest extends BaseTest {
 

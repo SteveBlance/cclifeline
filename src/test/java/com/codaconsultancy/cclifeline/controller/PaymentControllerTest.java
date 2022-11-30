@@ -14,7 +14,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.validation.BindingResult;
@@ -33,7 +32,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@EnableJpaRepositories(basePackages = {"com.codaconsultancy.cclifeline.repositories"})
 @SpringBootTest(classes = PaymentController.class)
 public class PaymentControllerTest extends BaseTest {
 
