@@ -154,6 +154,7 @@ public class MemberController extends LifelineController {
         }
 
         Member updatedMember = memberService.updateMember(member);
+        memberService.updateEligibilityStatus(member.toViewBean());
 
         return navigateToEditAddress(updatedMember.getMembershipNumber());
     }

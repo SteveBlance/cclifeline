@@ -88,7 +88,6 @@ public class MemberService extends LifelineService {
     }
 
     public Member updateMember(Member member) {
-        forceDrawEligibilityRefresh();
         return memberRepository.save(member);
     }
 
@@ -98,8 +97,8 @@ public class MemberService extends LifelineService {
 
     public List<MemberViewBean> fetchMemberDrawEntries() {
         List<MemberViewBean> memberDrawEntries = new ArrayList<>();
-        List<MemberViewBean> allMembers = findAllMembers();
-        for (MemberViewBean member : allMembers) {
+        List<MemberViewBean> currentMembers = findCurrentMembers();
+        for (MemberViewBean member : currentMembers) {
             if (member.isEligibleForDrawStored()) {
                 if (isLifelineMember(member)) {
                     // 3 entries for lifeline members
@@ -110,7 +109,6 @@ public class MemberService extends LifelineService {
                     // 1 entry for Legacy member
                     memberDrawEntries.add(member);
                 }
-
             }
         }
         return memberDrawEntries;
@@ -216,24 +214,8 @@ public class MemberService extends LifelineService {
         if (lotteryEligibilityStatusRefreshRequired()) {
             logMessage("Updating Eligibility Statuses");
             List<MemberViewBean> members = memberRepository.findCurrentMembers();
-            boolean wasPreviouslyEligible;
-            boolean isNowEligible;
             for (MemberViewBean member : members) {
-                wasPreviouslyEligible = member.isEligibleForDrawStored();
-                isNowEligible = isEligibleForDraw(member);
-                if (isNowEligible) {
-                    member.setEligibleForDrawStored(true);
-                    if (!wasPreviouslyEligible) {
-                        updateMember(member.toEntity());
-                    }
-
-                } else {
-                    wasPreviouslyEligible = member.isEligibleForDrawStored();
-                    member.setEligibleForDrawStored(false);
-                    if (wasPreviouslyEligible) {
-                        updateMember(member.toEntity());
-                    }
-                }
+                updateEligibilityStatus(member);
             }
             Configuration lastRefresh = configurationRepository.findByName(LAST_ELIGIBILITY_REFRESH_DATE);
             lastRefresh.setDateValue(DateTime.now().toDate());
@@ -241,6 +223,23 @@ public class MemberService extends LifelineService {
             refreshRequired.setBooleanValue(false);
             configurationRepository.save(lastRefresh);
             configurationRepository.save(refreshRequired);
+        }
+    }
+
+    public void updateEligibilityStatus(MemberViewBean member) {
+        boolean wasPreviouslyEligible = member.isEligibleForDrawStored();
+        boolean isNowEligible = isEligibleForDraw(member);
+        if (isNowEligible) {
+            member.setEligibleForDrawStored(true);
+            if (!wasPreviouslyEligible) {
+                updateMember(member.toEntity());
+            }
+        } else {
+            wasPreviouslyEligible = member.isEligibleForDrawStored();
+            member.setEligibleForDrawStored(false);
+            if (wasPreviouslyEligible) {
+                updateMember(member.toEntity());
+            }
         }
     }
 

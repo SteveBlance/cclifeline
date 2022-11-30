@@ -35,29 +35,29 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
     private static final String EXAMPLE_STATEMENT =
             "20191101, , 82621900174982CA, , CR, , , 20.00,\"Transfer FPS, Teed G T4E F, 4550\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 2,\"Giro 025\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 2,\"Giro 0090\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Combe G F, 988\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, J Harris, 579\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Huggs Sa&Fj B A/C, 617\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Keen I B/J Ba  Sg, 213\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, David Jack, 600\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, John Voit, 00192\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Karlie Yvonne/I, 0229\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Hunt B & L M, 0018\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Peters Kidd G/Ro, 0111 PETERS\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Grey M/Mrs D, 282\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Alyn Lowe, 585\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Thom Knight\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Miss Kaye P Crisp, 0066\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Bisk B & Mrs S, 711\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, D Dee, 0103 DEE\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, A & B Bev, 0110 BARR\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Shaws, 88\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Will, 530\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Kitchin F Fug F, 1177\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Giro 0263\", , , GBP\n" +
-                    "20191101, , 82621900174982CA, , CR, , , 8.66,\"Giro 0567\", , , GBP";
+            "20191101, , 82621900174982CA, , CR, , , 2,\"Giro 025\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 2,\"Giro 0090\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Combe G F, 988\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, J Harris, 579\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Huggs Sa&Fj B A/C, 617\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Keen I B/J Ba  Sg, 213\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, David Jack, 600\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, John Voit, 00192\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Karlie Yvonne/I, 0229\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Hunt B & L M, 0018\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Peters Kidd G/Ro, 0111 PETERS\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Grey M/Mrs D, 282\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Alyn Lowe, 585\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Thom Knight\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Miss Kaye P Crisp, 0066\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Bisk B & Mrs S, 711\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, D Dee, 0103 DEE\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, A & B Bev, 0110 BARR\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Shaws, 88\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Will, 530\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Transfer FPS, Kitchin F Fug F, 1177\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Giro 0263\", , , GBP\n" +
+            "20191101, , 82621900174982CA, , CR, , , 8.66,\"Giro 0567\", , , GBP";
 
     private static final String BAD_STATEMENT__INVALID_AMOUNT =
             "20170403,,82621900174982CA,,CR,BGC,Bank Giro Credit,BAD,FPS CREDIT 4061,MR MATTHEW LAFFERT,4.0642E+13,GBP\n";
@@ -191,7 +191,6 @@ public class PaymentServiceTest extends LifelineServiceTest {
 
         verify(paymentRepository, times(1)).save(payment);
         verify(memberRepository, never()).save(any(Member.class));
-
 
         assertSame(payment, savedPayment);
     }

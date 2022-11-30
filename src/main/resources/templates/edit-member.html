@@ -132,6 +132,12 @@
                 <textarea type="text" class="form-control" th:field="*{comments}" placeholder="(Optional)"></textarea>
             </div>
         </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Requested no contact:</label>
+            <div class="col-sm-9">
+                <input type="checkbox" class="checkbox" th:field="*{emailOptOut}"/>
+            </div>
+        </div>
 
         <div class="row">
             <a th:href="@{/member/} + ${member.membershipNumber}" class="btn btn-default " role="button">Cancel</a>
