@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Where(clause="ARCHIVED=false")
 @Table(name = "MEMBERS")
 public class Member {
 
@@ -90,6 +92,9 @@ public class Member {
 
     @Column(name = "EMAIL_OPT_OUT")
     private boolean emailOptOut;
+
+    @Column(name = "ARCHIVED")
+    private boolean archived;
 
     public Long getId() {
         return id;
@@ -257,6 +262,14 @@ public class Member {
 
     public void setEmailOptOut(boolean emailOptOut) {
         this.emailOptOut = emailOptOut;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public MemberViewBean toViewBean() {

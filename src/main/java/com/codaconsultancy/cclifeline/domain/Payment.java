@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.view.PaymentViewBean;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.hibernate.annotations.Where;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "PAYMENTS")
+@Where(clause="ARCHIVED=false")
 public class Payment {
 
     public Payment() {
@@ -54,6 +56,10 @@ public class Payment {
 
     @Column(name = "COMMENTS")
     private String comments;
+
+    @Column(name = "ARCHIVED")
+    private boolean archived;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
@@ -128,6 +134,14 @@ public class Payment {
 
     public void setComments(String comments) {
         this.comments = comments;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public PaymentViewBean toViewBean() {

@@ -4,12 +4,14 @@ import com.codaconsultancy.cclifeline.view.AddressViewBean;
 import ma.glasnost.orika.MapperFacade;
 import ma.glasnost.orika.MapperFactory;
 import ma.glasnost.orika.impl.DefaultMapperFactory;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "ADDRESSES")
+@Where(clause="ARCHIVED=false")
 public class Address {
 
     public static final String BR_TAG = "<br/>";
@@ -40,6 +42,9 @@ public class Address {
 
     @Column(name = "IS_ACTIVE")
     private Boolean isActive;
+
+    @Column(name = "ARCHIVED")
+    private boolean archived;
 
     @Transient
     private String formattedAddress;
@@ -134,6 +139,14 @@ public class Address {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public AddressViewBean toViewBean() {

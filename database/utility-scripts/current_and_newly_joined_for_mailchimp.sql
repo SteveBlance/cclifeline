@@ -1,14 +1,14 @@
-select * from (
-select m.email, m.FORENAME, m.SURNAME, m.MEMBERSHIP_NUMBER
+select distinct email as email_address, FORENAME as first_name, SURNAME as last_name from (
+select m.email, m.FORENAME, m.SURNAME
 from members m
-where m.IS_ELIGIBLE_FOR_DRAW = true
-and email is not null
+where email is not null
 and email like '%@%'
 and m.deceased = false
 and email_opt_out = false
+and STATUS = 'Open'
 union
-select m.email, m.FORENAME, m.SURNAME, m.MEMBERSHIP_NUMBER
+select m.email, m.FORENAME, m.SURNAME
 from members m
-where JOIN_DATE > (DATE_SUB(curdate(), INTERVAL 30 DAY))
+where JOIN_DATE > (DATE_SUB(curdate(), INTERVAL 60 DAY))
 ) s
-order by 4
+order by 3, 2;

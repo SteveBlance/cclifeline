@@ -37,7 +37,7 @@ public class MemberController extends LifelineController {
 
     private final AddressService addressService;
 
-    private Logger logger = LoggerFactory.getLogger(MemberController.class);
+    private final Logger logger = LoggerFactory.getLogger(MemberController.class);
 
     public MemberController(SecuritySubjectService securitySubjectService, NotificationService notificationService, MemberService memberService, PaymentService paymentService, AddressService addressService, LotteryDrawService lotteryDrawService) {
         super(securitySubjectService, notificationService, memberService, lotteryDrawService);
