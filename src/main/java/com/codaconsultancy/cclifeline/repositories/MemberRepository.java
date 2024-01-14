@@ -1,6 +1,7 @@
 package com.codaconsultancy.cclifeline.repositories;
 
 import com.codaconsultancy.cclifeline.domain.Member;
+import com.codaconsultancy.cclifeline.view.MemberAddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -26,6 +27,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                     "FROM Member m " +
                     "WHERE m.status = 'Open' ")
     List<MemberViewBean> findCurrentMembers();
+
+    @Query(value =
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberAddressViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, a.addressLine1, a.addressLine2, a.addressLine3, a.postcode, a.region, a.town) " +
+                    "FROM Member m, Address a " +
+                    "WHERE m.id = a.member.id ")
+    List<MemberAddressViewBean> findAllMembersWithAddresses();
 
     @Query(value =
             "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +

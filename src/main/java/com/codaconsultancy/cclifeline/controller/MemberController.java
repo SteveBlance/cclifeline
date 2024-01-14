@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -214,6 +215,9 @@ public class MemberController extends LifelineController {
 
     @RequestMapping(value = "/export-data", method = RequestMethod.GET)
     public ModelAndView navigateExportData() {
-        return modelAndView(EXPORT_DATA_PAGE);
+        List <String> reportTypes = new ArrayList<>();
+        reportTypes.add("All Members");
+        reportTypes.add("All Prize Draws");
+        return modelAndView(EXPORT_DATA_PAGE).addObject("reportTypes", reportTypes).addObject("reportForm", new ReportForm());
     }
 }

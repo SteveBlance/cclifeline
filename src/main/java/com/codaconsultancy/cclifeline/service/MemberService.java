@@ -4,6 +4,7 @@ import com.codaconsultancy.cclifeline.domain.Configuration;
 import com.codaconsultancy.cclifeline.domain.Member;
 import com.codaconsultancy.cclifeline.repositories.MemberRepository;
 import com.codaconsultancy.cclifeline.repositories.PaymentRepository;
+import com.codaconsultancy.cclifeline.view.MemberAddressViewBean;
 import com.codaconsultancy.cclifeline.view.MemberViewBean;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -42,6 +43,10 @@ public class MemberService extends LifelineService {
 
     public List<MemberViewBean> findCurrentMembers() {
         return memberRepository.findCurrentMembers();
+    }
+
+    public List<MemberAddressViewBean> findAllMembersWithAddresses() {
+        return memberRepository.findAllMembersWithAddresses();
     }
 
     public List<MemberViewBean> findEligibleMembers() {

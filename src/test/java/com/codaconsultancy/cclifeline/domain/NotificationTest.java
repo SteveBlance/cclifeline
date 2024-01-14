@@ -18,7 +18,7 @@ public class NotificationTest {
         notification.setId(92L);
         notification.setEventType("DRAW");
         notification.setDescription("New Lottery Draw");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date eventDate = sdf.parse("2011-05-13");
         notification.setEventDate(eventDate);
     }
@@ -30,7 +30,7 @@ public class NotificationTest {
 
     @Test
     public void getEventDate() throws Exception {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         assertEquals("2011-05-13", sdf.format(notification.getEventDate()));
         assertEquals("1 decade ago", notification.getPrettyTime());
         notification.setEventDate(new Date());
