@@ -1,182 +1,182 @@
 # noinspection SqlNoDataSourceInspectionForFile
 
-DROP TABLE MEMBERS;
+drop table members;
 
-CREATE TABLE MEMBERS (
-    ID                         INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    MEMBERSHIP_NUMBER          INT         NOT NULL,
-    MEMBERSHIP_TYPE            VARCHAR(50) NOT NULL,
-    STATUS                     VARCHAR(50) NOT NULL DEFAULT 'OPEN',
-    FORENAME                   VARCHAR(50) NOT NULL,
-    SURNAME                    VARCHAR(50) NOT NULL,
-    PAYER_TYPE                 VARCHAR(20) NOT NULL DEFAULT 'MONTHLY',
-    JOIN_DATE                  DATE,
-    LEAVE_DATE                 DATE,
-    EMAIL                      VARCHAR(255),
-    LANDLINE_NUMBER            VARCHAR(50),
-    MOBILE_NUMBER              VARCHAR(50),
-    CARD_REQUEST_DATE          DATE,
-    CARD_ISSUED_DATE           DATE,
-    WELCOME_LETTER_ISSUED_DATE DATE,
-    COMMENTS                   VARCHAR(2000),
-    IS_ELIGIBLE_FOR_DRAW       BOOLEAN NOT NULL DEFAULT FALSE,
-    EMAIL_OPT_OUT              BOOLEAN NOT NULL DEFAULT FALSE,
-    DECEASED                   BOOLEAN NOT NULL DEFAULT FALSE
+create table members (
+    id                         int         not null auto_increment primary key,
+    membership_number          int         not null,
+    membership_type            varchar(50) not null,
+    status                     varchar(50) not null default 'Open',
+    forename                   varchar(50) not null,
+    surname                    varchar(50) not null,
+    payer_type                 varchar(20) not null default 'Monthly',
+    join_date                  date,
+    leave_date                 date,
+    email                      varchar(255),
+    landline_number            varchar(50),
+    mobile_number              varchar(50),
+    card_request_date          date,
+    card_issued_date           date,
+    welcome_letter_issued_date date,
+    comments                   varchar(2000),
+    is_eligible_for_draw       boolean not null default false,
+    email_opt_out              boolean not null default false,
+    deceased                   boolean not null default false
 );,
 
-DROP TABLE ADDRESSES;
+drop table addresses;
 
-CREATE TABLE ADDRESSES (
-    ID             INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    ADDRESS_LINE_1 VARCHAR(255) NOT NULL,
-    ADDRESS_LINE_2 VARCHAR(255),
-    ADDRESS_LINE_3 VARCHAR(255),
-    TOWN           VARCHAR(255) NOT NULL,
-    REGION         VARCHAR(50)  NOT NULL,
-    POSTCODE       VARCHAR(10),
-    COUNTRY        VARCHAR(50),
-    IS_ACTIVE      BOOLEAN,
-    MEMBER_ID      INT          NOT NULL REFERENCES MEMBERS(ID)
+create table addresses (
+    id             int          not null auto_increment primary key,
+    address_line_1 varchar(255) not null,
+    address_line_2 varchar(255),
+    address_line_3 varchar(255),
+    town           varchar(255) not null,
+    region         varchar(50)  not null,
+    postcode       varchar(10),
+    country        varchar(50),
+    is_active      boolean,
+    member_id      int          not null references members(id)
 );
 
-DROP TABLE PAYMENTS;
+drop table payments;
 
-CREATE TABLE PAYMENTS (
-    ID                 INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    PAYMENT_DATE       DATE          NOT NULL,
-    PAYMENT_AMOUNT     DECIMAL(10,2) NOT NULL,
-    CREDIT_REFERENCE   VARCHAR(200),
-    NAME               VARCHAR(200),
-    CREDITED_ACCOUNT   VARCHAR(50),
-    MEMBER_ID          INT REFERENCES MEMBERS(ID),
-    IS_LOTTERY_PAYMENT BOOLEAN NOT NULL DEFAULT TRUE,
-    COMMENTS           VARCHAR(2000)
+create table payments (
+    id                 int           not null auto_increment primary key,
+    payment_date       date          not null,
+    payment_amount     decimal(10,2) not null,
+    credit_reference   varchar(200),
+    name               varchar(200),
+    credited_account   varchar(50),
+    member_id          int references members(id),
+    is_lottery_payment boolean not null default true,
+    comments           varchar(2000)
 );
 
-DROP TABLE PAYMENT_REFERENCES;
+drop table payment_references;
 
-CREATE TABLE PAYMENT_REFERENCES (
-    ID        INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    REFERENCE VARCHAR(255) NOT NULL,
-    IS_ACTIVE BOOLEAN      NOT NULL,
-    NAME      VARCHAR(255),
-    MEMBER_ID INT          NOT NULL REFERENCES MEMBERS(ID)
+create table payment_references (
+    id        int          not null auto_increment primary key,
+    reference varchar(255) not null,
+    is_active boolean      not null,
+    name      varchar(255),
+    member_id int          not null references members(id)
 );
 
-DROP TABLE LOTTERY_DRAWS;
+drop table lottery_draws;
 
-CREATE TABLE LOTTERY_DRAWS (
-    ID           INT  NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    DRAW_DATE    DATE NOT NULL,
-    NAME         VARCHAR(255),
-    LOTTERY_DATE DATE,
-    DRAW_MASTER  VARCHAR(255)
+create table lottery_draws (
+    id           int  not null auto_increment primary key,
+    draw_date    date not null,
+    name         varchar(255),
+    lottery_date date,
+    draw_master  varchar(255)
 );
 
-DROP TABLE PRIZES;
+drop table prizes;
 
-CREATE TABLE PRIZES (
-    ID                   INT     NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    PRIZE                VARCHAR(1000),
-    LOTTERY_DRAW_ID      INT     NOT NULL REFERENCES LOTTERY_DRAWS(ID),
-    WINNER_ID            INT REFERENCES MEMBER(ID),
-    PRIZE_COLLECTED      BOOLEAN NOT NULL,
-    PRIZE_COLLECTED_DATE DATE
+create table prizes (
+    id                   int     not null auto_increment primary key,
+    prize                varchar(1000),
+    lottery_draw_id      int     not null references lottery_draws(id),
+    winner_id            int references member(id),
+    prize_collected      boolean not null,
+    prize_collected_date date
 );
 
-DROP TABLE NOTIFICATIONS;
+drop table notifications;
 
-CREATE TABLE NOTIFICATIONS (
-  ID          INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  EVENT_TYPE  VARCHAR(50)   NOT NULL,
-  EVENT_DATE  DATE          NOT NULL,
-  DESCRIPTION VARCHAR(1000) NOT NULL
+create table notifications (
+  id          int           not null auto_increment primary key,
+  event_type  varchar(50)   not null,
+  event_date  date          not null,
+  description varchar(1000) not null
 );
 
-DROP TABLE SECURITY_SUBJECTS;
+drop table security_subjects;
 
-CREATE TABLE SECURITY_SUBJECTS (
-  ID                     INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  FORENAME               VARCHAR(100) NOT NULL,
-  SURNAME                VARCHAR(100) NOT NULL,
-  USERNAME               VARCHAR(100) NOT NULL,
-  PASSWORD               VARCHAR(100) NOT NULL,
-  FAILED_LOGIN_ATTEMPTS  INT          NOT NULL DEFAULT 0,
-  ACCOUNT_LOCKED         BOOLEAN      NOT NULL DEFAULT FALSE,
-  PASSWORD_TO_BE_CHANGED BOOLEAN      NOT NULL DEFAULT FALSE,
-  UNIQUE KEY `USERNAME_UNIQUE` (`USERNAME`)
+create table security_subjects (
+  id                     int          not null auto_increment primary key,
+  forename               varchar(100) not null,
+  surname                varchar(100) not null,
+  username               varchar(100) not null,
+  password               varchar(100) not null,
+  failed_login_attempts  int          not null default 0,
+  account_locked         boolean      not null default false,
+  password_to_be_changed boolean      not null default false,
+  unique key `username_unique` (`username`)
 );
 
-DROP TABLE EVENT_LOG;
+drop table event_log;
 
-CREATE TABLE EVENT_LOG (
-  ID         INT          NOT NULL  AUTO_INCREMENT PRIMARY KEY,
-  MESSAGE    VARCHAR(250) NOT NULL,
-  EVENT_DATE TIMESTAMP    NOT NULL DEFAULT NOW()
+create table event_log (
+  id         int          not null  auto_increment primary key,
+  message    varchar(250) not null,
+  event_date timestamp    not null default now()
 );
 
-DROP TABLE CONFIGURATION;
+drop table configuration;
 
-CREATE TABLE CONFIGURATION (
-  ID            INT          NOT NULL  AUTO_INCREMENT PRIMARY KEY,
-  NAME          VARCHAR(250) NOT NULL,
-  STRING_VALUE  VARCHAR(250),
-  BOOLEAN_VALUE BOOLEAN,
-  DATE_VALUE    TIMESTAMP
+create table configuration (
+  id            int          not null  auto_increment primary key,
+  name          varchar(250) not null,
+  string_value  varchar(250),
+  boolean_value boolean,
+  date_value    timestamp
 );
 
-DROP TABLE REPORTS;
+drop table reports;
 
-CREATE TABLE REPORTS (
-  ID          INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  NAME        VARCHAR(100) NOT NULL,
-  REPORT_DATE DATE         NOT NULL,
-  INT_VALUE   INT          NOT NULL
+create table reports (
+  id          int          not null auto_increment primary key,
+  name        varchar(100) not null,
+  report_date date         not null,
+  int_value   int          not null
 );
 
-CREATE VIEW INELIGIBLE_FOR_DRAW_VW AS
-SELECT m.id member_id, m.MEMBERSHIP_NUMBER, m.FORENAME, m.SURNAME, m.email, m.LANDLINE_NUMBER, m.MOBILE_NUMBER, m.PAYER_TYPE, m.JOIN_DATE, p.PAYMENT_AMOUNT, MAX(p.PAYMENT_DATE) LAST_PAYMENT
-FROM members m, payments p
-WHERE status = 'Open'
-AND IS_ELIGIBLE_FOR_DRAW = FALSE
-AND p.member_id = m.id
-GROUP BY m.id, m.MEMBERSHIP_NUMBER, m.FORENAME, m.SURNAME, m.email, m.LANDLINE_NUMBER, m.MOBILE_NUMBER, m.PAYER_TYPE, m.JOIN_DATE, p.PAYMENT_AMOUNT
-ORDER BY MAX(p.PAYMENT_DATE) DESC;
+create view ineligible_for_draw_vw as
+select m.id member_id, m.membership_number, m.forename, m.surname, m.email, m.landline_number, m.mobile_number, m.payer_type, m.join_date, p.payment_amount, max(p.payment_date) last_payment
+from members m, payments p
+where status = 'Open'
+and is_eligible_for_draw = false
+and p.member_id = m.id
+group by m.id, m.membership_number, m.forename, m.surname, m.email, m.landline_number, m.mobile_number, m.payer_type, m.join_date, p.payment_amount
+order by max(p.payment_date) desc;
 
-CREATE INDEX MEMBER_ADDRESS_IDX ON ADDRESSES (MEMBER_ID);
+create index member_address_idx on addresses (member_id);
 
-CREATE INDEX ADDRESS_IS_ACTIVE_IDX ON ADDRESSES(IS_ACTIVE);
+create index address_is_active_idx on addresses(is_active);
 
-CREATE INDEX MEMBER_PRIZES_IDX ON PRIZES (WINNER_ID);
+create index member_prizes_idx on prizes (winner_id);
 
-CREATE INDEX PRIZES_DRAW_ID_IDX ON PRIZES (LOTTERY_DRAW_ID);
+create index prizes_draw_id_idx on prizes (lottery_draw_id);
 
-CREATE INDEX MEMBER_REFERENCES_IDX ON PAYMENT_REFERENCES (MEMBER_ID);
+create index member_references_idx on payment_references (member_id);
 
-CREATE INDEX PAYMENT_REFERENCES_ACTIVE_IDX ON PAYMENT_REFERENCES (IS_ACTIVE);
+create index payment_references_active_idx on payment_references (is_active);
 
-CREATE INDEX MEMBER_PAYMENTS_IDX ON PAYMENTS (MEMBER_ID);
+create index member_payments_idx on payments (member_id);
 
-CREATE UNIQUE INDEX MEMBER_MEMBERSHIP_NUMBER ON MEMBERS (MEMBERSHIP_NUMBER);
+create unique index member_membership_number on members (membership_number);
 
-CREATE INDEX PAYMENT_DATE_IDX ON PAYMENTS (PAYMENT_DATE);
+create index payment_date_idx on payments (payment_date);
 
-CREATE INDEX MEMBER_SURNAME_IDX ON MEMBERS (SURNAME);
+create index member_surname_idx on members (surname);
 
-CREATE INDEX MEMBER_FORENAME_IDX ON MEMBERS (FORENAME);
+create index member_forename_idx on members (forename);
 
-CREATE INDEX MEMBER_TYPE_IDX ON MEMBERS (MEMBERSHIP_TYPE);
+create index member_type_idx on members (membership_type);
 
-CREATE INDEX MEMBER_STATUS_IDX ON MEMBERS (STATUS);
+create index member_status_idx on members (status);
 
-CREATE INDEX MEMBER_IS_ELIGIBLE_IDX  ON MEMBERS (IS_ELIGIBLE_FOR_DRAW);
+create index member_is_eligible_idx  on members (is_eligible_for_draw);
 
-CREATE INDEX SECURITY_SUBJECT_NAME_IDX ON SECURITY_SUBJECTS (USERNAME);
+create index security_subject_name_idx on security_subjects (username);
 
-CREATE INDEX PAYMENT_IS_LOTTERY_IDX ON PAYMENTS (IS_LOTTERY_PAYMENT);
+create index payment_is_lottery_idx on payments (is_lottery_payment);
 
-CREATE INDEX REPORTS_REPORT_DATE_IDX ON REPORTS (REPORT_DATE);
+create index reports_report_date_idx on reports (report_date);
 
-CREATE INDEX CONFIGURATON_NAME_IDX ON CONFIGURATION(NAME);
+create index configuraton_name_idx on configuration(name);
 
-CREATE INDEX LOTTERY_DRAWS_DATE_IDX ON LOTTERY_DRAWS(LOTTERY_DATE);
+create index lottery_draws_date_idx on lottery_draws(lottery_date);

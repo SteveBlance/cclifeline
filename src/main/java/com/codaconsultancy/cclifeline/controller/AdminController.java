@@ -28,7 +28,10 @@ import java.util.List;
 @Controller
 public class AdminController extends LifelineController {
 
+    public static final String ADMINISTRATORS_PAGE = "administrators";
+    public static final String ADMINISTRATOR_PAGE = "administrator";
     public static final String ADD_ADMINISTRATOR_PAGE = "add-administrator";
+    public static final String EDIT_ADMINISTRATOR_PAGE = "edit-administrator";
     public static final String CHANGE_PASSWORD_PAGE = "change-password";
     private Logger logger = LoggerFactory.getLogger(AdminController.class);
 
@@ -41,7 +44,13 @@ public class AdminController extends LifelineController {
     public ModelAndView navigateToAdministrators() {
         List<SecuritySubject> administrators = securitySubjectService.findAllSecuritySubjects();
 
-        return modelAndView("administrators").addObject("administrators", administrators);
+        return modelAndView(ADMINISTRATORS_PAGE).addObject("administrators", administrators);
+    }
+
+    @RequestMapping(value = "/administrator", method = RequestMethod.GET)
+    public ModelAndView navigateToAdministrator() {
+        SecuritySubject administrator = securitySubjectService.findByUsername(loggedInUser());
+        return modelAndView(ADMINISTRATOR_PAGE).addObject("administrator", administrator);
     }
 
     @RequestMapping(value = "/add-administrator", method = RequestMethod.GET)
@@ -50,6 +59,21 @@ public class AdminController extends LifelineController {
         return addAlertMessage(new ModelAndView(ADD_ADMINISTRATOR_PAGE).addObject("administrator", administrator), "info", SecuritySubjectService.PASSWORD_RULES_MESSAGE);
     }
 
+    @RequestMapping(value = "/edit-administrator", method = RequestMethod.GET)
+    public ModelAndView navigateToEditAdministrator() {
+        SecuritySubject administrator = securitySubjectService.findByUsername(loggedInUser());
+        return modelAndView(EDIT_ADMINISTRATOR_PAGE).addObject("administrator", administrator);
+    }
+
+    @RequestMapping(value = "/edit-administrator", method = RequestMethod.POST)
+    public ModelAndView editMember(@Valid @ModelAttribute("administrator") SecuritySubject administrator, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            logger.debug("Validation errors for administrator: ", administrator);
+            return navigateToEditAdministrator();
+        }
+        securitySubjectService.updateSecuritySubject(administrator);
+        return navigateToAdministrator();
+    }
     @RequestMapping(value = "/administrator", method = RequestMethod.POST)
     public ModelAndView addNewAdministrator(@Valid @ModelAttribute("subject") SecuritySubjectViewBean securitySubjectViewBean, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

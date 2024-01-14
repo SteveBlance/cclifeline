@@ -43,7 +43,9 @@
                     <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                    <li><a th:href="@{/administrator}"><i class="fa fa-gear fa-fw"></i> Account details</a>
+                    </li>
+                    <li><a th:href="@{/change-password/{user}(user=${loggedInUser})}"><i class="fa fa-gear fa-fw"></i> Change password</a>
                     </li>
                     <li class="divider"></li>
                     <li><a th:href="@{/logout}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -77,7 +79,7 @@
                         <a th:href="@{/reports}"><i class="fa fa-bar-chart fa-fw"></i> Reports</a>
                     </li>
                     <li>
-                        <a th:href="@{/administrators}"><i class="fa fa-wrench fa-fw"></i> Site Admin</a>
+                        <a th:href="@{/administrators}"><i class="fa fa-user-plus fa-fw"></i> Administrators</a>
                     </li>
                 </ul>
             </div>

@@ -172,4 +172,7 @@ public class SecuritySubjectService extends LifelineService implements UserDetai
         return false;
     }
 
+    public SecuritySubject updateSecuritySubject(SecuritySubject administrator) {
+        return securitySubjectRepository.save(administrator);
+    }
 }
