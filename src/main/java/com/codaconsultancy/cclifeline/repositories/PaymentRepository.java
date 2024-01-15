@@ -50,7 +50,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     @Query(value =
             "SELECT IFNULL(SUM(PAYMENT_AMOUNT), 0) " +
-                    "FROM PAYMENTS WHERE MEMBER_ID = :member " +
+                    "FROM payments WHERE MEMBER_ID = :member " +
                     "AND PAYMENT_DATE >= :lastExpectedPaymentDate " +
                     "AND IS_LOTTERY_PAYMENT = TRUE ",
             nativeQuery = true)
