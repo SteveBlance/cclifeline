@@ -19,7 +19,7 @@ public class MemberViewBean {
     public MemberViewBean() {
     }
 
-    public MemberViewBean(Long id, Long membershipNumber, String forename, String surname, String membershipType, String status, String payerType, Date joinDate, Date leaveDate, String email, String landlineNumber, String mobileNumber, boolean isEligibleForDrawStored, boolean emailOptOut) {
+    public MemberViewBean(Long id, Long membershipNumber, String forename, String surname, String membershipType, String status, String payerType, Date joinDate, Date leaveDate, String email, String landlineNumber, String mobileNumber, boolean isEligibleForDrawStored, boolean emailOptOut, Integer fanbaseId) {
         this.id = id;
         this.membershipNumber = membershipNumber;
         this.forename = forename;
@@ -34,6 +34,7 @@ public class MemberViewBean {
         this.mobileNumber = mobileNumber;
         this.isEligibleForDrawStored = isEligibleForDrawStored;
         this.emailOptOut = emailOptOut;
+        this.fanbaseId = fanbaseId;
     }
 
     private Long id;
@@ -83,8 +84,8 @@ public class MemberViewBean {
     private List<Prize> prizeWins;
     private Payment lastPayment;
     private List<PaymentReference> paymentReferences;
-
     private boolean emailOptOut;
+    private Integer fanbaseId;
 
     public Long getId() {
         return id;
@@ -270,5 +271,17 @@ public class MemberViewBean {
 
     public void setEmailOptOut(boolean emailOptOut) {
         this.emailOptOut = emailOptOut;
+    }
+
+    public Integer getFanbaseId() {
+        return fanbaseId;
+    }
+
+    public void setFanbaseId(Integer fanbaseId) {
+        this.fanbaseId = fanbaseId;
+    }
+
+    public boolean hasFanbaseId() {
+        return null != this.getFanbaseId();
     }
 }

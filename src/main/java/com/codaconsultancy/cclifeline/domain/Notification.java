@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "NOTIFICATIONS")
+@Table(name = "notifications")
 public class Notification {
 
     public Notification() {

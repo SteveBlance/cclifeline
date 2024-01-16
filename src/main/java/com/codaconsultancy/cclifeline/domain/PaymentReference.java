@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "PAYMENT_REFERENCES")
+@Table(name = "payment_references")
 public class PaymentReference {
 
     public PaymentReference() {

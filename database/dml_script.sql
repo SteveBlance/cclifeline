@@ -86,6 +86,11 @@ insert into members (membership_number, membership_type, status, forename, surna
 values (1580, 'Premium Legacy', 'Open', 'John', 'Brown', 'Monthly', STR_TO_DATE('14/12/2013', '%d/%m/%Y'), 'broony@email.com',
         '01383 111111', '077111111', STR_TO_DATE('14/12/2013', '%d/%m/%Y'), STR_TO_DATE('14/12/2013', '%d/%m/%Y'), null, 'Membership card lost');
 
+insert into members (membership_number, membership_type, status, forename, surname, payer_type, join_date, email,
+                     landline_number, mobile_number, card_request_date, card_issued_date, welcome_letter_issued_date, comments, fanbase_id)
+values (1681, 'Lifeline', 'Open', 'Steve', 'Strange', 'Monthly', STR_TO_DATE('15/12/2023', '%d/%m/%Y'), 'steve.strange@email.com',
+        '01383 722322', '07766554433', null, null, null, null, 1335);
+
 insert into payment_references (reference, is_active, name, member_id)
 select 'FPS CREDIT CC LIFELINE', true, 'JOHN BROWN', id from members where membership_number = 1580;
 

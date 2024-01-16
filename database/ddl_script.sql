@@ -21,7 +21,8 @@ create table members (
     comments                   varchar(2000),
     is_eligible_for_draw       boolean not null default false,
     email_opt_out              boolean not null default false,
-    deceased                   boolean not null default false
+    deceased                   boolean not null default false,
+    fanbase_id                 int unique
 );,
 
 drop table addresses;

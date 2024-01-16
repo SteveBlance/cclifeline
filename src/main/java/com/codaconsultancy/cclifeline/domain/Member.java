@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "MEMBERS")
+@Table(name = "members")
 public class Member {
 
     @Id
@@ -90,6 +90,9 @@ public class Member {
 
     @Column(name = "EMAIL_OPT_OUT")
     private boolean emailOptOut;
+
+    @Column(name = "FANBASE_ID")
+    private Integer fanbaseId;
 
     public Long getId() {
         return id;
@@ -257,6 +260,14 @@ public class Member {
 
     public void setEmailOptOut(boolean emailOptOut) {
         this.emailOptOut = emailOptOut;
+    }
+
+    public Integer getFanbaseId() {
+        return fanbaseId;
+    }
+
+    public void setFanbaseId(Integer fanbaseId) {
+        this.fanbaseId = fanbaseId;
     }
 
     public MemberViewBean toViewBean() {

@@ -7,6 +7,27 @@
 <script th:src="@{/js/jquery.js}"></script>
 <script th:src="@{/js/jquery-ui.js}"></script>
 <script>
+    $(document).ready(function() {
+        // select the payerType dropdown
+        const payerTypeSelect = $('select[name="payerType"]');
+
+        // select the div with id "fanbaseId"
+        const fanbaseIds = $('.fanbase');
+
+        // hide the div initially
+        fanbaseIds.hide();
+
+        // add change event listener to the advertType dropdown
+        payerTypeSelect.change(function() {
+            if ($(this).val() === 'Fanbase') {
+                // show the div if Fanbase is selected
+                fanbaseIds.show();
+            } else {
+                // hide the div otherwise
+                fanbaseIds.hide();
+            }
+        });
+    });
     $(function () {
         $(".datepicker").datepicker({
             dateFormat: "dd/mm/yy"
@@ -73,11 +94,18 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Payer Type:</label>
             <div class="col-sm-7">
-                <select class="form-control" th:field="*{payerType}">
-                    <option th:value="Monthly" th:selected="selected">Monthly</option>
+                <select name="payerType" class="form-control" th:field="*{payerType}">
+                    <option th:value="Monthly" th:selected="selected">Monthly (Standing Order)</option>
+                    <option th:value="Fanbase">Monthly (Fanbase)</option>
                     <option th:value="Quarterly">Quarterly</option>
                     <option th:value="Annual">Annual</option>
                 </select>
+            </div>
+        </div>
+        <div class="form-group fanbase">
+            <label class="col-sm-3 control-label fanbase">Fanbase ID:</label>
+            <div class="col-sm-7 fanbase">
+                <input type="text" class="form-control" th:field="*{fanbaseId}"/>
             </div>
         </div>
         <div class="form-group">

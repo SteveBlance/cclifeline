@@ -18,53 +18,53 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Long nextMembershipNumber();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId) " +
                     "FROM Member m ")
     List<MemberViewBean> findAllMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId) " +
                     "FROM Member m " +
                     "WHERE m.status = 'Open' ")
     List<MemberViewBean> findCurrentMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberAddressViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, a.addressLine1, a.addressLine2, a.addressLine3, a.postcode, a.region, a.town) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberAddressViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId, a.addressLine1, a.addressLine2, a.addressLine3, a.postcode, a.region, a.town) " +
                     "FROM Member m, Address a " +
                     "WHERE m.id = a.member.id ")
     List<MemberAddressViewBean> findAllMembersWithAddresses();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId) " +
                     "FROM Member m " +
                     "WHERE m.status = 'Open' " +
                     "AND m.isEligibleForDrawStored = TRUE")
     List<MemberViewBean> findEligibleMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId) " +
                     "FROM Member m " +
                     "WHERE m.status IN ('TBC', 'Open')" +
                     "AND m.isEligibleForDrawStored = FALSE")
     List<MemberViewBean> findIneligibleMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId) " +
                     "FROM Member m " +
                     "WHERE m.status = 'Open'" +
                     "AND m.isEligibleForDrawStored = FALSE")
     List<MemberViewBean> findLapsedMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId) " +
                     "FROM Member m " +
                     "WHERE m.status = 'TBC' ")
     List<MemberViewBean> findPendingMembers();
 
     @Query(value =
-            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut) " +
+            "SELECT new com.codaconsultancy.cclifeline.view.MemberViewBean(m.id, m.membershipNumber, m.forename, m.surname, m.membershipType, m.status, m.payerType, m.joinDate, m.leaveDate, m.email, m.landlineNumber, m.mobileNumber, m.isEligibleForDrawStored, m.emailOptOut, m.fanbaseId) " +
                     "FROM Member m " +
-                    "WHERE m.status in ('Closed', 'Cancelled') ")
+                    "WHERE m.status = 'Closed' ")
     List<MemberViewBean> findFormerMembers();
 
     List<Member> findAllByOrderBySurnameAscForenameAsc();

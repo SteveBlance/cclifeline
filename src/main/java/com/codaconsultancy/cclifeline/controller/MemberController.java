@@ -137,7 +137,7 @@ public class MemberController extends LifelineController {
 
         Member newMember = memberService.saveMember(memberViewBean.toEntity());
         notificationService.logNewMemberAdded();
-
+        memberService.updateEligibilityStatus(newMember.toViewBean());
         return navigateToAddAddress(newMember.getId());
     }
 

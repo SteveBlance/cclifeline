@@ -18,7 +18,7 @@ public class MemberAddressViewBean {
     public MemberAddressViewBean() {
     }
 
-    public MemberAddressViewBean(Long id, Long membershipNumber, String forename, String surname, String membershipType, String status, String payerType, Date joinDate, Date leaveDate, String email, String landlineNumber, String mobileNumber, boolean isEligibleForDrawStored, boolean emailOptOut, String addressLine1, String addressLine2, String addressLine3, String postcode, String region, String town) {
+    public MemberAddressViewBean(Long id, Long membershipNumber, String forename, String surname, String membershipType, String status, String payerType, Date joinDate, Date leaveDate, String email, String landlineNumber, String mobileNumber, boolean isEligibleForDrawStored, boolean emailOptOut, Integer fanbaseId, String addressLine1, String addressLine2, String addressLine3, String postcode, String region, String town) {
         this.id = id;
         this.membershipNumber = membershipNumber;
         this.forename = forename;
@@ -33,6 +33,7 @@ public class MemberAddressViewBean {
         this.mobileNumber = mobileNumber;
         this.isEligibleForDrawStored = isEligibleForDrawStored;
         this.emailOptOut = emailOptOut;
+        this.fanbaseId = fanbaseId;
         this.addressLine1 = addressLine1;
         this.addressLine2 = addressLine2;
         this.addressLine3 = addressLine3;
@@ -83,12 +84,11 @@ public class MemberAddressViewBean {
     private Date welcomeLetterIssuedDate;
 
     private boolean isEligibleForDrawStored;
-
     private List<Prize> prizeWins;
     private Payment lastPayment;
     private List<PaymentReference> paymentReferences;
-
     private boolean emailOptOut;
+    private Integer fanbaseId;
 
     private String addressLine1;
     private String addressLine2;
@@ -273,6 +273,14 @@ public class MemberAddressViewBean {
 
     public void setEmailOptOut(boolean emailOptOut) {
         this.emailOptOut = emailOptOut;
+    }
+
+    public Integer getFanbaseId() {
+        return fanbaseId;
+    }
+
+    public void setFanbaseId(Integer fanbaseId) {
+        this.fanbaseId = fanbaseId;
     }
 
     public String getFullAddress() {

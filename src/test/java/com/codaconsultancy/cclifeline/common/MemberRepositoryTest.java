@@ -33,7 +33,7 @@ public class MemberRepositoryTest extends BaseTest {
         member2 = TestHelper.newMember(1819L, "Jane", "Jones", "jsmith@email.com", "01383772233", "07777777766", "Monthly", "Lifeline", "Was a legacy member", "Open");
         member3 = TestHelper.newMember(1820L, "Bill", "Wilson", "billy@email.com", "01383999999", null, "Annual", "Legacy", "Old member", "Open");
         member4 = TestHelper.newMember(1821L, "Jimmy", "Jimmieson", "jj@email.com", "01383000111", null, "Monthly", "Legacy", "Old member", "Closed");
-        member5 = TestHelper.newMember(1822L, "Bart", "Simpson", "bart@email.com", "01383000911", null, "Monthly", "Lifeline", "Old member", "Cancelled");
+        member5 = TestHelper.newMember(1822L, "Bart", "Simpson", "bart@email.com", "01383000911", null, "Monthly", "Lifeline", "Old member", "Closed");
         member6 = TestHelper.newMember(1823L, "Ace", "Simmonds", "ace@email.com", "01383000921", null, "Monthly", "Lifeline", "New member", "TBC");
         entityManager.persist(member1);
         entityManager.persist(member2);
@@ -109,7 +109,7 @@ public class MemberRepositoryTest extends BaseTest {
         assertEquals("Jimmy", foundMembers.get(3).getForename());
         assertEquals("Closed", foundMembers.get(3).getStatus());
         assertEquals("Bart", foundMembers.get(4).getForename());
-        assertEquals("Cancelled", foundMembers.get(4).getStatus());
+        assertEquals("Closed", foundMembers.get(4).getStatus());
         assertEquals("Ace", foundMembers.get(5).getForename());
         assertEquals("TBC", foundMembers.get(5).getStatus());
     }
@@ -140,7 +140,7 @@ public class MemberRepositoryTest extends BaseTest {
         assertEquals("Jimmy", foundMembers.get(0).getForename());
         assertEquals("Bart", foundMembers.get(1).getForename());
         assertEquals("Closed", foundMembers.get(0).getStatus());
-        assertEquals("Cancelled", foundMembers.get(1).getStatus());
+        assertEquals("Closed", foundMembers.get(1).getStatus());
 
     }
 

@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "REPORTS")
+@Table(name = "reports")
 public class Report {
 
     public static final String NUMBER_OF_ELIGIBLE_MEMBERS = "Number of eligible members";

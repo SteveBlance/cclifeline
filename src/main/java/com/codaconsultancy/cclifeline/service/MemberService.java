@@ -82,7 +82,11 @@ public class MemberService extends LifelineService {
     }
 
     public Member saveMember(Member member) {
-        member.setStatus(TBC_STATUS);
+        if (member.getPayerType().equalsIgnoreCase("Fanbase") && null != member.getFanbaseId()) {
+            member.setStatus(OPEN_STATUS);
+        } else {
+            member.setStatus(TBC_STATUS);
+        }
         member.setJoinDate(DateTime.now().toDate());
 
         return memberRepository.save(member);
@@ -139,7 +143,11 @@ public class MemberService extends LifelineService {
     }
 
     public boolean isEligibleForDraw(MemberViewBean member) {
-        return OPEN_STATUS.equals(member.getStatus()) && (paymentsAreUpToDate(member, PAYMENT_GRACE_PERIOD_IN_DAYS));
+        return OPEN_STATUS.equals(member.getStatus()) && (isFanbasePayer(member) || (paymentsAreUpToDate(member, PAYMENT_GRACE_PERIOD_IN_DAYS)));
+    }
+
+    private boolean isFanbasePayer(MemberViewBean member) {
+        return member.hasFanbaseId() && member.getPayerType().equalsIgnoreCase("Fanbase");
     }
 
     private boolean paymentsAreUpToDate(MemberViewBean member, int gracePeriodInDays) {

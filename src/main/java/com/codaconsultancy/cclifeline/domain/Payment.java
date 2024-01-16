@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
-@Table(name = "PAYMENTS")
+@Table(name = "payments")
 public class Payment {
 
     public Payment() {

@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "LOTTERY_DRAWS")
+@Table(name = "lottery_draws")
 public class LotteryDraw {
 
     @Id

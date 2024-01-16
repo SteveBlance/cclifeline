@@ -4,7 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "EVENT_LOG")
+@Table(name = "event_log")
 public class EventLog {
 
     private EventLog() {

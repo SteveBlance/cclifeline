@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 
 @Entity
-@Table(name = "SECURITY_SUBJECTS")
+@Table(name = "security_subjects")
 public class SecuritySubject {
 
     @Id

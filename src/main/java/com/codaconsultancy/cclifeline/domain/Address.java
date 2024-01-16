@@ -9,7 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "ADDRESSES")
+@Table(name = "addresses")
 public class Address {
 
     public static final String BR_TAG = "<br/>";
