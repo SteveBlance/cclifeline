@@ -49,11 +49,10 @@
                width="100%">
             <thead>
             <tr>
-                <th>Payment Date</th>
-                <th>Payment Amount (£)</th>
+                <th>Date</th>
+                <th>Amount (£)</th>
                 <th>Credit Reference</th>
                 <th>Name</th>
-                <th>Credited Account</th>
                 <th>Member</th>
                 <th>Lottery Payment?</th>
             </tr>
@@ -67,7 +66,6 @@
                 </td>
                 <td th:text="${payment.creditReference}">Credit Reference</td>
                 <td th:text="${payment.name}">Name</td>
-                <td th:text="${payment.creditedAccount}">Credited Account</td>
                 <td th:text="${payment.memberDisplayText}? ${payment.memberDisplayText}">Member</td>
                 <td th:style="${payment.isLotteryPayment()}? 'color: green' : 'color: red'"
                     th:utext="${payment.isLotteryPayment()}? '&lt;strong&gt;Yes&lt;/strong&gt;' : '&lt;strong&gt;No&lt;/strong&gt;'">

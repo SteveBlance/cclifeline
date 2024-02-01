@@ -97,6 +97,9 @@ public class MemberService extends LifelineService {
     }
 
     public Member updateMember(Member member) {
+        if (TBC_STATUS.equals(member.getStatus()) && member.getPayerType().equalsIgnoreCase("Fanbase") && null != member.getFanbaseId()) {
+            member.setStatus(OPEN_STATUS);
+        }
         return memberRepository.save(member);
     }
 
