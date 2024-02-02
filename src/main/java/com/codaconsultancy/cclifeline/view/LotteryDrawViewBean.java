@@ -98,7 +98,12 @@ public class LotteryDrawViewBean {
             if (null != winner.getAddresses().get(0).getTown() && !winner.getAddresses().get(0).getTown().isEmpty()) {
                 prizeSummary.append(", ").append(winner.getAddresses().get(0).getTown());
             }
-            prizeSummary.append(" (").append(winner.getMembershipNumber()).append("), ");
+            Long membershipNumber = winner.getMembershipNumber();
+            String memberNumberDisplay = String.format("%d", membershipNumber);
+            if (winner.getPayerType().equals("Fanbase") && null != winner.getFanbaseId()) {
+                memberNumberDisplay = membershipNumber + "/Fanbase-" + winner.getFanbaseId();
+            }
+            prizeSummary.append(" (").append(memberNumberDisplay).append("), ");
         }
         prizeSummary.deleteCharAt(prizeSummary.length() - 1);
         prizeSummary.deleteCharAt(prizeSummary.length() - 1);

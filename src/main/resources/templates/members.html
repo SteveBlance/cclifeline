@@ -53,7 +53,7 @@
                 <th>Type</th>
                 <th>Status</th>
                 <th>Payments</th>
-                <th>Joined</th>
+                <th>Fanbase ID</th>
                 <th>Email</th>
                 <th>Landline</th>
                 <th>Mobile</th>
@@ -70,7 +70,7 @@
                 <td th:text="${member.membershipType}">Membership Type</td>
                 <td th:text="${member.status}">Status</td>
                 <td th:text="${member.payerType}">Payer Type</td>
-                <td th:text="${member.joinDate} ? ${#dates.format(member.joinDate, 'yyyy/MM/dd')}">Join Date</td>
+                <td th:text="${member.isFanbasePayer()}? ${member.fanbaseId} : '-'">Fanbase ID</td>
                 <td th:text="${member.email}">Email</td>
                 <td th:text="${member.landlineNumber}">Phone Number</td>
                 <td th:text="${member.mobileNumber}">Mobile Number</td>

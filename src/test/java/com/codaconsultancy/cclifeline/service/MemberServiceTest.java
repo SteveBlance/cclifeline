@@ -224,6 +224,7 @@ public class MemberServiceTest extends LifelineServiceTest {
         Member member = TestHelper.newMember(23L, "Billy", "Whiz", "bw@email.com", "0131991188", null, "Annual", "Lifeline", "New member", "Open");
 
         when(memberRepository.save(member)).thenReturn(member);
+        when(memberRepository.findOne(anyLong())).thenReturn(member);
 
         Member newMember = memberService.updateMember(member);
 
@@ -348,7 +349,7 @@ public class MemberServiceTest extends LifelineServiceTest {
 
         int closedAccountCount = memberService.closeLapsedMemberships();
 
-        verify(memberRepository, times(2)).findOne(any(Long.class));
+        verify(memberRepository, times(4)).findOne(any(Long.class));
         verify(memberRepository, times(2)).save(any(Member.class));
         verify(memberRepository, times(1)).save(lapsed1);
         verify(memberRepository, times(1)).save(lapsed2);

@@ -95,7 +95,7 @@
                     <tr th:each="prize: ${lotteryDraw.prizes}" style="cursor: pointer"
                         th:onclick="'javascript:rowClicked(\'' + ${prize.winner.membershipNumber} + '\');'">
                         <td th:text="${prize.prize}">Prize</td>
-                        <td th:text="${prize.winner.membershipNumber}">Membership Number</td>
+                        <td th:text="${prize.winner.isFanbasePayer()}? ${prize.winner.membershipNumber} + '/Fanbase-'+${prize.winner.fanbaseId} : ${prize.winner.membershipNumber}">Membership Number</td>
                         <td th:text="${prize.winner.forename + ' ' + prize.winner.surname}">Name</td>
                         <td th:text="${prize.winner.getAddresses().get(0).town}">Town</td>
                         <td th:text="${prize.winner.email}">Email</td>

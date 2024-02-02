@@ -27,6 +27,7 @@ public class MemberService extends LifelineService {
     private static final String TBC_STATUS = "TBC";
     private static final String OPEN_STATUS = "Open";
     private static final String CLOSED_STATUS = "Closed";
+    public static final String FANBASE = "Fanbase";
 
     private final MemberRepository memberRepository;
 
@@ -97,8 +98,12 @@ public class MemberService extends LifelineService {
     }
 
     public Member updateMember(Member member) {
-        if (TBC_STATUS.equals(member.getStatus()) && member.getPayerType().equalsIgnoreCase("Fanbase") && null != member.getFanbaseId()) {
+        if (TBC_STATUS.equals(member.getStatus()) && member.getPayerType().equalsIgnoreCase(FANBASE) && null != member.getFanbaseId()) {
             member.setStatus(OPEN_STATUS);
+        }
+        Member storedMember = memberRepository.findOne(member.getId());
+        if (OPEN_STATUS.equals(storedMember.getStatus()) && CLOSED_STATUS.equals(member.getStatus())) {
+            member.setLeaveDate(DateTime.now().toDate());
         }
         return memberRepository.save(member);
     }

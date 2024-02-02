@@ -270,6 +270,16 @@ public class Member {
         this.fanbaseId = fanbaseId;
     }
 
+    @Transient
+    public boolean hasFanbaseId() {
+        return null != this.fanbaseId;
+    }
+
+    @Transient
+    public boolean isFanbasePayer() {
+        return this.payerType.equals("Fanbase") && hasFanbaseId();
+    }
+
     public MemberViewBean toViewBean() {
         MapperFactory mapperFactory = new DefaultMapperFactory.Builder().build();
         MapperFacade mapper = mapperFactory.getMapperFacade();

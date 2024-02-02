@@ -282,6 +282,10 @@ public class MemberViewBean {
     }
 
     public boolean hasFanbaseId() {
-        return null != this.getFanbaseId();
+        return null != this.fanbaseId;
+    }
+
+    public boolean isFanbasePayer() {
+        return this.payerType.equals("Fanbase") && hasFanbaseId();
     }
 }
