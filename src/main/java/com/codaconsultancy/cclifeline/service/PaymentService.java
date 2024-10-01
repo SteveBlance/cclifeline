@@ -132,7 +132,7 @@ public class PaymentService extends LifelineService {
     }
 
     private void matchWithMember(Payment payment, List<Member> allMembers) {
-        if (payment.getCreditReference().contains("ADDITIONAL LIST")) {
+        if (payment.getCreditReference().contains("FPS, Stripe Payments Uk Ltd, FANBASE")) {
             payment.setLotteryPayment(false);
             return;
         }

@@ -2,14 +2,14 @@ select * from ineligible_for_draw_vw;
 
 -- VIEW LAPSED 
 select * from ineligible_for_draw_vw
-where LAST_PAYMENT like '2023-11-%';
+where LAST_PAYMENT like '2024-06-%';
 
 
 -- UPDATE LAPSED TO CLOSED
 
-update members set STATUS = 'Closed' where id in (
+update members set STATUS = 'Closed', leave_date = now() where id in (
 select member_id from ineligible_for_draw_vw
-where LAST_PAYMENT like '2023-10-%');
+where LAST_PAYMENT like '2024-05-%');
 
 -- Current Legacy memberships
 select count(1) from members  where status = 'Open' and MEMBERSHIP_TYPE = 'Legacy'; 
